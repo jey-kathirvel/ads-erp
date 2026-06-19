@@ -1,0 +1,171 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+
+Edit Role
+
+{% endblock %}
+
+{% block content %}
+
+<section class="content">
+
+    <div class="container-fluid">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-8">
+
+                <div class="card card-warning">
+
+                    <div class="card-header">
+
+                        <h3 class="card-title">
+
+                            <i class="fas fa-user-edit"></i>
+
+                            Edit Role
+
+                        </h3>
+
+                    </div>
+
+                    <form
+                        method="post"
+                        action="/roles/{{ role.id }}/edit">
+
+                        <div class="card-body">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Role Code
+
+                                </label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="role_code"
+
+                                    class="form-control"
+
+                                    required
+
+                                    value="{{ role.role_code }}">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Role Name
+
+                                </label>
+
+                                <input
+
+                                    type="text"
+
+                                    name="role_name"
+
+                                    class="form-control"
+
+                                    required
+
+                                    value="{{ role.role_name }}">
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Description
+
+                                </label>
+
+                                <textarea
+
+                                    name="description"
+
+                                    rows="4"
+
+                                    class="form-control">{{ role.description }}</textarea>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="custom-control custom-switch">
+
+                                    <input
+
+                                        type="checkbox"
+
+                                        class="custom-control-input"
+
+                                        id="is_active"
+
+                                        name="is_active"
+
+                                        {% if role.is_active %}checked{% endif %}>
+
+                                    <label
+
+                                        class="custom-control-label"
+
+                                        for="is_active">
+
+                                        Active Role
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer">
+
+                            <button
+
+                                type="submit"
+
+                                class="btn btn-warning">
+
+                                <i class="fas fa-save"></i>
+
+                                Update
+
+                            </button>
+
+                            <a
+
+                                href="/roles"
+
+                                class="btn btn-secondary">
+
+                                Cancel
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

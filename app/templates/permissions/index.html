@@ -1,0 +1,263 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+
+Permissions
+
+{% endblock %}
+
+{% block content %}
+
+<section class="content-header">
+
+    <div class="container-fluid">
+
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+
+                <h1>
+
+                    Role Permissions
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="content">
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <form method="get">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <label>
+
+                            Select Role
+
+                        </label>
+
+                        <select
+
+                            name="role_id"
+
+                            class="form-control"
+
+                            onchange="this.form.submit()">
+
+                            <option value="">
+
+                                Select Role
+
+                            </option>
+
+                            {% for role in roles %}
+
+                            <option
+
+                                value="{{ role.id }}"
+
+                                {% if selected_role|int==role.id %}
+
+                                selected
+
+                                {% endif %}>
+
+                                {{ role.role_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        {% if selected_role %}
+
+        <form
+
+            method="post"
+
+            action="/permissions/save">
+
+            <input
+
+                type="hidden"
+
+                name="role_id"
+
+                value="{{ selected_role }}">
+
+            <div class="card-body table-responsive p-0">
+
+                <table class="table table-bordered table-striped">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+
+                            Module
+
+                        </th>
+
+                        <th class="text-center">
+
+                            View
+
+                        </th>
+
+                        <th class="text-center">
+
+                            Add
+
+                        </th>
+
+                        <th class="text-center">
+
+                            Edit
+
+                        </th>
+
+                        <th class="text-center">
+
+                            Delete
+
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for module in modules %}
+
+                    {% set permission = permissions.get(module,{}) %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ module|replace("_"," ")|title }}
+
+                        </td>
+
+                        <td align="center">
+
+                            <input
+
+                                type="checkbox"
+
+                                name="{{ module }}_view"
+
+                                {% if permission.get("can_view") %}
+
+                                checked
+
+                                {% endif %}>
+
+                        </td>
+
+                        <td align="center">
+
+                            <input
+
+                                type="checkbox"
+
+                                name="{{ module }}_add"
+
+                                {% if permission.get("can_add") %}
+
+                                checked
+
+                                {% endif %}>
+
+                        </td>
+
+                        <td align="center">
+
+                            <input
+
+                                type="checkbox"
+
+                                name="{{ module }}_edit"
+
+                                {% if permission.get("can_edit") %}
+
+                                checked
+
+                                {% endif %}>
+
+                        </td>
+
+                        <td align="center">
+
+                            <input
+
+                                type="checkbox"
+
+                                name="{{ module }}_delete"
+
+                                {% if permission.get("can_delete") %}
+
+                                checked
+
+                                {% endif %}>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="card-footer">
+
+                <button
+
+                    class="btn btn-primary"
+
+                    type="submit">
+
+                    <i class="fas fa-save"></i>
+
+                    Save Permissions
+
+                </button>
+
+            </div>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

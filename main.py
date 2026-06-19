@@ -6,13 +6,12 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.routes.router import api_router
-from app.auth.middleware import AuthenticationMiddleware
 
 app = FastAPI(
 
     title="ADS ERP",
 
-    version="0.4.1"
+    version="0.5.1"
 
 )
 
@@ -33,7 +32,6 @@ app.add_middleware(
     https_only=True
 
 )
-
 
 # ----------------------------------------------------
 # Static Files
@@ -63,9 +61,8 @@ templates = Jinja2Templates(
 
 )
 
-
 # ----------------------------------------------------
-# Template Global
+# Template Globals
 # ----------------------------------------------------
 
 def current_user(
@@ -112,7 +109,11 @@ async def index(
 
 ):
 
-    if request.session.get("user"):
+    if request.session.get(
+
+        "user"
+
+    ):
 
         return templates.TemplateResponse(
 
@@ -120,7 +121,15 @@ async def index(
 
             name="dashboard/index.html",
 
-            context={}
+            context={
+
+                "user": request.session.get(
+
+                    "user"
+
+                )
+
+            }
 
         )
 
@@ -149,7 +158,7 @@ async def health():
 
         "application": "ADS ERP",
 
-        "version": "0.4.1",
+        "version": "0.5.1",
 
         "status": "running"
 
