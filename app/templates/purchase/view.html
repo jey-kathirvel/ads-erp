@@ -1,0 +1,93 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+<div class="card-header bg-success">
+
+<h3>
+
+Purchase {{ purchase.purchase_no }}
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Supplier</th>
+
+<td>{{ purchase.supplier_id }}</td>
+
+</tr>
+
+<tr>
+
+<th>Grand Total</th>
+
+<td>₹ {{ purchase.grand_total }}</td>
+
+</tr>
+
+<tr>
+
+<th>Payment</th>
+
+<td>{{ purchase.payment_mode }}</td>
+
+</tr>
+
+</table>
+
+<hr>
+
+<table class="table table-striped">
+
+<thead>
+
+<tr>
+
+<th>Product</th>
+
+<th>Qty</th>
+
+<th>Rate</th>
+
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in items %}
+
+<tr>
+
+<td>{{ item.product_id }}</td>
+
+<td>{{ item.qty }}</td>
+
+<td>{{ item.rate }}</td>
+
+<td>{{ item.total }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

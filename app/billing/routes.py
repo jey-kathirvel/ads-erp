@@ -1,0 +1,323 @@
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import Form
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+
+from app.config.database import get_db
+
+from app.billing.schemas import InvoiceCreate
+from app.billing.service import BillingService
+from app.billing.item_service import InvoiceItemService
+
+from app.customers.service import CustomerService
+from app.products.service import ProductService
+from app.inventory.service import InventoryService
+from app.accounts.service import AutoPostingService
+from app.auth.dependencies import login_required
+
+router = APIRouter()
+
+templates = Jinja2Templates(
+    directory="app/templates"
+)
+
+
+# ----------------------------------------------------
+# New Billing Screen
+# ----------------------------------------------------
+
+@router.get(
+    "/billing",
+    response_class=HTMLResponse
+)
+async def billing_page(
+
+    request: Request,
+
+    user=Depends(login_required),
+
+    db: Session = Depends(get_db)
+
+):
+
+    # ------------------------------------
+    # Redirect to Login if session expired
+    # ------------------------------------
+
+    if isinstance(user, RedirectResponse):
+
+        return user
+
+    customers = CustomerService.get_all(db)
+
+    products = ProductService.get_all(db)
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/create.html",
+
+        context={
+
+            "customers": customers,
+
+            "products": products
+
+        }
+
+    )
+
+
+# ----------------------------------------------------
+# Save Invoice
+# ----------------------------------------------------
+
+@router.post("/billing/save")
+async def save_invoice(
+
+    customer_id: int = Form(...),
+
+    subtotal: float = Form(...),
+
+    discount: float = Form(0),
+
+    taxable_amount: float = Form(...),
+
+    cgst: float = Form(...),
+
+    sgst: float = Form(...),
+
+    igst: float = Form(0),
+
+    grand_total: float = Form(...),
+
+    payment_mode: str = Form(...),
+
+    remarks: str = Form(""),
+
+    product_id: list[int] = Form(...),
+
+    qty: list[float] = Form(...),
+
+    rate: list[float] = Form(...),
+
+    gst: list[float] = Form(...),
+
+    total: list[float] = Form(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoice = InvoiceCreate(
+
+        customer_id=customer_id,
+
+        subtotal=subtotal,
+
+        discount=discount,
+
+        taxable_amount=taxable_amount,
+
+        cgst=cgst,
+
+        sgst=sgst,
+
+        igst=igst,
+
+        grand_total=grand_total,
+
+        payment_mode=payment_mode,
+
+        remarks=remarks
+
+    )
+
+    # -------------------------
+    # Save Invoice
+    # -------------------------
+
+    saved_invoice = BillingService.create(
+
+        db,
+
+        invoice
+
+    )
+
+    # -------------------------
+    # Auto Accounting Entry
+    # -------------------------
+
+    AutoPostingService.post_sales(
+
+        db,
+
+        saved_invoice
+
+    )
+
+    # -------------------------
+    # Save Items & Inventory
+    # -------------------------
+
+    for i in range(len(product_id)):
+
+        InvoiceItemService.create(
+
+            db=db,
+
+            invoice_id=saved_invoice.id,
+
+            product_id=product_id[i],
+
+            qty=qty[i],
+
+            rate=rate[i],
+
+            gst_percentage=gst[i],
+
+            total=total[i]
+
+        )
+
+        product = ProductService.get_by_id(
+
+            db,
+
+            product_id[i]
+
+        )
+
+        balance = 0
+
+        if product:
+
+            balance = float(product.current_stock or 0) - float(qty[i])
+
+        InventoryService.create(
+
+            db=db,
+
+            transaction_no=saved_invoice.invoice_no,
+
+            transaction_type="SALE",
+
+            product_id=product_id[i],
+
+            reference_id=saved_invoice.id,
+
+            qty=qty[i],
+
+            balance_qty=balance,
+
+            remarks="GST Invoice"
+
+        )
+
+        ProductService.update_stock(
+
+            db,
+
+            product_id[i],
+
+            qty[i]
+
+        )
+
+    return RedirectResponse(
+
+        url=f"/billing/view/{saved_invoice.id}",
+
+        status_code=303
+
+    )
+
+
+# ----------------------------------------------------
+# Invoice List
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/list",
+    response_class=HTMLResponse
+)
+async def invoice_list(
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoices = BillingService.get_all(db)
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/list.html",
+
+        context={
+
+            "invoices": invoices
+
+        }
+
+    )
+
+
+# ----------------------------------------------------
+# Invoice View
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/view/{invoice_id}",
+    response_class=HTMLResponse
+)
+async def view_invoice(
+
+    invoice_id: int,
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoice = BillingService.get_by_id(
+
+        db,
+
+        invoice_id
+
+    )
+
+    items = BillingService.get_items(
+
+        db,
+
+        invoice_id
+
+    )
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/view.html",
+
+        context={
+
+            "invoice": invoice,
+
+            "items": items
+
+        }
+
+    )

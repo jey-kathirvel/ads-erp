@@ -1,0 +1,209 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card card-primary">
+
+    <div class="card-header">
+
+        <h3 class="card-title">
+
+            <i class="fas fa-book"></i>
+
+            Supplier Ledger
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <table class="table table-bordered">
+
+                    <tr>
+
+                        <th width="40%">
+
+                            Supplier
+
+                        </th>
+
+                        <td>
+
+                            {{ summary.supplier.supplier_name }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            Contact
+
+                        </th>
+
+                        <td>
+
+                            {{ summary.supplier.mobile }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            GSTIN
+
+                        </th>
+
+                        <td>
+
+                            {{ summary.supplier.gstin }}
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <table class="table table-bordered">
+
+                    <tr>
+
+                        <th>
+
+                            Opening Balance
+
+                        </th>
+
+                        <td>
+
+                            ₹ {{ summary.opening }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            Purchase Total
+
+                        </th>
+
+                        <td>
+
+                            ₹ {{ summary.purchase_total }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr class="bg-warning">
+
+                        <th>
+
+                            Outstanding
+
+                        </th>
+
+                        <td>
+
+                            <strong>
+
+                                ₹ {{ summary.outstanding }}
+
+                            </strong>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h5>
+
+            Purchase History
+
+        </h5>
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+            <tr>
+
+                <th>No</th>
+
+                <th>Date</th>
+
+                <th>Payment</th>
+
+                <th>Total</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for purchase in purchases %}
+
+            <tr>
+
+                <td>
+
+                    {{ purchase.purchase_no }}
+
+                </td>
+
+                <td>
+
+                    {{ purchase.purchase_date }}
+
+                </td>
+
+                <td>
+
+                    {{ purchase.payment_mode }}
+
+                </td>
+
+                <td>
+
+                    ₹ {{ purchase.grand_total }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

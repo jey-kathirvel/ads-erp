@@ -1,28 +1,44 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 
 {% block title %}
+
 ADS ERP
+
 {% endblock %}
 
 {% block content %}
 
-<div class="card shadow">
+<div class="row justify-content-center">
 
-    <div class="card-body text-center">
+    <div class="col-md-8">
 
-        <h2>Welcome to ADS ERP</h2>
+        <div class="card shadow">
 
-        <p class="text-muted">
+            <div class="card-body text-center">
 
-            Inventory • Billing • Reports
+                <h1>
 
-        </p>
+                    ADS ERP
 
-        <a href="/login" class="btn btn-primary">
+                </h1>
 
-            Login
+                <p class="lead">
 
-        </a>
+                    Inventory • Billing • Reports
+
+                </p>
+
+                <a
+                    href="/login"
+                    class="btn btn-primary">
+
+                    Login
+
+                </a>
+
+            </div>
+
+        </div>
 
     </div>
 

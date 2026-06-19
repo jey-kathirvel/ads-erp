@@ -1,0 +1,103 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+<div class="card-header">
+
+<div class="d-flex justify-content-between">
+
+<h3 class="card-title">
+
+Invoices
+
+</h3>
+
+<a
+href="/billing"
+class="btn btn-primary">
+
+New Invoice
+
+</a>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>Invoice No</th>
+
+<th>Customer ID</th>
+
+<th>Grand Total</th>
+
+<th>Payment</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for invoice in invoices %}
+
+<tr>
+
+<td>
+
+{{ invoice.invoice_no }}
+
+</td>
+
+<td>
+
+{{ invoice.customer_id }}
+
+</td>
+
+<td>
+
+₹ {{ invoice.grand_total }}
+
+</td>
+
+<td>
+
+{{ invoice.payment_mode }}
+
+</td>
+
+<td>
+
+<span class="badge badge-success">
+
+Completed
+
+</span>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

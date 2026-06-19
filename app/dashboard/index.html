@@ -1,0 +1,493 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="content-header">
+
+    <div class="container-fluid">
+
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+
+                <h1>
+
+                    <i class="fas fa-tachometer-alt"></i>
+
+                    ADS ERP Dashboard
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<section class="content">
+
+<div class="container-fluid">
+
+<div class="row">
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-info">
+
+            <div class="inner">
+
+                <h3>{{ customer_count }}</h3>
+
+                <p>Customers</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-users"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-success">
+
+            <div class="inner">
+
+                <h3>{{ product_count }}</h3>
+
+                <p>Products</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-boxes"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-warning">
+
+            <div class="inner">
+
+                <h3>{{ invoice_count }}</h3>
+
+                <p>Invoices</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-file-invoice"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-danger">
+
+            <div class="inner">
+
+                <h3>{{ low_stock }}</h3>
+
+                <p>Low Stock</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-exclamation-triangle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-primary">
+
+            <div class="inner">
+
+                <h3>{{ out_of_stock }}</h3>
+
+                <p>Out Of Stock</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-times-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-secondary">
+
+            <div class="inner">
+
+                <h3>
+
+                    ? {{ "{:,.2f}".format(inventory_value) }}
+
+                </h3>
+
+                <p>Inventory Value</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-warehouse"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-dark">
+
+            <div class="inner">
+
+                <h3>
+
+                    {{ total_stock_qty }}
+
+                </h3>
+
+                <p>Total Stock Qty</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-layer-group"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-6">
+
+        <div class="small-box bg-teal">
+
+            <div class="inner">
+
+                <h3>
+
+                    ERP
+
+                </h3>
+
+                <p>Ready</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-check-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-8">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Recent Invoices
+
+</h3>
+
+</div>
+
+<div class="card-body table-responsive p-0">
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+
+<th>
+
+Invoice
+
+</th>
+
+<th>
+
+Customer
+
+</th>
+
+<th>
+
+Total
+
+</th>
+
+<th>
+
+Payment
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for invoice in recent_invoices %}
+
+<tr>
+
+<td>
+
+<a href="/billing/view/{{ invoice.id }}">
+
+{{ invoice.invoice_no }}
+
+</a>
+
+</td>
+
+<td>
+
+{{ invoice.customer_id }}
+
+</td>
+
+<td>
+
+? {{ invoice.grand_total }}
+
+</td>
+
+<td>
+
+{{ invoice.payment_mode }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Quick Actions
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<a href="/billing"
+
+class="btn btn-primary btn-block mb-2">
+
+<i class="fas fa-file-invoice"></i>
+
+New Invoice
+
+</a>
+
+<a href="/customers/create"
+
+class="btn btn-success btn-block mb-2">
+
+<i class="fas fa-user-plus"></i>
+
+New Customer
+
+</a>
+
+<a href="/products/create"
+
+class="btn btn-info btn-block mb-2">
+
+<i class="fas fa-box-open"></i>
+
+New Product
+
+</a>
+
+<a href="/inventory/current-stock"
+
+class="btn btn-warning btn-block mb-2">
+
+<i class="fas fa-boxes"></i>
+
+Current Stock
+
+</a>
+
+<a href="/inventory/dashboard"
+
+class="btn btn-secondary btn-block">
+
+<i class="fas fa-chart-bar"></i>
+
+Inventory Dashboard
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Recent Stock Transactions
+
+</h3>
+
+</div>
+
+<div class="card-body table-responsive p-0">
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Transaction</th>
+
+<th>Type</th>
+
+<th>Product</th>
+
+<th>Qty</th>
+
+<th>Balance</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for stock in recent_transactions %}
+
+<tr>
+
+<td>{{ stock.id }}</td>
+
+<td>{{ stock.transaction_no }}</td>
+
+<td>
+
+{% if stock.transaction_type == "SALE" %}
+
+<span class="badge badge-danger">
+
+SALE
+
+</span>
+
+{% else %}
+
+<span class="badge badge-success">
+
+{{ stock.transaction_type }}
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ stock.product_id }}</td>
+
+<td>{{ stock.qty }}</td>
+
+<td>{{ stock.balance_qty }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

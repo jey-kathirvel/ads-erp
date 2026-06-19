@@ -1,0 +1,250 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<h2>
+
+Edit Customer
+
+</h2>
+
+<hr>
+
+<form method="post">
+
+<div class="row">
+
+    <div class="col-md-6">
+
+        <label>
+
+            Customer Name
+
+        </label>
+
+        <input
+            class="form-control"
+            name="customer_name"
+            value="{{ customer.customer_name }}"
+            required>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label>
+
+            Contact Person
+
+        </label>
+
+        <input
+            class="form-control"
+            name="contact_person"
+            value="{{ customer.contact_person or '' }}">
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <label>
+
+            Mobile
+
+        </label>
+
+        <input
+            class="form-control"
+            name="mobile"
+            value="{{ customer.mobile or '' }}">
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label>
+
+            Email
+
+        </label>
+
+        <input
+            class="form-control"
+            type="email"
+            name="email"
+            value="{{ customer.email or '' }}">
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <label>
+
+            GSTIN
+
+        </label>
+
+        <input
+            class="form-control"
+            name="gstin"
+            value="{{ customer.gstin or '' }}">
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label>
+
+            City
+
+        </label>
+
+        <input
+            class="form-control"
+            name="city"
+            value="{{ customer.city or '' }}">
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <label>
+
+            State
+
+        </label>
+
+        <input
+            class="form-control"
+            name="state"
+            value="{{ customer.state or '' }}">
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label>
+
+            Pincode
+
+        </label>
+
+        <input
+            class="form-control"
+            name="pincode"
+            value="{{ customer.pincode or '' }}">
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <label>
+
+            Credit Limit
+
+        </label>
+
+        <input
+            class="form-control"
+            type="number"
+            step="0.01"
+            name="credit_limit"
+            value="{{ customer.credit_limit or 0 }}">
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label>
+
+            Opening Balance
+
+        </label>
+
+        <input
+            class="form-control"
+            type="number"
+            step="0.01"
+            name="opening_balance"
+            value="{{ customer.opening_balance or 0 }}">
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <label>
+
+            Status
+
+        </label>
+
+        <select
+            class="form-control"
+            name="is_active">
+
+            <option
+                value="true"
+                {% if customer.is_active %}selected{% endif %}>
+
+                Active
+
+            </option>
+
+            <option
+                value="false"
+                {% if not customer.is_active %}selected{% endif %}>
+
+                Inactive
+
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<div class="mt-4">
+
+    <button
+        class="btn btn-primary">
+
+        <i class="fas fa-save"></i>
+
+        Update Customer
+
+    </button>
+
+    <a
+        href="/customers"
+        class="btn btn-secondary">
+
+        Cancel
+
+    </a>
+
+</div>
+
+</form>
+
+{% endblock %}

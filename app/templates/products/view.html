@@ -1,0 +1,203 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="card-header">
+
+        <div class="d-flex justify-content-between">
+
+            <h3 class="card-title">
+
+                <i class="fas fa-box"></i>
+
+                Product Details
+
+            </h3>
+
+            <a
+                href="/products"
+                class="btn btn-secondary">
+
+                <i class="fas fa-arrow-left"></i>
+
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered">
+
+            <tr>
+
+                <th width="250">
+
+                    Product Code
+
+                </th>
+
+                <td>
+
+                    {{ product.product_code }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Product Name
+
+                </th>
+
+                <td>
+
+                    {{ product.product_name }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    HSN Code
+
+                </th>
+
+                <td>
+
+                    {{ product.hsn_code or "-" }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    GST %
+
+                </th>
+
+                <td>
+
+                    {{ product.gst_percentage }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Purchase Price
+
+                </th>
+
+                <td>
+
+                    ₹ {{ product.purchase_price }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Selling Price
+
+                </th>
+
+                <td>
+
+                    ₹ {{ product.selling_price }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Opening Stock
+
+                </th>
+
+                <td>
+
+                    {{ product.opening_stock }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Minimum Stock
+
+                </th>
+
+                <td>
+
+                    {{ product.minimum_stock }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Barcode
+
+                </th>
+
+                <td>
+
+                    {{ product.barcode or "-" }}
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Description
+
+                </th>
+
+                <td>
+
+                    {{ product.description or "-" }}
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

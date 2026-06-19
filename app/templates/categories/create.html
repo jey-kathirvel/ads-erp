@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<h2>
+
+Add Category
+
+</h2>
+
+<hr>
+
+<form method="post">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<label>
+
+Category Name
+
+</label>
+
+<input
+class="form-control"
+name="category_name"
+required>
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-12">
+
+<label>
+
+Description
+
+</label>
+
+<textarea
+class="form-control"
+name="description"></textarea>
+
+</div>
+
+</div>
+
+<div class="mt-4">
+
+<button
+class="btn btn-success">
+
+Save Category
+
+</button>
+
+<a
+href="/categories"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+{% endblock %}

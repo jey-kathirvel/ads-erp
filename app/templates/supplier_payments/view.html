@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+<div class="card-header bg-info">
+
+<h3>
+
+Supplier Payment
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>
+
+Payment No
+
+</th>
+
+<td>
+
+{{ payment.payment_no }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Supplier
+
+</th>
+
+<td>
+
+{{ payment.supplier_id }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Mode
+
+</th>
+
+<td>
+
+{{ payment.payment_mode }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Amount
+
+</th>
+
+<td>
+
+? {{ payment.amount }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>
+
+Remarks
+
+</th>
+
+<td>
+
+{{ payment.remarks }}
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

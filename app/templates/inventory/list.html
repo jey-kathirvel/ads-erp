@@ -1,0 +1,153 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="card-header bg-primary">
+
+        <div class="d-flex justify-content-between">
+
+            <h3 class="card-title">
+
+                <i class="fas fa-history"></i>
+
+                Stock Ledger
+
+            </h3>
+
+            <a href="/inventory/current-stock"
+
+               class="btn btn-light btn-sm">
+
+                Current Stock
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Transaction No</th>
+
+                    <th>Type</th>
+
+                    <th>Product ID</th>
+
+                    <th class="text-right">
+
+                        Qty
+
+                    </th>
+
+                    <th class="text-right">
+
+                        Balance
+
+                    </th>
+
+                    <th>Remarks</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for stock in stocks %}
+
+                <tr>
+
+                    <td>
+
+                        {{ stock.id }}
+
+                    </td>
+
+                    <td>
+
+                        {{ stock.transaction_no }}
+
+                    </td>
+
+                    <td>
+
+                        {% if stock.transaction_type == "PURCHASE" %}
+
+                            <span class="badge badge-success">
+
+                                PURCHASE
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-primary">
+
+                                SALE
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {{ stock.product_id }}
+
+                    </td>
+
+                    <td class="text-right">
+
+                        {{ stock.qty }}
+
+                    </td>
+
+                    <td class="text-right">
+
+                        {{ stock.balance_qty }}
+
+                    </td>
+
+                    <td>
+
+                        {{ stock.remarks }}
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="7" class="text-center text-muted">
+
+                        No stock transactions found.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

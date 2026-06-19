@@ -1,0 +1,354 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="content-header">
+
+    <div class="container-fluid">
+
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+
+                <h1>
+
+                    <i class="fas fa-boxes"></i>
+
+                    Inventory Dashboard
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<section class="content">
+
+<div class="container-fluid">
+
+<div class="row">
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="small-box bg-info">
+
+            <div class="inner">
+
+                <h3>{{ total_products }}</h3>
+
+                <p>Total Products</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-box"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="small-box bg-success">
+
+            <div class="inner">
+
+                <h3>{{ low_stock_count }}</h3>
+
+                <p>Low Stock</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-exclamation-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="small-box bg-danger">
+
+            <div class="inner">
+
+                <h3>{{ out_of_stock }}</h3>
+
+                <p>Out Of Stock</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-times-circle"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="small-box bg-warning">
+
+            <div class="inner">
+
+                <h3>{{ products|length }}</h3>
+
+                <p>Active Items</p>
+
+            </div>
+
+            <div class="icon">
+
+                <i class="fas fa-cubes"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-8">
+
+<div class="card">
+
+<div class="card-header bg-primary">
+
+<h3 class="card-title">
+
+Current Stock
+
+</h3>
+
+</div>
+
+<div class="card-body table-responsive p-0">
+
+<table class="table table-hover table-striped">
+
+<thead>
+
+<tr>
+
+<th>Product</th>
+
+<th>Current</th>
+
+<th>Minimum</th>
+
+<th>Status</th>
+
+<th>Selling Price</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for product in products %}
+
+<tr>
+
+<td>
+
+{{ product.product_name }}
+
+</td>
+
+<td>
+
+{{ product.current_stock }}
+
+</td>
+
+<td>
+
+{{ product.minimum_stock }}
+
+</td>
+
+<td>
+
+{% set current = product.current_stock|float %}
+{% set minimum = product.minimum_stock|float %}
+
+{% if current <= 0 %}
+
+<span class="badge badge-danger">
+
+Out Of Stock
+
+</span>
+
+{% elif current <= minimum %}
+
+<span class="badge badge-warning">
+
+Low Stock
+
+</span>
+
+{% else %}
+
+<span class="badge badge-success">
+
+Available
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+? {{ "%.2f"|format(product.selling_price|float) }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card card-success">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Quick Actions
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<a href="/inventory/current-stock"
+
+class="btn btn-primary btn-block mb-2">
+
+<i class="fas fa-boxes"></i>
+
+Current Stock
+
+</a>
+
+<a href="/inventory"
+
+class="btn btn-info btn-block mb-2">
+
+<i class="fas fa-history"></i>
+
+Stock Ledger
+
+</a>
+
+<a href="/products"
+
+class="btn btn-success btn-block mb-2">
+
+<i class="fas fa-cube"></i>
+
+Products
+
+</a>
+
+<a href="/billing"
+
+class="btn btn-warning btn-block">
+
+<i class="fas fa-file-invoice"></i>
+
+Create Invoice
+
+</a>
+
+</div>
+
+</div>
+
+<div class="card card-secondary">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+Summary
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Total Products</th>
+
+<td>{{ total_products }}</td>
+
+</tr>
+
+<tr>
+
+<th>Low Stock</th>
+
+<td>{{ low_stock_count }}</td>
+
+</tr>
+
+<tr>
+
+<th>Out Of Stock</th>
+
+<td>{{ out_of_stock }}</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

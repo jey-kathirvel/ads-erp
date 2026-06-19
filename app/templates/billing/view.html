@@ -1,0 +1,245 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="card-header bg-primary">
+
+        <h3>
+
+            GST Invoice
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <h5>
+
+                    Invoice No
+
+                </h5>
+
+                <p>
+
+                    {{ invoice.invoice_no }}
+
+                </p>
+
+            </div>
+
+            <div class="col-md-6 text-right">
+
+                <h5>
+
+                    Date
+
+                </h5>
+
+                <p>
+
+                    {{ invoice.invoice_date }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <table class="table table-bordered">
+
+            <thead>
+
+            <tr>
+
+                <th>
+
+                    Product
+
+                </th>
+
+                <th>
+
+                    Qty
+
+                </th>
+
+                <th>
+
+                    Rate
+
+                </th>
+
+                <th>
+
+                    GST %
+
+                </th>
+
+                <th>
+
+                    Total
+
+                </th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for item in items %}
+
+            <tr>
+
+                <td>
+
+                    {{ item.product_id }}
+
+                </td>
+
+                <td>
+
+                    {{ item.qty }}
+
+                </td>
+
+                <td>
+
+                    {{ item.rate }}
+
+                </td>
+
+                <td>
+
+                    {{ item.gst_percentage }}
+
+                </td>
+
+                <td>
+
+                    {{ item.total }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <hr>
+
+        <div class="row">
+
+            <div class="col-md-8"></div>
+
+            <div class="col-md-4">
+
+                <table class="table">
+
+                    <tr>
+
+                        <th>
+
+                            Subtotal
+
+                        </th>
+
+                        <td>
+
+                            ? {{ invoice.subtotal }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            CGST
+
+                        </th>
+
+                        <td>
+
+                            ? {{ invoice.cgst }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            SGST
+
+                        </th>
+
+                        <td>
+
+                            ? {{ invoice.sgst }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            Grand Total
+
+                        </th>
+
+                        <th>
+
+                            ? {{ invoice.grand_total }}
+
+                        </th>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <a
+
+            href="/billing/list"
+
+            class="btn btn-secondary">
+
+            Back
+
+        </a>
+
+        <button
+
+            onclick="window.print()"
+
+            class="btn btn-success">
+
+            Print
+
+        </button>
+
+    </div>
+
+</div>
+
+{% endblock %}

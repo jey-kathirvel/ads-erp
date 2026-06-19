@@ -1,0 +1,231 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card card-primary">
+
+    <div class="card-header">
+
+        <div class="d-flex justify-content-between">
+
+            <h3 class="card-title">
+
+                <i class="fas fa-boxes"></i>
+
+                {% if page_title %}
+
+                    {{ page_title }}
+
+                {% else %}
+
+                    Current Stock
+
+                {% endif %}
+
+            </h3>
+
+            <div>
+
+                <a href="/inventory"
+
+                   class="btn btn-secondary btn-sm">
+
+                    <i class="fas fa-list"></i>
+
+                    Stock Ledger
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-3">
+
+            <div class="col-md-4">
+
+                <input
+
+                    type="text"
+
+                    id="searchInput"
+
+                    class="form-control"
+
+                    placeholder="Search Product">
+
+            </div>
+
+        </div>
+
+        <table
+
+            class="table table-bordered table-striped table-hover"
+
+            id="stockTable">
+
+            <thead class="table-primary">
+
+            <tr>
+
+                <th width="12%">
+
+                    Code
+
+                </th>
+
+                <th width="30%">
+
+                    Product
+
+                </th>
+
+                <th width="12%">
+
+                    Current
+
+                </th>
+
+                <th width="12%">
+
+                    Minimum
+
+                </th>
+
+                <th width="15%">
+
+                    Status
+
+                </th>
+
+                <th width="19%">
+
+                    Stock Value
+
+                </th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for product in products %}
+
+            <tr>
+
+                <td>
+
+                    {{ product.product_code }}
+
+                </td>
+
+                <td>
+
+                    {{ product.product_name }}
+
+                </td>
+
+                <td>
+
+                    {{ product.current_stock }}
+
+                </td>
+
+                <td>
+
+                    {{ product.minimum_stock }}
+
+                </td>
+
+                <td>
+
+                    {% if product.current_stock <= 0 %}
+
+                        <span class="badge badge-danger">
+
+                            Out Of Stock
+
+                        </span>
+
+                    {% elif product.current_stock <= product.minimum_stock %}
+
+                        <span class="badge badge-warning">
+
+                            Low Stock
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge badge-success">
+
+                            Available
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    ₹ {{ (product.current_stock * product.selling_price)|round(2) }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("searchInput")
+
+.addEventListener(
+
+"keyup",
+
+function(){
+
+let value=this.value.toLowerCase();
+
+document.querySelectorAll(
+
+"#stockTable tbody tr"
+
+).forEach(function(row){
+
+row.style.display=
+
+row.innerText.toLowerCase()
+
+.includes(value)
+
+?
+
+""
+
+:
+
+"none";
+
+});
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ADS ERP</title>
+
+<link rel="stylesheet"
+href="/static/adminlte/plugins/fontawesome-free/css/all.min.css">
+
+<link rel="stylesheet"
+href="/static/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+
+<link rel="stylesheet"
+href="/static/adminlte/dist/css/adminlte.min.css">
+
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+
+<div class="wrapper">
+
+{% include 'layouts/navbar.html' %}
+
+{% include 'layouts/sidebar.html' %}
+
+<div class="content-wrapper">
+
+<section class="content pt-3">
+
+<div class="container-fluid">
+
+{% block content %}
+
+{% endblock %}
+
+</div>
+
+</section>
+
+</div>
+
+{% include 'layouts/footer.html' %}
+
+</div>
+
+<script src="/static/adminlte/plugins/jquery/jquery.min.js"></script>
+
+<script src="/static/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="/static/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+<script src="/static/adminlte/dist/js/adminlte.min.js"></script>
+
+</body>
+
+</html>

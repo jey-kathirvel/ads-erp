@@ -1,0 +1,91 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+<div class="card-header">
+
+<div class="d-flex justify-content-between">
+
+<h3>
+
+Chart Of Accounts
+
+</h3>
+
+<a
+href="/accounts/create"
+class="btn btn-primary">
+
+New Account
+
+</a>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>Code</th>
+
+<th>Account</th>
+
+<th>Group</th>
+
+<th>Opening</th>
+
+<th></th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for account in accounts %}
+
+<tr>
+
+<td>{{ account.account_code }}</td>
+
+<td>{{ account.account_name }}</td>
+
+<td>{{ account.account_group }}</td>
+
+<td>₹ {{ account.opening_balance }}</td>
+
+<td>
+
+<a
+
+href="/accounts/{{ account.id }}/ledger"
+
+class="btn btn-info btn-sm">
+
+Ledger
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

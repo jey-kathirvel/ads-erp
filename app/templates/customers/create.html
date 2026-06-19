@@ -1,0 +1,200 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<h2>
+
+Add Customer
+
+</h2>
+
+<hr>
+
+<form method="post">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<label>
+
+Customer Name
+
+</label>
+
+<input
+class="form-control"
+name="customer_name"
+required>
+
+</div>
+
+<div class="col-md-6">
+
+<label>
+
+Contact Person
+
+</label>
+
+<input
+class="form-control"
+name="contact_person">
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-6">
+
+<label>
+
+Mobile
+
+</label>
+
+<input
+class="form-control"
+name="mobile">
+
+</div>
+
+<div class="col-md-6">
+
+<label>
+
+Email
+
+</label>
+
+<input
+class="form-control"
+type="email"
+name="email">
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-6">
+
+<label>
+
+GSTIN
+
+</label>
+
+<input
+class="form-control"
+name="gstin">
+
+</div>
+
+<div class="col-md-6">
+
+<label>
+
+City
+
+</label>
+
+<input
+class="form-control"
+name="city">
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-6">
+
+<label>
+
+State
+
+</label>
+
+<input
+class="form-control"
+name="state">
+
+</div>
+
+<div class="col-md-6">
+
+<label>
+
+Pincode
+
+</label>
+
+<input
+class="form-control"
+name="pincode">
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-6">
+
+<label>
+
+Credit Limit
+
+</label>
+
+<input
+class="form-control"
+name="credit_limit"
+value="0">
+
+</div>
+
+<div class="col-md-6">
+
+<label>
+
+Opening Balance
+
+</label>
+
+<input
+class="form-control"
+name="opening_balance"
+value="0">
+
+</div>
+
+</div>
+
+<div class="mt-4">
+
+<button
+class="btn btn-success">
+
+Save Customer
+
+</button>
+
+<a
+href="/customers"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+{% endblock %}

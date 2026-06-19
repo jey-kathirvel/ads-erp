@@ -1,0 +1,129 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<form method="post" action="/supplier-payments/save">
+
+<div class="card">
+
+<div class="card-header bg-success">
+
+<h3>
+
+Supplier Payment
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<div class="form-group">
+
+<label>
+
+Supplier
+
+</label>
+
+<select
+
+name="supplier_id"
+
+class="form-control">
+
+{% for supplier in suppliers %}
+
+<option value="{{ supplier.id }}">
+
+{{ supplier.supplier_name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>
+
+Payment Mode
+
+</label>
+
+<select
+
+name="payment_mode"
+
+class="form-control">
+
+<option>Cash</option>
+
+<option>Bank</option>
+
+<option>UPI</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>
+
+Amount
+
+</label>
+
+<input
+
+name="amount"
+
+type="number"
+
+step="0.01"
+
+class="form-control"
+
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>
+
+Remarks
+
+</label>
+
+<textarea
+
+name="remarks"
+
+class="form-control"></textarea>
+
+</div>
+
+</div>
+
+<div class="card-footer">
+
+<button
+
+class="btn btn-primary">
+
+Save Payment
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+{% endblock %}

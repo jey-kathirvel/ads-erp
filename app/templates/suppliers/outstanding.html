@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="card-header bg-danger">
+
+        <h3 class="card-title">
+
+            Supplier Outstanding Report
+
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+
+            <tr>
+
+                <th>Supplier</th>
+
+                <th>Opening</th>
+
+                <th>Purchase</th>
+
+                <th>Outstanding</th>
+
+                <th></th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for row in suppliers %}
+
+            <tr>
+
+                <td>
+
+                    {{ row.supplier.supplier_name }}
+
+                </td>
+
+                <td>
+
+                    ₹ {{ row.opening }}
+
+                </td>
+
+                <td>
+
+                    ₹ {{ row.purchase_total }}
+
+                </td>
+
+                <td>
+
+                    <strong>
+
+                        ₹ {{ row.outstanding }}
+
+                    </strong>
+
+                </td>
+
+                <td>
+
+                    <a
+
+                        href="/suppliers/{{ row.supplier.id }}/ledger"
+
+                        class="btn btn-primary btn-sm">
+
+                        Ledger
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

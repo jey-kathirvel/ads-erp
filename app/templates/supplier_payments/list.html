@@ -1,0 +1,93 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+<div class="card-header">
+
+<div class="d-flex justify-content-between">
+
+<h3>
+
+Supplier Payments
+
+</h3>
+
+<a
+
+href="/supplier-payments"
+
+class="btn btn-success">
+
+New Payment
+
+</a>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>No</th>
+
+<th>Supplier</th>
+
+<th>Mode</th>
+
+<th>Amount</th>
+
+<th></th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for payment in payments %}
+
+<tr>
+
+<td>{{ payment.payment_no }}</td>
+
+<td>{{ payment.supplier_id }}</td>
+
+<td>{{ payment.payment_mode }}</td>
+
+<td>? {{ payment.amount }}</td>
+
+<td>
+
+<a
+
+href="/supplier-payments/view/{{ payment.id }}"
+
+class="btn btn-info btn-sm">
+
+View
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

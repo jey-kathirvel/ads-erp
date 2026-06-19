@@ -1,0 +1,215 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="card-header">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h3 class="card-title">
+
+                <i class="fas fa-truck"></i>
+
+                Supplier Master
+
+            </h3>
+
+            <div>
+
+                <a
+                    href="/suppliers/outstanding"
+                    class="btn btn-success">
+
+                    <i class="fas fa-file-invoice-dollar"></i>
+
+                    Outstanding
+
+                </a>
+
+                <a
+                    href="/suppliers/create"
+                    class="btn btn-primary">
+
+                    <i class="fas fa-plus"></i>
+
+                    Add Supplier
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-3">
+
+            <div class="col-md-6">
+
+                <input
+                    type="text"
+                    id="searchSupplier"
+                    class="form-control"
+                    placeholder="Search Supplier / Mobile / GSTIN">
+
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table
+                class="table table-bordered table-striped table-hover"
+                id="supplierTable">
+
+                <thead class="thead-light">
+
+                <tr>
+
+                    <th width="10%">Code</th>
+
+                    <th width="20%">Supplier</th>
+
+                    <th width="15%">Contact</th>
+
+                    <th width="15%">Mobile</th>
+
+                    <th width="15%">GSTIN</th>
+
+                    <th width="10%">City</th>
+
+                    <th width="15%">Actions</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for supplier in suppliers %}
+
+                <tr>
+
+                    <td>
+
+                        {{ supplier.supplier_code }}
+
+                    </td>
+
+                    <td>
+
+                        <strong>
+
+                            {{ supplier.supplier_name }}
+
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        {{ supplier.contact_person }}
+
+                    </td>
+
+                    <td>
+
+                        {{ supplier.mobile }}
+
+                    </td>
+
+                    <td>
+
+                        {{ supplier.gstin }}
+
+                    </td>
+
+                    <td>
+
+                        {{ supplier.city }}
+
+                    </td>
+
+                    <td>
+
+                        <a
+
+                            href="/suppliers/{{ supplier.id }}/ledger"
+
+                            class="btn btn-info btn-sm"
+                            title="Ledger">
+
+                            <i class="fas fa-book"></i>
+
+                        </a>
+
+                        <a
+
+                            href="/suppliers/{{ supplier.id }}/edit"
+
+                            class="btn btn-warning btn-sm"
+                            title="Edit">
+
+                            <i class="fas fa-edit"></i>
+
+                        </a>
+
+                        <a
+
+                            href="/suppliers/{{ supplier.id }}/delete"
+
+                            class="btn btn-danger btn-sm"
+                            title="Delete"
+                            onclick="return confirm('Delete Supplier?')">
+
+                            <i class="fas fa-trash"></i>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("searchSupplier").addEventListener(
+
+    "keyup",
+
+    function(){
+
+        let value = this.value.toLowerCase();
+
+        document.querySelectorAll("#supplierTable tbody tr").forEach(function(row){
+
+            row.style.display = row.innerText.toLowerCase().includes(value)
+
+                ? ""
+
+                : "none";
+
+        });
+
+    }
+
+);
+
+</script>
+
+{% endblock %}
