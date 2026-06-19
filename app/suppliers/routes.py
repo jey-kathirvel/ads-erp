@@ -16,7 +16,20 @@ from app.suppliers.ledger_service import SupplierLedgerService
 from app.purchase.service import PurchaseService
 from app.auth.dependencies import login_required
 
-router = APIRouter()
+from fastapi import Depends
+
+from app.auth.dependencies import login_required
+
+router = APIRouter(
+
+    dependencies=[
+
+        Depends(login_required)
+
+    ]
+
+)
+
 
 templates = Jinja2Templates(
     directory="app/templates"

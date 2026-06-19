@@ -13,7 +13,20 @@ from app.company.schemas import CompanySettingCreate
 from app.company.service import CompanyService
 from app.auth.dependencies import login_required
 
-router = APIRouter()
+from fastapi import Depends
+
+from app.auth.dependencies import login_required
+
+router = APIRouter(
+
+    dependencies=[
+
+        Depends(login_required)
+
+    ]
+
+)
+
 
 templates = Jinja2Templates(
     directory="app/templates"

@@ -6,45 +6,151 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.routes.router import api_router
+from app.auth.middleware import AuthenticationMiddleware
 
 app = FastAPI(
+
     title="ADS ERP",
-    version="0.3.0"
+
+    version="0.4.1"
+
 )
+
+# ----------------------------------------------------
+# Session Middleware
+# ----------------------------------------------------
+
 app.add_middleware(
 
     SessionMiddleware,
 
-    secret_key="ads-erp-secret-key"
+    secret_key="ads-erp-secret-key",
+
+    max_age=60 * 60 * 8,
+
+    same_site="lax",
+
+    https_only=True
 
 )
+
+
+# ----------------------------------------------------
+# Static Files
+# ----------------------------------------------------
+
 app.mount(
+
     "/static",
-    StaticFiles(directory="app/static"),
+
+    StaticFiles(
+
+        directory="app/static"
+
+    ),
+
     name="static"
+
 )
+
+# ----------------------------------------------------
+# Templates
+# ----------------------------------------------------
 
 templates = Jinja2Templates(
+
     directory="app/templates"
+
 )
 
-app.include_router(api_router)
 
+# ----------------------------------------------------
+# Template Global
+# ----------------------------------------------------
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
+def current_user(
 
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html"
+    request: Request
+
+):
+
+    return request.session.get(
+
+        "user",
+
+        {}
+
     )
 
 
-@app.get("/health")
+templates.env.globals["current_user"] = current_user
+
+# ----------------------------------------------------
+# Routes
+# ----------------------------------------------------
+
+app.include_router(
+
+    api_router
+
+)
+
+# ----------------------------------------------------
+# Home
+# ----------------------------------------------------
+
+@app.get(
+
+    "/",
+
+    response_class=HTMLResponse
+
+)
+async def index(
+
+    request: Request
+
+):
+
+    if request.session.get("user"):
+
+        return templates.TemplateResponse(
+
+            request=request,
+
+            name="dashboard/index.html",
+
+            context={}
+
+        )
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="index.html",
+
+        context={}
+
+    )
+
+# ----------------------------------------------------
+# Health
+# ----------------------------------------------------
+
+@app.get(
+
+    "/health"
+
+)
 async def health():
 
     return {
+
         "application": "ADS ERP",
-        "version": "0.3.0",
+
+        "version": "0.4.1",
+
         "status": "running"
+
     }

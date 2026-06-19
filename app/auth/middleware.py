@@ -8,15 +8,13 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         path = request.url.path
 
-        # ----------------------------
-        # Public URLs
-        # ----------------------------
-
         public_urls = [
 
             "/",
 
             "/login",
+
+            "/logout",
 
             "/health",
 
@@ -28,29 +26,23 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         ]
 
-        # ----------------------------
-        # Allow Static Files
-        # ----------------------------
+        # Static Files
 
         if path.startswith("/static"):
 
             return await call_next(request)
 
-        if path.startswith("/favicon.ico"):
+        if path.startswith("/favicon"):
 
             return await call_next(request)
 
-        # ----------------------------
-        # Allow Public URLs
-        # ----------------------------
+        # Public URLs
 
         if path in public_urls:
 
             return await call_next(request)
 
-        # ----------------------------
-        # Session Check
-        # ----------------------------
+        # Session
 
         try:
 
@@ -58,13 +50,23 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         except Exception:
 
-            return await call_next(request)
+            return RedirectResponse(
+
+                "/login",
+
+                status_code=303
+
+            )
+
+        # Debug
+
+        print("MIDDLEWARE SESSION =", dict(session))
 
         if "user" not in session:
 
             return RedirectResponse(
 
-                url="/login?next=" + path,
+                url=f"/login?next={path}",
 
                 status_code=303
 

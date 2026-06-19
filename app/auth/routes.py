@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.config.database import get_db
 from app.users.service import UserService
+from app.auth.service import AuthService
 
 router = APIRouter()
 
@@ -17,13 +18,22 @@ templates = Jinja2Templates(
 )
 
 
+# ----------------------------------------------------
+# Login Page
+# ----------------------------------------------------
+
 @router.get(
     "/login",
     response_class=HTMLResponse
 )
 async def login_page(
+
     request: Request
+
 ):
+
+    # Temporarily always show login page
+    # (Disable auto redirect while debugging)
 
     return templates.TemplateResponse(
 
@@ -32,13 +42,21 @@ async def login_page(
         name="auth/login.html",
 
         context={
+
             "message": ""
+
         }
 
     )
 
 
-@router.post("/login")
+# ----------------------------------------------------
+# Login
+# ----------------------------------------------------
+
+@router.post(
+    "/login"
+)
 async def login(
 
     request: Request,
@@ -77,27 +95,64 @@ async def login(
 
         )
 
-    request.session["user"] = user.email
+    role = AuthService.get_role(
+
+        db,
+
+        user.role_id
+
+    )
+
+    request.session["user"] = {
+
+        "id": user.id,
+
+        "email": user.email,
+
+        "name": user.full_name,
+
+        "role_id": role.id,
+
+        "role_code": role.role_code,
+
+        "role_name": role.role_name
+
+    }
 
     request.session["name"] = user.full_name
 
+    print("=================================")
+    print("LOGIN SUCCESS")
+    print(request.session)
+    print("=================================")
+
     return RedirectResponse(
 
-        "/dashboard",
+        url="/dashboard",
 
         status_code=303
 
     )
 
 
-@router.get("/logout")
-async def logout(request: Request):
+# ----------------------------------------------------
+# Logout
+# ----------------------------------------------------
+
+@router.get(
+    "/logout"
+)
+async def logout(
+
+    request: Request
+
+):
 
     request.session.clear()
 
     return RedirectResponse(
 
-        url="/login?logout=1",
+        url="/login",
 
         status_code=303
 
