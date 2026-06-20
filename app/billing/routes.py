@@ -17,6 +17,7 @@ from app.customers.service import CustomerService
 from app.products.service import ProductService
 from app.inventory.service import InventoryService
 from app.accounts.service import AutoPostingService
+from app.billing.item_models import InvoiceItem
 from app.auth.dependencies import login_required
 
 from fastapi import Depends
@@ -332,5 +333,156 @@ async def view_invoice(
             "items": items
 
         }
+
+    )
+# ----------------------------------------------------
+# Edit Invoice
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/{invoice_id}/edit",
+    response_class=HTMLResponse
+)
+async def edit_invoice(
+
+    invoice_id: int,
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoice = BillingService.get_by_id(
+
+        db,
+
+        invoice_id
+
+    )
+
+    if invoice is None:
+
+        return RedirectResponse(
+
+            "/billing/list",
+
+            status_code=303
+
+        )
+
+    customers = CustomerService.get_all(db)
+
+    products = ProductService.get_all(db)
+
+    items = BillingService.get_items(
+
+        db,
+
+        invoice_id
+
+    )
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/edit.html",
+
+        context={
+
+            "invoice": invoice,
+
+            "customers": customers,
+
+            "products": products,
+
+            "items": items
+
+        }
+
+    )
+
+
+@router.post(
+    "/billing/{invoice_id}/edit"
+)
+async def update_invoice(
+
+    invoice_id: int,
+
+    customer_id: int = Form(...),
+
+    subtotal: float = Form(...),
+
+    discount: float = Form(0),
+
+    taxable_amount: float = Form(...),
+
+    cgst: float = Form(...),
+
+    sgst: float = Form(...),
+
+    igst: float = Form(0),
+
+    grand_total: float = Form(...),
+
+    payment_mode: str = Form(...),
+
+    remarks: str = Form(""),
+
+    product_id: list[int] = Form(...),
+
+    qty: list[float] = Form(...),
+
+    rate: list[float] = Form(...),
+
+    gst: list[float] = Form(...),
+
+    total: list[float] = Form(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoice = InvoiceCreate(
+
+        customer_id=customer_id,
+
+        subtotal=subtotal,
+
+        discount=discount,
+
+        taxable_amount=taxable_amount,
+
+        cgst=cgst,
+
+        sgst=sgst,
+
+        igst=igst,
+
+        grand_total=grand_total,
+
+        payment_mode=payment_mode,
+
+        remarks=remarks
+
+    )
+
+    BillingService.update(
+
+        db=db,
+
+        invoice_id=invoice_id,
+
+        data=invoice
+
+    )
+
+    return RedirectResponse(
+
+        url=f"/billing/view/{invoice_id}",
+
+        status_code=303
 
     )

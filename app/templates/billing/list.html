@@ -4,99 +4,246 @@
 
 <div class="card">
 
-<div class="card-header">
+    <div class="card-header">
 
-<div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-center">
 
-<h3 class="card-title">
+            <h3 class="card-title">
 
-Invoices
+                <i class="fas fa-file-invoice"></i>
 
-</h3>
+                GST Invoice List
+
+            </h3>
+
+            <a
+                href="/billing"
+                class="btn btn-primary">
+
+                <i class="fas fa-plus"></i>
+
+                New Invoice
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover table-striped">
+
+                <thead class="thead-light">
+
+                    <tr>
+
+                        <th width="12%">
+
+                            Invoice No
+
+                        </th>
+
+                        <th width="12%">
+
+                            Date
+
+                        </th>
+
+                        <th>
+
+                            Customer
+
+                        </th>
+
+                        <th class="text-right">
+
+                            Amount
+
+                        </th>
+
+                        <th>
+
+                            Payment
+
+                        </th>
+
+                        <th>
+
+                            Status
+
+                        </th>
+
+                        <th width="18%" class="text-center">
+
+                            Actions
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for invoice in invoices %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+
+                                {{ invoice.invoice_no }}
+
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            {{ invoice.invoice_date }}
+
+                        </td>
+
+                        <td>
+
+                            {% if invoice.customer %}
+
+                                {{ invoice.customer.customer_name }}
+
+                            {% else %}
+
+                                Customer #{{ invoice.customer_id }}
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.grand_total|float) }}
+
+                        </td>
+
+                        <td>
+
+                            {% if invoice.payment_mode == "Cash" %}
+
+                                <span class="badge badge-success">
+
+                                    Cash
+
+                                </span>
+
+                            {% elif invoice.payment_mode == "UPI" %}
+
+                                <span class="badge badge-info">
+
+                                    UPI
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-primary">
+
+                                    {{ invoice.payment_mode }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-success">
+
+                                {{ invoice.status }}
+
+                            </span>
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <a
+
+                                href="/billing/view/{{ invoice.id }}"
+
+                                class="btn btn-info btn-sm"
+
+                                title="View">
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>
 
 <a
-href="/billing"
-class="btn btn-primary">
 
-New Invoice
+    href="/billing/{{ invoice.id }}/edit"
+
+    class="btn btn-warning btn-sm">
+
+    <i class="fas fa-edit"></i>
 
 </a>
+                            <a
 
-</div>
+                                href="/billing/print/{{ invoice.id }}"
 
-</div>
+                                target="_blank"
 
-<div class="card-body">
+                                class="btn btn-secondary btn-sm"
 
-<table class="table table-bordered table-striped">
+                                title="Print">
 
-<thead>
+                                <i class="fas fa-print"></i>
 
-<tr>
+                            </a>
 
-<th>Invoice No</th>
+                            <a
 
-<th>Customer ID</th>
+                                href="/billing/{{ invoice.id }}/delete"
 
-<th>Grand Total</th>
+                                class="btn btn-danger btn-sm"
 
-<th>Payment</th>
+                                title="Delete"
 
-<th>Status</th>
+                                onclick="return confirm('Delete this invoice?');">
 
-</tr>
+                                <i class="fas fa-trash"></i>
 
-</thead>
+                            </a>
 
-<tbody>
+                        </td>
 
-{% for invoice in invoices %}
+                    </tr>
 
-<tr>
+                    {% else %}
 
-<td>
+                    <tr>
 
-{{ invoice.invoice_no }}
+                        <td colspan="7" class="text-center text-muted">
 
-</td>
+                            No invoices found.
 
-<td>
+                        </td>
 
-{{ invoice.customer_id }}
+                    </tr>
 
-</td>
+                    {% endfor %}
 
-<td>
+                </tbody>
 
-₹ {{ invoice.grand_total }}
+            </table>
 
-</td>
+        </div>
 
-<td>
-
-{{ invoice.payment_mode }}
-
-</td>
-
-<td>
-
-<span class="badge badge-success">
-
-Completed
-
-</span>
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
+    </div>
 
 </div>
 
