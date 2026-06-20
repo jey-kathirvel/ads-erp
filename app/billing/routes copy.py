@@ -471,13 +471,23 @@ async def update_invoice(
 
     BillingService.update(
 
-        db=db,
+    db=db,
 
-        invoice_id=invoice_id,
+    invoice_id=invoice_id,
 
-        data=invoice
+    data=invoice,
 
-    )
+    product_id=product_id,
+
+    qty=qty,
+
+    rate=rate,
+
+    gst=gst,
+
+    total=total
+
+)
 
     return RedirectResponse(
 

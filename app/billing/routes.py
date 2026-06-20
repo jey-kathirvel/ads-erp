@@ -496,3 +496,82 @@ async def update_invoice(
         status_code=303
 
     )
+# ----------------------------------------------------
+# Delete Invoice
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/{invoice_id}/delete"
+)
+async def delete_invoice(
+
+    invoice_id: int,
+
+    db: Session = Depends(get_db)
+
+):
+
+    BillingService.delete(
+
+        db,
+
+        invoice_id
+
+    )
+
+    return RedirectResponse(
+
+        url="/billing/list",
+
+        status_code=303
+
+    )
+# ----------------------------------------------------
+# Print Invoice
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/print/{invoice_id}",
+    response_class=HTMLResponse
+)
+async def print_invoice(
+
+    invoice_id: int,
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+    
+    invoice = BillingService.get_by_id(
+
+        db,
+
+        invoice_id
+
+    )
+
+    items = BillingService.get_items(
+
+        db,
+
+        invoice_id
+
+    )
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/view.html",
+
+        context={
+
+            "invoice": invoice,
+
+            "items": items
+
+        }
+
+    )
