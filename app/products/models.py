@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Numeric
 from sqlalchemy import String
 from sqlalchemy import Text
+from app.units.models import Unit
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 

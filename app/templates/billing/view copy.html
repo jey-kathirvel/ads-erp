@@ -1,0 +1,427 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card card-primary card-outline">
+
+    <div class="card-header">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <img
+                    src="/static/uploads/logo/logo.png"
+                    style="height:70px;">
+
+            </div>
+
+            <div class="text-center">
+
+                <h3 class="mb-0">
+
+                    ADS AI TECHNOLOGIES
+
+                </h3>
+
+                <small>
+
+                    GST BILLING & INVENTORY ERP
+
+                </small>
+
+                <br>
+
+                <strong>
+
+                    TAX INVOICE
+
+                </strong>
+
+            </div>
+
+            <div class="text-right">
+
+                <strong>
+
+                    Invoice No
+
+                </strong>
+
+                <br>
+
+                {{ invoice.invoice_no }}
+
+                <br><br>
+
+                <strong>
+
+                    Date
+
+                </strong>
+
+                <br>
+
+                {{ invoice.invoice_date }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-4">
+
+            <div class="col-md-6">
+
+                <h5>
+
+                    Customer Details
+
+                </h5>
+
+                <hr>
+
+                {% if invoice.customer %}
+
+                    <strong>
+
+                        {{ invoice.customer.customer_name }}
+
+                    </strong>
+
+                    <br>
+
+                    {{ invoice.customer.mobile }}
+
+                    <br>
+
+                    {{ invoice.customer.email }}
+
+                    <br>
+
+                    {{ invoice.customer.city }}
+
+                {% else %}
+
+                    Customer ID :
+
+                    {{ invoice.customer_id }}
+
+                {% endif %}
+
+            </div>
+
+            <div class="col-md-6 text-right">
+
+                <h5>
+
+                    Payment
+
+                </h5>
+
+                <hr>
+
+                <strong>
+
+                    Mode :
+
+                </strong>
+
+                {{ invoice.payment_mode }}
+
+                <br>
+
+                <strong>
+
+                    Status :
+
+                </strong>
+
+                <span class="badge badge-success">
+
+                    {{ invoice.status }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <table class="table table-bordered table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th width="5%">
+
+                        #
+
+                    </th>
+
+                    <th>
+
+                        Product
+
+                    </th>
+
+                    <th class="text-center">
+
+                        Qty
+
+                    </th>
+
+                    <th class="text-right">
+
+                        Rate
+
+                    </th>
+
+                    <th class="text-center">
+
+                        GST %
+
+                    </th>
+
+                    <th class="text-right">
+
+                        Total
+
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in items %}
+
+                <tr>
+
+                    <td>
+
+                        {{ loop.index }}
+
+                    </td>
+
+                    <td>
+
+                        {% if item.product %}
+
+                            {{ item.product.product_name }}
+
+                        {% else %}
+
+                            Product #{{ item.product_id }}
+
+                        {% endif %}
+
+                    </td>
+
+                    <td class="text-center">
+
+                        {{ item.qty }}
+
+                    </td>
+
+                    <td class="text-right">
+
+                        Rs {{ "%.2f"|format(item.rate|float) }}
+
+                    </td>
+
+                    <td class="text-center">
+
+                        {{ item.gst_percentage }} %
+
+                    </td>
+
+                    <td class="text-right">
+
+                        Rs {{ "%.2f"|format(item.total|float) }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <div class="row mt-4">
+
+            <div class="col-md-7">
+
+                <strong>
+
+                    Remarks
+
+                </strong>
+
+                <hr>
+
+                {{ invoice.remarks or "-" }}
+
+            </div>
+
+            <div class="col-md-5">
+
+                <table class="table table-bordered">
+
+                    <tr>
+
+                        <th>
+
+                            Subtotal
+
+                        </th>
+
+                        <td class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.subtotal|float) }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            Discount
+
+                        </th>
+
+                        <td class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.discount|float) }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            Taxable
+
+                        </th>
+
+                        <td class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.taxable_amount|float) }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            CGST
+
+                        </th>
+
+                        <td class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.cgst|float) }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <th>
+
+                            SGST
+
+                        </th>
+
+                        <td class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.sgst|float) }}
+
+                        </td>
+
+                    </tr>
+
+                    <tr class="table-success">
+
+                        <th>
+
+                            Grand Total
+
+                        </th>
+
+                        <th class="text-right">
+
+                            Rs {{ "%.2f"|format(invoice.grand_total|float) }}
+
+                        </th>
+
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-footer text-center">
+
+        <a
+            href="/billing/list"
+            class="btn btn-secondary">
+
+            <i class="fas fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+        <a
+            href="/billing/{{ invoice.id }}/edit"
+            class="btn btn-warning">
+
+            <i class="fas fa-edit"></i>
+
+            Edit
+
+        </a>
+
+        <button
+            onclick="window.print()"
+            class="btn btn-success">
+
+            <i class="fas fa-print"></i>
+
+            Print
+
+        </button>
+
+        <a
+            href="/billing/print/{{ invoice.id }}"
+            class="btn btn-danger">
+
+            <i class="fas fa-file-pdf"></i>
+
+            PDF
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

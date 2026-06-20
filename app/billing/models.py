@@ -8,6 +8,7 @@ from sqlalchemy import Numeric
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
@@ -31,6 +32,11 @@ class Invoice(Base):
 
     customer_id: Mapped[int] = mapped_column(
         ForeignKey("customers.id")
+    )
+
+    customer = relationship(
+        "Customer",
+        lazy="joined"
     )
 
     subtotal: Mapped[float] = mapped_column(

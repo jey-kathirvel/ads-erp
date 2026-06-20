@@ -15,8 +15,23 @@ from app.supplier_payments.schemas import SupplierPaymentCreate
 from app.supplier_payments.service import SupplierPaymentService
 
 from app.accounts.service import PaymentPostingService
+from app.auth.dependencies import login_required
 
-router = APIRouter()
+
+from fastapi import Depends
+
+from app.auth.dependencies import login_required
+
+router = APIRouter(
+
+    dependencies=[
+
+        Depends(login_required)
+
+    ]
+
+)
+
 
 templates = Jinja2Templates(
     directory="app/templates"

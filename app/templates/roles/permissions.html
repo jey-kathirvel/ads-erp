@@ -1,0 +1,181 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+
+Role Permissions
+
+{% endblock %}
+
+{% block content %}
+
+<section class="content">
+
+<div class="container-fluid">
+
+<div class="card">
+
+<div class="card-header">
+
+<h3 class="card-title">
+
+<i class="fas fa-lock"></i>
+
+Permissions - {{ role.role_name }}
+
+</h3>
+
+</div>
+
+<form method="post">
+
+<div class="card-body">
+
+<table class="table table-bordered table-hover">
+
+<thead>
+
+<tr>
+
+<th width="35%">
+
+Module
+
+</th>
+
+<th class="text-center">
+
+View
+
+</th>
+
+<th class="text-center">
+
+Add
+
+</th>
+
+<th class="text-center">
+
+Edit
+
+</th>
+
+<th class="text-center">
+
+Delete
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for permission in permissions %}
+
+<tr>
+
+<td>
+
+<strong>
+
+{{ permission.module_name }}
+
+</strong>
+
+</td>
+
+<td class="text-center">
+
+<input
+
+type="checkbox"
+
+name="view_{{ permission.id }}"
+
+{% if permission.can_view %}checked{% endif %}>
+
+</td>
+
+<td class="text-center">
+
+<input
+
+type="checkbox"
+
+name="add_{{ permission.id }}"
+
+{% if permission.can_add %}checked{% endif %}>
+
+</td>
+
+<td class="text-center">
+
+<input
+
+type="checkbox"
+
+name="edit_{{ permission.id }}"
+
+{% if permission.can_edit %}checked{% endif %}>
+
+</td>
+
+<td class="text-center">
+
+<input
+
+type="checkbox"
+
+name="delete_{{ permission.id }}"
+
+{% if permission.can_delete %}checked{% endif %}>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card-footer">
+
+<button
+
+type="submit"
+
+class="btn btn-success">
+
+<i class="fas fa-save"></i>
+
+Save Permissions
+
+</button>
+
+<a
+
+href="/roles"
+
+class="btn btn-secondary">
+
+Back
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

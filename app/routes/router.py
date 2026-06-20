@@ -13,98 +13,87 @@ from app.accounts.routes import router as accounts_router
 from app.supplier_payments.routes import router as supplier_payment_router
 from app.company.routes import router as company_router
 from app.auth.routes import router as auth_router
-
+from app.users.routes import router as users_router
+from app.roles.routes import router as roles_router
+#from app.menu.routes import router as menu_router
+from app.permissions.routes import router as permission_router
 
 api_router = APIRouter()
 
 # Dashboard
-api_router.include_router(
-    dashboard_router,
-    tags=["Dashboard"]
-)
+api_router.include_router(dashboard_router, tags=["Dashboard"])
 
 # Customers
-api_router.include_router(
-    customer_router,
-    tags=["Customers"]
-)
+api_router.include_router(customer_router, tags=["Customers"])
 
 # Products
-api_router.include_router(
-    product_router,
-    tags=["Products"]
-)
+api_router.include_router(product_router, tags=["Products"])
 
 # Categories
-api_router.include_router(
-    category_router,
-    tags=["Categories"]
-)
+api_router.include_router(category_router, tags=["Categories"])
 
 # Billing
-api_router.include_router(
-    billing_router,
-    tags=["Billing"]
-)
+api_router.include_router(billing_router, tags=["Billing"])
 
 # Inventory
-api_router.include_router(
-    inventory_router,
-    tags=["Inventory"]
-)
+api_router.include_router(inventory_router, tags=["Inventory"])
 
 # Suppliers
+api_router.include_router(supplier_router, tags=["Suppliers"])
+
+# Purchase
+api_router.include_router(purchase_router, tags=["Purchase"])
+
+# Reports
+api_router.include_router(reports_router, tags=["Reports"])
+
+# Accounts
+api_router.include_router(accounts_router, tags=["Accounts"])
+
+# Supplier Payments
 api_router.include_router(
-    supplier_router,
-    tags=["Suppliers"]
-)
-
-#Purchase
-api_router.include_router(
-
-    purchase_router,
-
-    tags=["Purchase"]
-
-)
-
-#Reports
-api_router.include_router(
-
-    reports_router,
-
-    tags=["Reports"]
-
-)
-#Accounts
-api_router.include_router(
-
-    accounts_router,
-
-    tags=["Accounts"]
-
-)
-#SupplierPayments
-api_router.include_router(
-
     supplier_payment_router,
-
     tags=["Supplier Payments"]
-
 )
-#company
-api_router.include_router(
 
+# Company
+api_router.include_router(
     company_router,
-
     tags=["Company"]
-
 )
-#Authentication
+
+# Authentication
+api_router.include_router(
+    auth_router,
+    tags=["Authentication"]
+)
+
+# Users
+api_router.include_router(
+    users_router,
+    tags=["Users"]
+)
+#Roles
 api_router.include_router(
 
-    auth_router,
+    roles_router,
 
-    tags=["Authentication"]
+    tags=["Roles"]
+
+)
+#Menu
+#api_router.include_router(
+
+#    menu_router,
+
+#    tags=["Menu"]
+
+#)
+#Permissions
+api_router.include_router(
+
+    permission_router,
+
+    tags=["Permissions"]
 
 )
