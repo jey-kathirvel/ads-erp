@@ -1,148 +1,136 @@
 {% extends "layouts/base.html" %}
-<style>
-    .card-header img {
 
-        object-fit: contain;
-
-    }
-
-    @media print {
-
-        .card-header {
-
-            padding: 20px;
-
-        }
-
-    }
-</style>
 {% block content %}
 
 <div class="card card-primary card-outline">
 
-    <div class="card-header">
+<div class="card-header">
 
-        <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center justify-content-between">
 
-            <!-- Logo -->
+        <!-- Logo -->
 
-            <div style="width:150px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:150px;display:flex;align-items:center;justify-content:center;">
 
-                {% if company and company.logo %}
+            {% if company and company.logo %}
 
-                <img src="/static/uploads/logo/{{ company.logo }}" style="max-width:120px;max-height:90px;">
+                <img
+                    src="/static/uploads/logo/{{ company.logo }}"
+                    style="max-width:120px;max-height:90px;">
 
-                {% else %}
+            {% else %}
 
-                <img src="/static/uploads/logo/logo.png" style="max-width:120px;max-height:90px;">
+                <img
+                    src="/static/uploads/logo/logo.png"
+                    style="max-width:120px;max-height:90px;">
 
+            {% endif %}
+
+        </div>
+
+        <!-- Company Details -->
+
+        <div class="text-center flex-fill">
+
+            <h2 class="mb-1">
+
+                {{ company.company_name if company else "ADS ERP" }}
+
+            </h2>
+
+            <div>
+
+                {{ company.address if company else "" }}
+
+            </div>
+
+            <div>
+
+                {{ company.city if company else "" }}
+
+                {% if company and company.state %}
+                    ,
+                    {{ company.state }}
+                {% endif %}
+
+                {% if company and company.pincode %}
+                    -
+                    {{ company.pincode }}
                 {% endif %}
 
             </div>
 
-            <!-- Company Details -->
+            <div>
 
-            <div class="text-center flex-fill">
+                <strong>Mobile :</strong>
 
-                <h2 class="mb-1">
+                {{ company.mobile if company else "" }}
 
-                    {{ company.company_name if company else "ADS ERP" }}
+                |
 
-                </h2>
+                <strong>Email :</strong>
 
-                <div>
-
-                    {{ company.address if company else "" }}
-
-                </div>
-
-                <div>
-
-                    {{ company.city if company else "" }}
-
-                    {% if company and company.state %}
-                    ,
-                    {{ company.state }}
-                    {% endif %}
-
-                    {% if company and company.pincode %}
-                    -
-                    {{ company.pincode }}
-                    {% endif %}
-
-                </div>
-
-                <div>
-
-                    <strong>Mobile :</strong>
-
-                    {{ company.mobile if company else "" }}
-
-                    |
-
-                    <strong>Email :</strong>
-
-                    {{ company.email if company else "" }}
-
-                </div>
-
-                <div>
-
-                    <strong>Website :</strong>
-
-                    {{ company.website if company else "" }}
-
-                </div>
-
-                <div>
-
-                    <strong>GSTIN :</strong>
-
-                    {{ company.gstin if company else "" }}
-
-                </div>
-
-                <br>
-
-                <h5>
-
-                    TAX INVOICE
-
-                </h5>
+                {{ company.email if company else "" }}
 
             </div>
 
-            <!-- Invoice Details -->
+            <div>
 
-            <div style="width:180px;" class="text-right">
+                <strong>Website :</strong>
 
-                <strong>
-
-                    Invoice No
-
-                </strong>
-
-                <br>
-
-                {{ invoice.invoice_no }}
-
-                <br><br>
-
-                <strong>
-
-                    Date
-
-                </strong>
-
-                <br>
-
-                {{ invoice.invoice_date }}
+                {{ company.website if company else "" }}
 
             </div>
+
+            <div>
+
+                <strong>GSTIN :</strong>
+
+                {{ company.gstin if company else "" }}
+
+            </div>
+
+            <br>
+
+            <h5>
+
+                TAX INVOICE
+
+            </h5>
+
+        </div>
+
+        <!-- Invoice Details -->
+
+        <div style="width:180px;" class="text-right">
+
+            <strong>
+
+                Invoice No
+
+            </strong>
+
+            <br>
+
+            {{ invoice.invoice_no }}
+
+            <br><br>
+
+            <strong>
+
+                Date
+
+            </strong>
+
+            <br>
+
+            {{ invoice.invoice_date }}
 
         </div>
 
     </div>
+
+</div>
 
     <div class="card-body">
 
@@ -160,29 +148,29 @@
 
                 {% if invoice.customer %}
 
-                <strong>
+                    <strong>
 
-                    {{ invoice.customer.customer_name }}
+                        {{ invoice.customer.customer_name }}
 
-                </strong>
+                    </strong>
 
-                <br>
+                    <br>
 
-                {{ invoice.customer.mobile }}
+                    {{ invoice.customer.mobile }}
 
-                <br>
+                    <br>
 
-                {{ invoice.customer.email }}
+                    {{ invoice.customer.email }}
 
-                <br>
+                    <br>
 
-                {{ invoice.customer.city }}
+                    {{ invoice.customer.city }}
 
                 {% else %}
 
-                Customer ID :
+                    Customer ID :
 
-                {{ invoice.customer_id }}
+                    {{ invoice.customer_id }}
 
                 {% endif %}
 
@@ -286,11 +274,11 @@
 
                         {% if item.product %}
 
-                        {{ item.product.product_name }}
+                            {{ item.product.product_name }}
 
                         {% else %}
 
-                        Product #{{ item.product_id }}
+                            Product #{{ item.product_id }}
 
                         {% endif %}
 
@@ -454,7 +442,9 @@
 
     <div class="card-footer text-center">
 
-        <a href="/billing/list" class="btn btn-secondary">
+        <a
+            href="/billing/list"
+            class="btn btn-secondary">
 
             <i class="fas fa-arrow-left"></i>
 
@@ -462,7 +452,9 @@
 
         </a>
 
-        <a href="/billing/{{ invoice.id }}/edit" class="btn btn-warning">
+        <a
+            href="/billing/{{ invoice.id }}/edit"
+            class="btn btn-warning">
 
             <i class="fas fa-edit"></i>
 
@@ -470,7 +462,9 @@
 
         </a>
 
-        <button onclick="window.print()" class="btn btn-success">
+        <button
+            onclick="window.print()"
+            class="btn btn-success">
 
             <i class="fas fa-print"></i>
 
@@ -478,7 +472,9 @@
 
         </button>
 
-        <a href="/billing/print/{{ invoice.id }}" class="btn btn-danger">
+        <a
+            href="/billing/print/{{ invoice.id }}"
+            class="btn btn-danger">
 
             <i class="fas fa-file-pdf"></i>
 

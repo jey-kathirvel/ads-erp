@@ -1,120 +1,46 @@
 {% extends "layouts/base.html" %}
-<style>
-    .card-header img {
 
-        object-fit: contain;
-
-    }
-
-    @media print {
-
-        .card-header {
-
-            padding: 20px;
-
-        }
-
-    }
-</style>
 {% block content %}
 
 <div class="card card-primary card-outline">
 
     <div class="card-header">
 
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex justify-content-between align-items-center">
 
-            <!-- Logo -->
+            <div>
 
-            <div style="width:150px;display:flex;align-items:center;justify-content:center;">
-
-                {% if company and company.logo %}
-
-                <img src="/static/uploads/logo/{{ company.logo }}" style="max-width:120px;max-height:90px;">
-
-                {% else %}
-
-                <img src="/static/uploads/logo/logo.png" style="max-width:120px;max-height:90px;">
-
-                {% endif %}
+                <img
+                    src="/static/uploads/logo/logo.png"
+                    style="height:70px;">
 
             </div>
 
-            <!-- Company Details -->
+            <div class="text-center">
 
-            <div class="text-center flex-fill">
+                <h3 class="mb-0">
 
-                <h2 class="mb-1">
+                    ADS AI TECHNOLOGIES
 
-                    {{ company.company_name if company else "ADS ERP" }}
+                </h3>
 
-                </h2>
+                <small>
 
-                <div>
+                    GST BILLING & INVENTORY ERP
 
-                    {{ company.address if company else "" }}
-
-                </div>
-
-                <div>
-
-                    {{ company.city if company else "" }}
-
-                    {% if company and company.state %}
-                    ,
-                    {{ company.state }}
-                    {% endif %}
-
-                    {% if company and company.pincode %}
-                    -
-                    {{ company.pincode }}
-                    {% endif %}
-
-                </div>
-
-                <div>
-
-                    <strong>Mobile :</strong>
-
-                    {{ company.mobile if company else "" }}
-
-                    |
-
-                    <strong>Email :</strong>
-
-                    {{ company.email if company else "" }}
-
-                </div>
-
-                <div>
-
-                    <strong>Website :</strong>
-
-                    {{ company.website if company else "" }}
-
-                </div>
-
-                <div>
-
-                    <strong>GSTIN :</strong>
-
-                    {{ company.gstin if company else "" }}
-
-                </div>
+                </small>
 
                 <br>
 
-                <h5>
+                <strong>
 
                     TAX INVOICE
 
-                </h5>
+                </strong>
 
             </div>
 
-            <!-- Invoice Details -->
-
-            <div style="width:180px;" class="text-right">
+            <div class="text-right">
 
                 <strong>
 
@@ -160,29 +86,29 @@
 
                 {% if invoice.customer %}
 
-                <strong>
+                    <strong>
 
-                    {{ invoice.customer.customer_name }}
+                        {{ invoice.customer.customer_name }}
 
-                </strong>
+                    </strong>
 
-                <br>
+                    <br>
 
-                {{ invoice.customer.mobile }}
+                    {{ invoice.customer.mobile }}
 
-                <br>
+                    <br>
 
-                {{ invoice.customer.email }}
+                    {{ invoice.customer.email }}
 
-                <br>
+                    <br>
 
-                {{ invoice.customer.city }}
+                    {{ invoice.customer.city }}
 
                 {% else %}
 
-                Customer ID :
+                    Customer ID :
 
-                {{ invoice.customer_id }}
+                    {{ invoice.customer_id }}
 
                 {% endif %}
 
@@ -286,11 +212,11 @@
 
                         {% if item.product %}
 
-                        {{ item.product.product_name }}
+                            {{ item.product.product_name }}
 
                         {% else %}
 
-                        Product #{{ item.product_id }}
+                            Product #{{ item.product_id }}
 
                         {% endif %}
 
@@ -454,7 +380,9 @@
 
     <div class="card-footer text-center">
 
-        <a href="/billing/list" class="btn btn-secondary">
+        <a
+            href="/billing/list"
+            class="btn btn-secondary">
 
             <i class="fas fa-arrow-left"></i>
 
@@ -462,7 +390,9 @@
 
         </a>
 
-        <a href="/billing/{{ invoice.id }}/edit" class="btn btn-warning">
+        <a
+            href="/billing/{{ invoice.id }}/edit"
+            class="btn btn-warning">
 
             <i class="fas fa-edit"></i>
 
@@ -470,7 +400,9 @@
 
         </a>
 
-        <button onclick="window.print()" class="btn btn-success">
+        <button
+            onclick="window.print()"
+            class="btn btn-success">
 
             <i class="fas fa-print"></i>
 
@@ -478,7 +410,9 @@
 
         </button>
 
-        <a href="/billing/print/{{ invoice.id }}" class="btn btn-danger">
+        <a
+            href="/billing/print/{{ invoice.id }}"
+            class="btn btn-danger">
 
             <i class="fas fa-file-pdf"></i>
 

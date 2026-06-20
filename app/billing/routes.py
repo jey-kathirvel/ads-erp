@@ -19,6 +19,7 @@ from app.inventory.service import InventoryService
 from app.accounts.service import AutoPostingService
 from app.billing.item_models import InvoiceItem
 from app.auth.dependencies import login_required
+from app.company.service import CompanyService
 
 from fastapi import Depends
 
@@ -319,20 +320,26 @@ async def view_invoice(
         invoice_id
 
     )
+    company = CompanyService.get(
 
+    db
+
+    )
     return templates.TemplateResponse(
 
         request=request,
 
         name="billing/view.html",
 
-        context={
+    context={
 
-            "invoice": invoice,
+    "invoice": invoice,
 
-            "items": items
+    "items": items,
 
-        }
+    "company": company
+
+    }
 
     )
 # ----------------------------------------------------
@@ -559,19 +566,25 @@ async def print_invoice(
         invoice_id
 
     )
+    company = CompanyService.get(
 
+    db
+
+    )
     return templates.TemplateResponse(
 
         request=request,
 
         name="billing/view.html",
 
-        context={
+    context={
 
-            "invoice": invoice,
+    "invoice": invoice,
 
-            "items": items
+    "items": items,
 
-        }
+    "company": company
+
+    }
 
     )
