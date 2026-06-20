@@ -143,17 +143,7 @@ class BillingService:
 
         invoice_id: int,
 
-        data: InvoiceCreate,
-
-        product_id: list[int],
-
-        qty: list[float],
-
-        rate: list[float],
-
-        gst: list[float],
-
-        total: list[float]
+        data: InvoiceCreate
 
     ):
 
@@ -175,10 +165,6 @@ class BillingService:
 
             return None
 
-        # -----------------------------
-        # Update Invoice Header
-        # -----------------------------
-
         invoice.customer_id = data.customer_id
 
         invoice.subtotal = data.subtotal
@@ -198,48 +184,6 @@ class BillingService:
         invoice.payment_mode = data.payment_mode
 
         invoice.remarks = data.remarks
-
-        db.commit()
-
-        # -----------------------------
-        # Delete Existing Items
-        # -----------------------------
-
-        db.query(
-
-            InvoiceItem
-
-        ).filter(
-
-            InvoiceItem.invoice_id == invoice_id
-
-        ).delete()
-
-        db.commit()
-
-        # -----------------------------
-        # Insert Updated Items
-        # -----------------------------
-
-        for i in range(len(product_id)):
-
-            item = InvoiceItem(
-
-                invoice_id=invoice_id,
-
-                product_id=product_id[i],
-
-                qty=qty[i],
-
-                rate=rate[i],
-
-                gst_percentage=gst[i],
-
-                total=total[i]
-
-            )
-
-            db.add(item)
 
         db.commit()
 
