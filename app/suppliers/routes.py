@@ -16,7 +16,20 @@ from app.suppliers.ledger_service import SupplierLedgerService
 from app.purchase.service import PurchaseService
 from app.auth.dependencies import login_required
 
-router = APIRouter()
+from fastapi import Depends
+
+from app.auth.dependencies import login_required
+
+router = APIRouter(
+
+    dependencies=[
+
+        Depends(login_required)
+
+    ]
+
+)
+
 
 templates = Jinja2Templates(
     directory="app/templates"
@@ -88,7 +101,55 @@ async def create_supplier_page(
 
     )
 
+# ----------------------------------------------------
+# Edit Supplier Page
+# ----------------------------------------------------
 
+@router.get(
+    "/suppliers/{supplier_id}/edit",
+    response_class=HTMLResponse
+)
+async def edit_supplier_page(
+
+    supplier_id: int,
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+
+    supplier = SupplierService.get_by_id(
+
+        db,
+
+        supplier_id
+
+    )
+
+    if supplier is None:
+
+        return RedirectResponse(
+
+            "/suppliers",
+
+            status_code=303
+
+        )
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="suppliers/edit.html",
+
+        context={
+
+            "supplier": supplier
+
+        }
+
+    )
 # ----------------------------------------------------
 # Save Supplier
 # ----------------------------------------------------
@@ -163,7 +224,84 @@ async def create_supplier(
         status_code=303
 
     )
+# ----------------------------------------------------
+# Update Supplier
+# ----------------------------------------------------
 
+@router.post("/suppliers/{supplier_id}/edit")
+async def update_supplier(
+
+    supplier_id: int,
+
+    supplier_name: str = Form(...),
+
+    contact_person: str = Form(""),
+
+    mobile: str = Form(""),
+
+    email: str = Form(""),
+
+    gstin: str = Form(""),
+
+    address1: str = Form(""),
+
+    address2: str = Form(""),
+
+    city: str = Form(""),
+
+    state: str = Form(""),
+
+    pincode: str = Form(""),
+
+    opening_balance: float = Form(0),
+
+    db: Session = Depends(get_db)
+
+):
+
+    supplier = SupplierCreate(
+
+        supplier_name=supplier_name,
+
+        contact_person=contact_person,
+
+        mobile=mobile,
+
+        email=email,
+
+        gstin=gstin,
+
+        address1=address1,
+
+        address2=address2,
+
+        city=city,
+
+        state=state,
+
+        pincode=pincode,
+
+        opening_balance=opening_balance
+
+    )
+
+    SupplierService.update(
+
+        db,
+
+        supplier_id,
+
+        supplier
+
+    )
+
+    return RedirectResponse(
+
+        url="/suppliers",
+
+        status_code=303
+
+    )
 
 # ----------------------------------------------------
 # Supplier Ledger

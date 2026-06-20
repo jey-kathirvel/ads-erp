@@ -17,9 +17,24 @@ from app.customers.service import CustomerService
 from app.products.service import ProductService
 from app.inventory.service import InventoryService
 from app.accounts.service import AutoPostingService
+from app.billing.item_models import InvoiceItem
+from app.auth.dependencies import login_required
+from app.company.service import CompanyService
+
+from fastapi import Depends
+
 from app.auth.dependencies import login_required
 
-router = APIRouter()
+router = APIRouter(
+
+    dependencies=[
+
+        Depends(login_required)
+
+    ]
+
+)
+
 
 templates = Jinja2Templates(
     directory="app/templates"
@@ -305,19 +320,271 @@ async def view_invoice(
         invoice_id
 
     )
+    company = CompanyService.get(
 
+    db
+
+    )
     return templates.TemplateResponse(
 
         request=request,
 
         name="billing/view.html",
 
+    context={
+
+    "invoice": invoice,
+
+    "items": items,
+
+    "company": company
+
+    }
+
+    )
+# ----------------------------------------------------
+# Edit Invoice
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/{invoice_id}/edit",
+    response_class=HTMLResponse
+)
+async def edit_invoice(
+
+    invoice_id: int,
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoice = BillingService.get_by_id(
+
+        db,
+
+        invoice_id
+
+    )
+
+    if invoice is None:
+
+        return RedirectResponse(
+
+            "/billing/list",
+
+            status_code=303
+
+        )
+
+    customers = CustomerService.get_all(db)
+
+    products = ProductService.get_all(db)
+
+    items = BillingService.get_items(
+
+        db,
+
+        invoice_id
+
+    )
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/edit.html",
+
         context={
 
             "invoice": invoice,
 
+            "customers": customers,
+
+            "products": products,
+
             "items": items
 
         }
+
+    )
+
+
+@router.post(
+    "/billing/{invoice_id}/edit"
+)
+async def update_invoice(
+
+    invoice_id: int,
+
+    customer_id: int = Form(...),
+
+    subtotal: float = Form(...),
+
+    discount: float = Form(0),
+
+    taxable_amount: float = Form(...),
+
+    cgst: float = Form(...),
+
+    sgst: float = Form(...),
+
+    igst: float = Form(0),
+
+    grand_total: float = Form(...),
+
+    payment_mode: str = Form(...),
+
+    remarks: str = Form(""),
+
+    product_id: list[int] = Form(...),
+
+    qty: list[float] = Form(...),
+
+    rate: list[float] = Form(...),
+
+    gst: list[float] = Form(...),
+
+    total: list[float] = Form(...),
+
+    db: Session = Depends(get_db)
+
+):
+
+    invoice = InvoiceCreate(
+
+        customer_id=customer_id,
+
+        subtotal=subtotal,
+
+        discount=discount,
+
+        taxable_amount=taxable_amount,
+
+        cgst=cgst,
+
+        sgst=sgst,
+
+        igst=igst,
+
+        grand_total=grand_total,
+
+        payment_mode=payment_mode,
+
+        remarks=remarks
+
+    )
+
+    BillingService.update(
+
+    db=db,
+
+    invoice_id=invoice_id,
+
+    data=invoice,
+
+    product_id=product_id,
+
+    qty=qty,
+
+    rate=rate,
+
+    gst=gst,
+
+    total=total
+
+)
+
+    return RedirectResponse(
+
+        url=f"/billing/view/{invoice_id}",
+
+        status_code=303
+
+    )
+# ----------------------------------------------------
+# Delete Invoice
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/{invoice_id}/delete"
+)
+async def delete_invoice(
+
+    invoice_id: int,
+
+    db: Session = Depends(get_db)
+
+):
+
+    BillingService.delete(
+
+        db,
+
+        invoice_id
+
+    )
+
+    return RedirectResponse(
+
+        url="/billing/list",
+
+        status_code=303
+
+    )
+# ----------------------------------------------------
+# Print Invoice
+# ----------------------------------------------------
+
+@router.get(
+    "/billing/print/{invoice_id}",
+    response_class=HTMLResponse
+)
+async def print_invoice(
+
+    invoice_id: int,
+
+    request: Request,
+
+    db: Session = Depends(get_db)
+
+):
+    
+    invoice = BillingService.get_by_id(
+
+        db,
+
+        invoice_id
+
+    )
+
+    items = BillingService.get_items(
+
+        db,
+
+        invoice_id
+
+    )
+    company = CompanyService.get(
+
+    db
+
+    )
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="billing/view.html",
+
+    context={
+
+    "invoice": invoice,
+
+    "items": items,
+
+    "company": company
+
+    }
 
     )

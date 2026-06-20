@@ -2,6 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Numeric
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
@@ -10,7 +11,14 @@ class InvoiceItem(Base):
 
     __tablename__ = "invoice_items"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    product = relationship(
+        "Product",
+        lazy="joined"
+    )
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True
+    )
 
     invoice_id: Mapped[int] = mapped_column(
         ForeignKey("invoices.id", ondelete="CASCADE")
