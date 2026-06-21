@@ -2,509 +2,383 @@
 
 {% block content %}
 
-<form
-    id="invoiceForm"
-    method="post"
-    action="/billing/save">
+<form id="invoiceForm" method="post" action="/billing/save">
 
-<div class="card card-primary">
+    <div class="card card-primary">
 
-    <div class="card-header">
+        <div class="card-header">
 
-        <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between">
 
-            <h3 class="card-title">
+                <h3 class="card-title">
 
-                <i class="fas fa-file-invoice"></i>
+                    <i class="fas fa-file-invoice"></i>
 
-                GST Billing
+                    GST Billing
 
-            </h3>
+                </h3>
 
-            <a
-                href="/billing/list"
-                class="btn btn-secondary">
+                <a href="/billing/list" class="btn btn-secondary">
 
-                <i class="fas fa-list"></i>
+                    <i class="fas fa-list"></i>
 
-                Invoice List
+                    Invoice List
 
-            </a>
-
-        </div>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="row">
-
-            <div class="col-md-4">
-
-                <label>
-
-                    Customer
-
-                </label>
-
-                <select
-                    class="form-control"
-                    name="customer_id"
-                    required>
-
-                    <option value="">
-
-                        Select Customer
-
-                    </option>
-
-                    {% for customer in customers %}
-
-                    <option value="{{ customer.id }}">
-
-                        {{ customer.customer_name }}
-
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-
-            <div class="col-md-3">
-
-                <label>
-
-                    Payment Mode
-
-                </label>
-
-                <select
-                    class="form-control"
-                    name="payment_mode">
-
-                    <option value="Cash">
-
-                        Cash
-
-                    </option>
-
-                    <option value="UPI">
-
-                        UPI
-
-                    </option>
-
-                    <option value="Card">
-
-                        Card
-
-                    </option>
-
-                    <option value="Credit">
-
-                        Credit
-
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="col-md-5">
-
-                <label>
-
-                    Remarks
-
-                </label>
-
-                <input
-                    class="form-control"
-                    type="text"
-                    name="remarks">
+                </a>
 
             </div>
 
         </div>
 
-        <hr>
+        <div class="card-body">
 
-        <div class="table-responsive">
+            <div class="row">
 
-            <table
-                class="table table-bordered table-hover"
-                id="invoiceTable">
+                <div class="col-md-4">
 
-                <thead>
+                    <label>
 
-                <tr>
+                        Customer
 
-                    <th width="35%">
+                    </label>
 
-                        Product
+                    <select class="form-control" name="customer_id" required>
 
-                    </th>
+                        <option value="">
 
-                    <th width="10%">
+                            Select Customer
 
-                        Qty
+                        </option>
 
-                    </th>
+                        {% for customer in customers %}
 
-                    <th width="15%">
+                        <option value="{{ customer.id }}">
 
-                        Rate
+                            {{ customer.customer_name }}
 
-                    </th>
+                        </option>
 
-                    <th width="10%">
+                        {% endfor %}
 
-                        GST %
+                    </select>
 
-                    </th>
+                </div>
 
-                    <th width="15%">
+                <div class="col-md-3">
 
-                        Total
+                    <label>
 
-                    </th>
+                        Payment Mode
 
-                    <th width="10%">
+                    </label>
 
-                        Action
+                    <select class="form-control" name="payment_mode">
 
-                    </th>
+                        <option value="Cash">
 
-                </tr>
+                            Cash
 
-                </thead>
+                        </option>
 
-                <tbody id="invoiceBody">
+                        <option value="UPI">
 
-                <tr>
+                            UPI
 
-                    <td>
+                        </option>
 
-                        <select
-                            class="form-control product"
-                            name="product_id">
+                        <option value="Card">
 
-                            {% for product in products %}
+                            Card
 
-                            <option
+                        </option>
 
-                                value="{{ product.id }}"
+                        <option value="Credit">
 
-                                data-rate="{{ product.selling_price }}"
+                            Credit
 
-                                data-gst="{{ product.gst_percentage }}">
+                        </option>
 
-                                {{ product.product_name }}
+                    </select>
 
-                            </option>
+                </div>
 
-                            {% endfor %}
+                <div class="col-md-5">
 
-                        </select>
+                    <label>
 
-                    </td>
+                        Remarks
 
-                    <td>
+                    </label>
 
-                        <input
-                            class="form-control qty"
-                            type="number"
-                            step="0.01"
-                            value="1"
-                            name="qty">
+                    <input class="form-control" type="text" name="remarks">
 
-                    </td>
+                </div>
 
-                    <td>
+            </div>
 
-                        <input
-                            class="form-control rate"
-                            type="number"
-                            step="0.01"
-                            name="rate">
+            <hr>
 
-                    </td>
+            <div class="table-responsive billing-table-wrapper">
 
-                    <td>
+                <table class="table table-bordered table-hover" id="invoiceTable">
 
-                        <input
-                            class="form-control gst"
-                            type="number"
-                            step="0.01"
-                            name="gst">
+                    <thead>
 
-                    </td>
+                        <tr>
 
-                    <td>
+                            <th width="35%">
 
-                        <input
-                            class="form-control total"
-                            readonly
-                            name="total">
+                                Product
 
-                    </td>
+                            </th>
 
-                    <td class="text-center">
+                            <th width="10%">
 
-                        <button
+                                Qty
 
-                            type="button"
+                            </th>
 
-                            class="btn btn-danger removeRow">
+                            <th width="15%">
 
-                            <i class="fas fa-trash"></i>
+                                Rate
 
-                        </button>
+                            </th>
 
-                    </td>
+                            <th width="10%">
 
-                </tr>
+                                GST %
 
-                </tbody>
+                            </th>
 
-            </table>
+                            <th width="15%">
 
-        </div>
+                                Total
 
-        <button
+                            </th>
 
-            id="addRow"
+                            <th width="10%">
 
-            type="button"
+                                Action
 
-            class="btn btn-success">
+                            </th>
 
-            <i class="fas fa-plus"></i>
+                        </tr>
 
-            Add Product
+                    </thead>
 
-        </button>
+                    <tbody id="invoiceBody">
 
-        <hr>
+                        <tr>
 
-        <div class="row">
+                            <td>
 
-            <div class="offset-md-8 col-md-4">
+                                <select class="form-control product" name="product_id">
 
-                <table class="table table-bordered">
+                                    {% for product in products %}
 
-                    <tr>
+                                    <option value="{{ product.id }}" data-rate="{{ product.selling_price }}"
+                                        data-gst="{{ product.gst_percentage }}">
 
-                        <th>
+                                        {{ product.product_name }}
 
-                            Subtotal
+                                    </option>
 
-                        </th>
+                                    {% endfor %}
 
-                        <td>
+                                </select>
 
-                            <input
-                                class="form-control"
-                                id="subtotal"
-                                name="subtotal"
-                                readonly>
+                            </td>
 
-                        </td>
+                            <td>
 
-                    </tr>
+                                <input class="form-control qty" type="number" step="0.01" value="1" name="qty">
 
-                    <tr>
+                            </td>
 
-                        <th>
+                            <td>
 
-                            Discount
+                                <input class="form-control rate" type="number" step="0.01" name="rate">
 
-                        </th>
+                            </td>
 
-                        <td>
+                            <td>
 
-                            <input
-                                class="form-control"
-                                id="discount"
-                                name="discount"
-                                value="0">
+                                <input class="form-control gst" type="number" step="0.01" name="gst">
 
-                        </td>
+                            </td>
 
-                    </tr>
+                            <td>
 
-                    <tr>
+                                <input class="form-control total" readonly name="total">
 
-                        <th>
+                            </td>
 
-                            Taxable
+                            <td class="text-center">
 
-                        </th>
+                                <button type="button" class="btn btn-danger removeRow">
 
-                        <td>
+                                    <i class="fas fa-trash"></i>
 
-                            <input
-                                class="form-control"
-                                id="taxable"
-                                name="taxable_amount"
-                                readonly>
+                                </button>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                        </tr>
 
-                    <tr>
-
-                        <th>
-
-                            CGST
-
-                        </th>
-
-                        <td>
-
-                            <input
-                                class="form-control"
-                                id="cgst"
-                                name="cgst"
-                                readonly>
-
-                        </td>
-
-                    </tr>
-
-                    <tr>
-
-                        <th>
-
-                            SGST
-
-                        </th>
-
-                        <td>
-
-                            <input
-                                class="form-control"
-                                id="sgst"
-                                name="sgst"
-                                readonly>
-
-                        </td>
-
-                    </tr>
-
-                    <tr class="table-success">
-
-                        <th>
-
-                            Grand Total
-
-                        </th>
-
-                        <td>
-
-                            <input
-                                class="form-control"
-                                id="grandTotal"
-                                name="grand_total"
-                                readonly>
-
-                        </td>
-
-                    </tr>
+                    </tbody>
 
                 </table>
 
             </div>
 
-        </div>
+            <button id="addRow" type="button" class="btn btn-success">
 
-        <div class="text-center">
+                <i class="fas fa-plus"></i>
 
-            <button
-
-                type="submit"
-
-                class="btn btn-primary">
-
-                Save Invoice
+                Add Product
 
             </button>
 
-            <button
+            <hr>
 
-                type="button"
+            <div class="row">
 
-                id="savePrint"
+                <div class="offset-md-8 col-md-4">
 
-                class="btn btn-success">
+                    <table class="table table-bordered">
 
-                Save & Print
+                        <tr>
 
-            </button>
+                            <th>
 
-            <a
+                                Subtotal
 
-                href="/dashboard"
+                            </th>
 
-                class="btn btn-secondary">
+                            <td>
 
-                Cancel
+                                <input class="form-control" id="subtotal" name="subtotal" readonly>
 
-            </a>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Discount
+
+                            </th>
+
+                            <td>
+
+                                <input class="form-control" id="discount" name="discount" value="0">
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Taxable
+
+                            </th>
+
+                            <td>
+
+                                <input class="form-control" id="taxable" name="taxable_amount" readonly>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                CGST
+
+                            </th>
+
+                            <td>
+
+                                <input class="form-control" id="cgst" name="cgst" readonly>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                SGST
+
+                            </th>
+
+                            <td>
+
+                                <input class="form-control" id="sgst" name="sgst" readonly>
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="table-success">
+
+                            <th>
+
+                                Grand Total
+
+                            </th>
+
+                            <td>
+
+                                <input class="form-control" id="grandTotal" name="grand_total" readonly>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div class="text-center">
+
+                <button type="submit" class="btn btn-primary">
+
+                    Save Invoice
+
+                </button>
+
+                <button type="button" id="savePrint" class="btn btn-success">
+
+                    Save & Print
+
+                </button>
+
+                <a href="/dashboard" class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
-
 </form>
 <script>
 
-function calculateRow(row){
-
-    let qty = parseFloat(
-
-        row.querySelector(".qty").value || 0
-
-    );
-
-    let rate = parseFloat(
-
-        row.querySelector(".rate").value || 0
-
-    );
-
-    let gst = parseFloat(
-
-        row.querySelector(".gst").value || 0
-
-    );
-
-    let taxable = qty * rate;
-
-    let gstAmount = taxable * gst / 100;
-
-    let total = taxable + gstAmount;
-
-    row.querySelector(".total").value = total.toFixed(2);
-
-}
-
-function calculateInvoice(){
-
-    let subtotal = 0;
-
-    document.querySelectorAll(
-
-        "#invoiceBody tr"
-
-    ).forEach(function(row){
-
-        calculateRow(row);
+    function calculateRow(row) {
 
         let qty = parseFloat(
 
@@ -518,273 +392,203 @@ function calculateInvoice(){
 
         );
 
-        subtotal += qty * rate;
+        let gst = parseFloat(
 
-    });
+            row.querySelector(".gst").value || 0
 
-    let discount = parseFloat(
+        );
 
-        document.getElementById("discount").value || 0
+        let taxable = qty * rate;
 
-    );
+        let gstAmount = taxable * gst / 100;
 
-    let taxable = subtotal - discount;
+        let total = taxable + gstAmount;
 
-    if(taxable < 0){
-
-        taxable = 0;
+        row.querySelector(".total").value = total.toFixed(2);
 
     }
 
-    let cgst = taxable * 0.09;
+    function calculateInvoice() {
 
-    let sgst = taxable * 0.09;
+        let subtotal = 0;
 
-    let grand = taxable + cgst + sgst;
+        document.querySelectorAll(
 
-    document.getElementById(
+            "#invoiceBody tr"
 
-        "subtotal"
+        ).forEach(function (row) {
 
-    ).value = subtotal.toFixed(2);
+            calculateRow(row);
 
-    document.getElementById(
+            let qty = parseFloat(
 
-        "taxable"
-
-    ).value = taxable.toFixed(2);
-
-    document.getElementById(
-
-        "cgst"
-
-    ).value = cgst.toFixed(2);
-
-    document.getElementById(
-
-        "sgst"
-
-    ).value = sgst.toFixed(2);
-
-    document.getElementById(
-
-        "grandTotal"
-
-    ).value = grand.toFixed(2);
-
-}
-
-function productChanged(select){
-
-    let row = select.closest("tr");
-
-    let option = select.options[
-
-        select.selectedIndex
-
-    ];
-
-    let rate = parseFloat(
-
-        option.getAttribute("data-rate") || 0
-
-    );
-
-    let gst = parseFloat(
-
-        option.getAttribute("data-gst") || 0
-
-    );
-
-    row.querySelector(
-
-        ".rate"
-
-    ).value = rate.toFixed(2);
-
-    row.querySelector(
-
-        ".gst"
-
-    ).value = gst.toFixed(2);
-
-    calculateInvoice();
-
-}
-
-document.addEventListener(
-
-    "change",
-
-    function(e){
-
-        if(
-
-            e.target.classList.contains(
-
-                "product"
-
-            )
-
-        ){
-
-            productChanged(
-
-                e.target
+                row.querySelector(".qty").value || 0
 
             );
 
-        }
+            let rate = parseFloat(
 
-    }
+                row.querySelector(".rate").value || 0
 
-);
+            );
 
-document.addEventListener(
+            subtotal += qty * rate;
 
-    "input",
+        });
 
-    function(e){
+        let discount = parseFloat(
 
-        if(
+            document.getElementById("discount").value || 0
 
-            e.target.classList.contains(
+        );
 
-                "qty"
+        let taxable = subtotal - discount;
 
-            )
+        if (taxable < 0) {
 
-            ||
-
-            e.target.classList.contains(
-
-                "rate"
-
-            )
-
-            ||
-
-            e.target.classList.contains(
-
-                "gst"
-
-            )
-
-            ||
-
-            e.target.id == "discount"
-
-        ){
-
-            calculateInvoice();
+            taxable = 0;
 
         }
 
+        let cgst = taxable * 0.09;
+
+        let sgst = taxable * 0.09;
+
+        let grand = taxable + cgst + sgst;
+
+        document.getElementById(
+
+            "subtotal"
+
+        ).value = subtotal.toFixed(2);
+
+        document.getElementById(
+
+            "taxable"
+
+        ).value = taxable.toFixed(2);
+
+        document.getElementById(
+
+            "cgst"
+
+        ).value = cgst.toFixed(2);
+
+        document.getElementById(
+
+            "sgst"
+
+        ).value = sgst.toFixed(2);
+
+        document.getElementById(
+
+            "grandTotal"
+
+        ).value = grand.toFixed(2);
+
     }
 
-);
+    function productChanged(select) {
 
-document.getElementById(
+        let row = select.closest("tr");
 
-    "addRow"
+        let option = select.options[
 
-).addEventListener(
+            select.selectedIndex
 
-    "click",
+        ];
 
-    function(){
+        let rate = parseFloat(
 
-        let tbody = document.getElementById(
-
-            "invoiceBody"
+            option.getAttribute("data-rate") || 0
 
         );
 
-        let firstRow = tbody.querySelector(
+        let gst = parseFloat(
 
-            "tr"
-
-        );
-
-        let clone = firstRow.cloneNode(
-
-            true
+            option.getAttribute("data-gst") || 0
 
         );
 
-        clone.querySelector(
-
-            ".qty"
-
-        ).value = 1;
-
-        clone.querySelector(
+        row.querySelector(
 
             ".rate"
 
-        ).value = 0;
+        ).value = rate.toFixed(2);
 
-        clone.querySelector(
+        row.querySelector(
 
             ".gst"
 
-        ).value = 18;
-
-        clone.querySelector(
-
-            ".total"
-
-        ).value = "";
-
-        tbody.appendChild(
-
-            clone
-
-        );
-
-        productChanged(
-
-            clone.querySelector(
-
-                ".product"
-
-            )
-
-        );
+        ).value = gst.toFixed(2);
 
         calculateInvoice();
 
     }
 
-);
+    document.addEventListener(
 
-document.addEventListener(
+        "change",
 
-    "click",
+        function (e) {
 
-    function(e){
+            if (
 
-        let btn = e.target.closest(
+                e.target.classList.contains(
 
-            ".removeRow"
+                    "product"
 
-        );
+                )
 
-        if(btn){
+            ) {
 
-            let rows = document.querySelectorAll(
+                productChanged(
 
-                "#invoiceBody tr"
+                    e.target
 
-            );
+                );
 
-            if(rows.length > 1){
+            }
 
-                btn.closest(
+        }
 
-                    "tr"
+    );
 
-                ).remove();
+    document.addEventListener(
+
+        "input",
+
+        function (e) {
+
+            if (
+
+                e.target.classList.contains(
+
+                    "qty"
+
+                )
+
+                ||
+
+                e.target.classList.contains(
+
+                    "rate"
+
+                )
+
+                ||
+
+                e.target.classList.contains(
+
+                    "gst"
+
+                )
+
+                ||
+
+                e.target.id == "discount"
+
+            ) {
 
                 calculateInvoice();
 
@@ -792,139 +596,291 @@ document.addEventListener(
 
         }
 
-    }
+    );
 
-);
+    document.getElementById(
 
-document.getElementById(
+        "addRow"
 
-    "invoiceForm"
+    ).addEventListener(
 
-).addEventListener(
+        "click",
 
-    "submit",
+        function () {
 
-    function(e){
+            let tbody = document.getElementById(
 
-        let customer = document.querySelector(
-
-            "select[name='customer_id']"
-
-        ).value;
-
-        if(customer == ""){
-
-            alert(
-
-                "Please select customer."
+                "invoiceBody"
 
             );
 
-            e.preventDefault();
+            let firstRow = tbody.querySelector(
 
-            return;
+                "tr"
+
+            );
+
+            let clone = firstRow.cloneNode(
+
+                true
+
+            );
+
+            clone.querySelector(
+
+                ".qty"
+
+            ).value = 1;
+
+            clone.querySelector(
+
+                ".rate"
+
+            ).value = 0;
+
+            clone.querySelector(
+
+                ".gst"
+
+            ).value = 18;
+
+            clone.querySelector(
+
+                ".total"
+
+            ).value = "";
+
+            tbody.appendChild(
+
+                clone
+
+            );
+
+            productChanged(
+
+                clone.querySelector(
+
+                    ".product"
+
+                )
+
+            );
+
+            calculateInvoice();
 
         }
 
-        let valid = true;
+    );
 
-        document.querySelectorAll(
+    document.addEventListener(
 
-            "#invoiceBody tr"
+        "click",
 
-        ).forEach(function(row){
+        function (e) {
 
-            let qty = parseFloat(
+            let btn = e.target.closest(
 
-                row.querySelector(
-
-                    ".qty"
-
-                ).value || 0
+                ".removeRow"
 
             );
 
-            let rate = parseFloat(
+            if (btn) {
 
-                row.querySelector(
+                let rows = document.querySelectorAll(
 
-                    ".rate"
+                    "#invoiceBody tr"
 
-                ).value || 0
+                );
 
-            );
+                if (rows.length > 1) {
 
-            if(
+                    btn.closest(
 
-                qty <= 0 ||
+                        "tr"
 
-                rate <= 0
+                    ).remove();
 
-            ){
+                    calculateInvoice();
 
-                valid = false;
+                }
 
             }
 
-        });
+        }
 
-        if(!valid){
+    );
 
-            alert(
+    document.getElementById(
 
-                "Please enter valid Qty and Rate."
+        "invoiceForm"
 
-            );
+    ).addEventListener(
 
-            e.preventDefault();
+        "submit",
 
-            return;
+        function (e) {
+
+            let customer = document.querySelector(
+
+                "select[name='customer_id']"
+
+            ).value;
+
+            if (customer == "") {
+
+                alert(
+
+                    "Please select customer."
+
+                );
+
+                e.preventDefault();
+
+                return;
+
+            }
+
+            let valid = true;
+
+            document.querySelectorAll(
+
+                "#invoiceBody tr"
+
+            ).forEach(function (row) {
+
+                let qty = parseFloat(
+
+                    row.querySelector(
+
+                        ".qty"
+
+                    ).value || 0
+
+                );
+
+                let rate = parseFloat(
+
+                    row.querySelector(
+
+                        ".rate"
+
+                    ).value || 0
+
+                );
+
+                if (
+
+                    qty <= 0 ||
+
+                    rate <= 0
+
+                ) {
+
+                    valid = false;
+
+                }
+
+            });
+
+            if (!valid) {
+
+                alert(
+
+                    "Please enter valid Qty and Rate."
+
+                );
+
+                e.preventDefault();
+
+                return;
+
+            }
 
         }
 
-    }
+    );
 
-);
+    document.getElementById(
 
-document.getElementById(
+        "savePrint"
 
-    "savePrint"
+    ).addEventListener(
 
-).addEventListener(
+        "click",
 
-    "click",
+        function () {
 
-    function(){
+            document.getElementById(
 
-        document.getElementById(
+                "invoiceForm"
 
-            "invoiceForm"
+            ).submit();
 
-        ).submit();
+        }
 
-    }
+    );
 
-);
+    window.onload = function () {
 
-window.onload = function(){
+        document.querySelectorAll(
 
-    document.querySelectorAll(
+            ".product"
 
-        ".product"
+        ).forEach(function (select) {
 
-    ).forEach(function(select){
+            productChanged(
 
-        productChanged(
+                select
 
-            select
+            );
 
-        );
+        });
 
-    });
+        calculateInvoice();
 
-    calculateInvoice();
-
-};
+    };
 
 </script>
+<style>
+    @media (max-width: 768px) {
+
+        .billing-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #invoiceTable {
+            min-width: 720px;
+            font-size: 13px;
+        }
+
+        #invoiceTable th,
+        #invoiceTable td {
+            white-space: nowrap;
+            vertical-align: middle;
+            padding: 6px;
+        }
+
+        #invoiceTable select,
+        #invoiceTable input {
+            min-width: 70px;
+            font-size: 13px;
+            padding: 4px;
+        }
+
+        #invoiceTable .product {
+            min-width: 180px;
+        }
+
+        #invoiceTable .btn {
+            padding: 4px 8px;
+        }
+
+        #addRow {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+    }
+</style>
 {% endblock %}

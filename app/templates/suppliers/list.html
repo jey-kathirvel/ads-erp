@@ -4,23 +4,26 @@
 
 <div class="card">
 
+
     <div class="card-header">
 
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="row align-items-center">
 
-            <h3 class="card-title">
+            <div class="col-md-6 col-12">
 
-                <i class="fas fa-truck"></i>
+                <h3 class="card-title mb-0">
 
-                Supplier Master
+                    <i class="fas fa-truck"></i>
 
-            </h3>
+                    Supplier Master
 
-            <div>
+                </h3>
 
-                <a
-                    href="/suppliers/outstanding"
-                    class="btn btn-success">
+            </div>
+            <br>
+            <div class="col-md-6 col-12 text-md-right supplier-buttons">
+
+                <a href="/suppliers/outstanding" class="btn btn-success btn-sm">
 
                     <i class="fas fa-file-invoice-dollar"></i>
 
@@ -28,9 +31,7 @@
 
                 </a>
 
-                <a
-                    href="/suppliers/create"
-                    class="btn btn-primary">
+                <a href="/suppliers/create" class="btn btn-primary btn-sm">
 
                     <i class="fas fa-plus"></i>
 
@@ -44,29 +45,25 @@
 
     </div>
 
-    <div class="card-body">
+</div>
 
-        <div class="row mb-3">
+<div class="card-body">
 
-            <div class="col-md-6">
+    <div class="row mb-3">
 
-                <input
-                    type="text"
-                    id="searchSupplier"
-                    class="form-control"
-                    placeholder="Search Supplier / Mobile / GSTIN">
+        <div class="col-md-6 col-12">
 
-            </div>
+            <input type="text" id="searchSupplier" class="form-control" placeholder="Search Supplier / Mobile / GSTIN">
 
         </div>
 
-        <div class="table-responsive">
+    </div>
 
-            <table
-                class="table table-bordered table-striped table-hover"
-                id="supplierTable">
+    <div class="table-responsive">
 
-                <thead class="thead-light">
+        <table class="table table-bordered table-striped table-hover" id="supplierTable">
+
+            <thead class="thead-light">
 
                 <tr>
 
@@ -86,9 +83,9 @@
 
                 </tr>
 
-                </thead>
+            </thead>
 
-                <tbody>
+            <tbody>
 
                 {% for supplier in suppliers %}
 
@@ -136,34 +133,19 @@
 
                     <td>
 
-                        <a
-
-                            href="/suppliers/{{ supplier.id }}/ledger"
-
-                            class="btn btn-info btn-sm"
-                            title="Ledger">
+                        <a href="/suppliers/{{ supplier.id }}/ledger" class="btn btn-info btn-sm" title="Ledger">
 
                             <i class="fas fa-book"></i>
 
                         </a>
 
-                        <a
-
-                            href="/suppliers/{{ supplier.id }}/edit"
-
-                            class="btn btn-warning btn-sm"
-                            title="Edit">
+                        <a href="/suppliers/{{ supplier.id }}/edit" class="btn btn-warning btn-sm" title="Edit">
 
                             <i class="fas fa-edit"></i>
 
                         </a>
 
-                        <a
-
-                            href="/suppliers/{{ supplier.id }}/delete"
-
-                            class="btn btn-danger btn-sm"
-                            title="Delete"
+                        <a href="/suppliers/{{ supplier.id }}/delete" class="btn btn-danger btn-sm" title="Delete"
                             onclick="return confirm('Delete Supplier?')">
 
                             <i class="fas fa-trash"></i>
@@ -176,40 +158,81 @@
 
                 {% endfor %}
 
-                </tbody>
+            </tbody>
 
-            </table>
-
-        </div>
+        </table>
 
     </div>
 
 </div>
 
+
+</div>
+
 <script>
 
-document.getElementById("searchSupplier").addEventListener(
+    document.getElementById("searchSupplier").addEventListener(
 
-    "keyup",
+        "keyup",
 
-    function(){
+        function () {
 
-        let value = this.value.toLowerCase();
+            let value = this.value.toLowerCase();
 
-        document.querySelectorAll("#supplierTable tbody tr").forEach(function(row){
+            document.querySelectorAll("#supplierTable tbody tr").forEach(function (row) {
 
-            row.style.display = row.innerText.toLowerCase().includes(value)
+                row.style.display = row.innerText.toLowerCase().includes(value)
 
-                ? ""
+                    ? ""
 
-                : "none";
+                    : "none";
 
-        });
+            });
 
-    }
+        }
 
-);
+    );
 
 </script>
+
+<style>
+    @media (max-width: 768px) {
+
+        .card-header .row {
+            display: block;
+        }
+
+        .card-title {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .supplier-buttons {
+            text-align: left !important;
+            margin-top: 10px;
+        }
+
+        .supplier-buttons .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        #supplierTable {
+            font-size: 13px;
+        }
+
+        #supplierTable th,
+        #supplierTable td {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        #supplierTable .btn {
+            padding: 4px 8px;
+        }
+
+    }
+</style>
 
 {% endblock %}
