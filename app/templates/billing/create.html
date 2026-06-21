@@ -38,15 +38,15 @@
 
                     <label>
 
-                        Customer
+                        Customer (Optional)
 
                     </label>
 
-                    <select class="form-control" name="customer_id" required>
+                    <select name="customer_id" class="form-control">
 
                         <option value="">
 
-                            Select Customer
+                            Guest / Walk-in Customer
 
                         </option>
 
@@ -61,6 +61,26 @@
                         {% endfor %}
 
                     </select>
+
+                    <div class="mt-2">
+
+                        <label>
+
+                            Walk-in Customer Name
+
+                        </label>
+
+                        <input type="text" name="manual_customer_name" class="form-control"
+                            placeholder="Enter customer name">
+
+                        <small class="text-muted">
+
+                            Select existing customer OR enter walk-in customer name.
+                            If both are blank, invoice will be saved as Guest.
+
+                        </small>
+
+                    </div>
 
                 </div>
 
@@ -726,19 +746,12 @@
 
             ).value;
 
-            if (customer == "") {
+            // customer is optional now
 
-                alert(
-
-                    "Please select customer."
-
-                );
-
-                e.preventDefault();
-
-                return;
-
-            }
+            // if(customerId == ""){
+            //     alert("Please select customer.");
+            //     return false;
+            // }
 
             let valid = true;
 

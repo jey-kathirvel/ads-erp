@@ -95,9 +95,7 @@ async def billing_page(
 @router.post("/billing/save")
 async def save_invoice(
 
-    customer_id: int | None = Form(None),
-
-    manual_customer_name: str = Form(""),
+    customer_id: int = Form(...),
 
     subtotal: float = Form(...),
 
@@ -131,35 +129,9 @@ async def save_invoice(
 
 ):
 
-
-    # ------------------------------------
-    # Customer Handling
-    # ------------------------------------
-
-    final_customer_id = None
-
-    if customer_id:
-
-        final_customer_id = customer_id
-
-    elif manual_customer_name.strip():
-
-        customer = CustomerService.create_walkin_customer(
-            db,
-            manual_customer_name.strip()
-        )
-
-        final_customer_id = customer.id
-
-    else:
-
-        guest = CustomerService.get_guest_customer(db)
-
-        final_customer_id = guest.id
-
     invoice = InvoiceCreate(
 
-        customer_id=final_customer_id,
+        customer_id=customer_id,
 
         subtotal=subtotal,
 
