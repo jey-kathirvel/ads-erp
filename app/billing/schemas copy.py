@@ -39,5 +39,3 @@ class InvoiceCreate(BaseModel):
     payment_mode: str = "Cash"
 
     remarks: str | None = None
-
-    payment_status: str = "Paid"

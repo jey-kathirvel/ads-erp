@@ -113,9 +113,11 @@ async def save_invoice(
 
     grand_total: float = Form(...),
 
-    payment_mode: str = Form(...),
+payment_mode: str = Form(...),
 
-    remarks: str = Form(""),
+payment_status: str = Form("Paid"),
+
+remarks: str = Form(""),
 
     product_id: list[int] = Form(...),
 
@@ -177,14 +179,11 @@ async def save_invoice(
 
         payment_mode=payment_mode,
 
+        payment_status=payment_status,
+
         remarks=remarks
 
     )
-
-    # -------------------------
-    # Save Invoice
-    # -------------------------
-
     saved_invoice = BillingService.create(
 
         db,
@@ -462,9 +461,11 @@ async def update_invoice(
 
     grand_total: float = Form(...),
 
-    payment_mode: str = Form(...),
+payment_mode: str = Form(...),
 
-    remarks: str = Form(""),
+payment_status: str = Form("Paid"),
+
+remarks: str = Form(""),
 
     product_id: list[int] = Form(...),
 
@@ -498,9 +499,11 @@ async def update_invoice(
 
         grand_total=grand_total,
 
-        payment_mode=payment_mode,
+payment_mode=payment_mode,
 
-        remarks=remarks
+payment_status=payment_status,
+
+remarks=remarks
 
     )
 
