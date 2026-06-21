@@ -5,9 +5,7 @@
 
     <meta charset="utf-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>
 
@@ -17,185 +15,263 @@
 
     <!-- Favicon -->
 
-    <link
-        rel="icon"
-        type="image/png"
-        href="/static/uploads/logo/logo.png">
+    <link rel="icon" type="image/png" href="/static/uploads/logo/logo.png">
 
     <!-- FontAwesome -->
 
-    <link
-        rel="stylesheet"
-        href="/static/adminlte/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/static/adminlte/plugins/fontawesome-free/css/all.min.css">
 
     <!-- OverlayScrollbars -->
 
-    <link
-        rel="stylesheet"
-        href="/static/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="/static/adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 
     <!-- AdminLTE -->
 
-    <link
-        rel="stylesheet"
-        href="/static/adminlte/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/static/adminlte/dist/css/adminlte.min.css">
 
     <style>
+        @media (max-width:768px) {
 
-.brand-logo{
+            .btn-sm {
 
-    max-height:70px;
+                margin-bottom: 4px;
 
-    max-width:220px;
+            }
 
-    width:auto;
+            td.text-center .btn {
 
-    display:block;
+                display: block;
 
-    margin:auto;
+                width: 100%;
 
-}
-        .content-wrapper{
+                margin-bottom: 4px;
 
-            min-height:calc(100vh - 115px);
-
-        }
-
-        .loader-wrapper{
-
-            position:fixed;
-
-            top:0;
-
-            left:0;
-
-            width:100%;
-
-            height:100%;
-
-            background:#ffffff;
-
-            display:flex;
-
-            align-items:center;
-
-            justify-content:center;
-
-            z-index:9999;
+            }
 
         }
 
-        .loader-wrapper.hidden{
+        .brand-logo {
 
-            display:none;
+            max-height: 70px;
+
+            max-width: 220px;
+
+            width: auto;
+
+            display: block;
+
+            margin: auto;
 
         }
 
+        .content-wrapper {
+
+            min-height: calc(100vh - 115px);
+
+        }
+
+        .loader-wrapper {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: #ffffff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 9999;
+
+        }
+
+        .loader-wrapper.hidden {
+
+            display: none;
+
+        }
+
+        /* ------------------------------
+   Mobile Responsive
+--------------------------------*/
+
+        @media (max-width: 768px) {
+
+            .content-wrapper {
+
+                margin-left: 0 !important;
+
+            }
+
+            .main-sidebar {
+
+                width: 260px !important;
+
+            }
+
+            .brand-logo {
+
+                max-height: 55px;
+
+                max-width: 180px;
+
+            }
+
+            .card {
+
+                margin-bottom: 12px;
+
+            }
+
+            .table-responsive {
+
+                overflow-x: auto;
+
+            }
+
+            .btn {
+
+                margin-bottom: 5px;
+
+            }
+
+        }
+
+        /* Invoice / Forms */
+
+        @media (max-width: 576px) {
+
+            .row>div {
+
+                margin-bottom: 10px;
+
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5 {
+
+                font-size: 90%;
+
+            }
+
+            .card-body {
+
+                padding: 12px;
+
+            }
+
+        }
     </style>
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
 
-<div class="loader-wrapper" id="loader">
+    <div class="loader-wrapper" id="loader">
 
-    <div class="text-center">
+        <div class="text-center">
 
-        <img
+            <img src="/static/uploads/logo/logo.png" class="brand-logo" alt="ADS ERP">
 
-            src="/static/uploads/logo/logo.png"
+            <br><br>
 
-            class="brand-logo"
+            <div class="spinner-border text-primary"></div>
 
-            alt="ADS ERP">
-
-        <br><br>
-
-        <div class="spinner-border text-primary"></div>
+        </div>
 
     </div>
 
-</div>
+    <div class="wrapper">
 
-<div class="wrapper">
+        <!-- Navbar -->
 
-    <!-- Navbar -->
+        {% include 'layouts/navbar.html' %}
 
-    {% include 'layouts/navbar.html' %}
+        <!-- Sidebar -->
 
-    <!-- Sidebar -->
+        {% include 'layouts/sidebar.html' %}
 
-    {% include 'layouts/sidebar.html' %}
+        <!-- Content -->
 
-    <!-- Content -->
+        <div class="content-wrapper">
 
-    <div class="content-wrapper">
+            <section class="content pt-3">
 
-        <section class="content pt-3">
+                <div class="container-fluid">
 
-            <div class="container-fluid">
+                    {% block content %}
 
-                {% block content %}
+                    {% endblock %}
 
-                {% endblock %}
+                </div>
 
-            </div>
+            </section>
 
-        </section>
+        </div>
+
+        <!-- Footer -->
+
+        {% include 'layouts/footer.html' %}
 
     </div>
 
-    <!-- Footer -->
+    <!-- jQuery -->
 
-    {% include 'layouts/footer.html' %}
+    <script src="/static/adminlte/plugins/jquery/jquery.min.js"></script>
 
-</div>
+    <!-- Bootstrap -->
 
-<!-- jQuery -->
+    <script src="/static/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<script src="/static/adminlte/plugins/jquery/jquery.min.js"></script>
+    <!-- OverlayScrollbars -->
 
-<!-- Bootstrap -->
+    <script src="/static/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 
-<script src="/static/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
 
-<!-- OverlayScrollbars -->
+    <script src="/static/adminlte/dist/js/adminlte.min.js"></script>
 
-<script src="/static/adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script>
 
-<!-- AdminLTE -->
+        window.addEventListener(
 
-<script src="/static/adminlte/dist/js/adminlte.min.js"></script>
+            "load",
 
-<script>
+            function () {
 
-window.addEventListener(
+                document
 
-    "load",
+                    .getElementById(
 
-    function(){
+                        "loader"
 
-        document
+                    )
 
-            .getElementById(
+                    .classList
 
-                "loader"
+                    .add(
 
-            )
+                        "hidden"
 
-            .classList
+                    );
 
-            .add(
+            }
 
-                "hidden"
+        );
 
-            );
-
-    }
-
-);
-
-</script>
+    </script>
 
 </body>
 

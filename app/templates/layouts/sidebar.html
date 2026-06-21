@@ -1,571 +1,626 @@
 <style>
+    .main-sidebar {
 
-.main-sidebar{
+        background: #ffffff !important;
 
-    background:#ffffff !important;
+        border-right: 1px solid #e5e7eb;
 
-    border-right:1px solid #e5e7eb;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, .05);
 
-    box-shadow:2px 0 15px rgba(0,0,0,.05);
+    }
 
-}
+    .brand-link {
 
-.brand-link{
+        background: #ffffff !important;
 
-    background:#ffffff !important;
+        border-bottom: 1px solid #e5e7eb;
 
-    border-bottom:1px solid #e5e7eb;
+        padding: 10px;
 
-    padding:15px 10px;
+        height: 100px;
 
-}
+        overflow: hidden;
 
-.brand-link img{
+    }
 
-    display:block;
+    .brand-link img {
 
-    margin:auto;
 
-    max-height:70px;
+        display: block;
 
-    max-width:210px;
+        margin: auto;
 
-    width:auto;
+        max-height: 70px;
 
-}
+        max-width: 210px;
 
-.nav-header{
+        width: auto;
 
-    color:#6b7280 !important;
+    }
 
-    font-size:11px;
+    .sidebar {
 
-    font-weight:700;
+        padding-top: 20px;
 
-    text-transform:uppercase;
+    }
 
-    letter-spacing:1px;
+    .nav-sidebar {
 
-    margin-top:15px;
+        margin-top: 10px;
 
-    padding-left:15px;
+    }
 
-}
+    .main-sidebar .brand-link {
 
-.nav-sidebar .nav-item{
+        display: flex;
 
-    margin:2px 8px;
+        justify-content: center;
 
-}
+        align-items: center;
 
-.nav-sidebar .nav-link{
+    }
 
-    color:#111827 !important;
+    .nav-header {
 
-    border-radius:10px;
+        color: #6b7280 !important;
 
-    transition:
+        font-size: 11px;
 
-    background .25s ease,
+        font-weight: 700;
 
-    color .25s ease,
+        text-transform: uppercase;
 
-    transform .25s ease,
+        letter-spacing: 1px;
 
-    box-shadow .25s ease;
+        margin-top: 15px;
 
-    padding:10px 12px;
+        padding-left: 15px;
 
-    font-size:15px;
+    }
 
-    font-weight:500;
+    .nav-sidebar .nav-item {
 
-}
+        margin: 2px 8px;
 
-.nav-sidebar .nav-link i{
+    }
 
-    color:#4b5563 !important;
+    .nav-sidebar .nav-link {
 
-    width:22px;
+        color: #111827 !important;
 
-}
+        border-radius: 10px;
 
-.nav-sidebar .nav-link:hover{
+        transition:
 
-    background:linear-gradient(
+            background .25s ease,
 
-        90deg,
+            color .25s ease,
 
-        #dbeafe,
+            transform .25s ease,
 
-        #eff6ff
+            box-shadow .25s ease;
 
-    ) !important;
+        padding: 10px 12px;
 
-    color:#0284c7 !important;
+        font-size: 15px;
 
-    font-weight:700 !important;
+        font-weight: 500;
 
-    transform:translateX(4px);
+    }
 
-    box-shadow:
+    .nav-sidebar .nav-link i {
 
-        0 3px 10px rgba(59,130,246,.15);
+        color: #4b5563 !important;
 
-}
-.nav-sidebar .nav-link:hover p{
+        width: 22px;
 
-    font-weight:700 !important;
+    }
 
-}
-.nav-sidebar .nav-link:hover i{
+    .nav-sidebar .nav-link:hover {
 
-    color:#0284c7 !important;
+        background: linear-gradient(90deg,
 
-}
-.nav-sidebar .nav-link:hover i{
+                #dbeafe,
 
-    color:#0284c7 !important;
+                #eff6ff) !important;
 
-}
+        color: #0284c7 !important;
 
-.nav-sidebar .nav-link.active{
+        font-weight: 700 !important;
 
-    background:linear-gradient(90deg,#2563eb,#3b82f6) !important;
+        transform: translateX(4px);
 
-    color:#ffffff !important;
+        box-shadow:
 
-    box-shadow:0 4px 10px rgba(37,99,235,.25);
+            0 3px 10px rgba(59, 130, 246, .15);
 
-}
+    }
 
-.nav-sidebar .nav-link.active{
+    .nav-sidebar .nav-link:hover p {
 
-    background:linear-gradient(
+        font-weight: 700 !important;
 
-        90deg,
+    }
 
-        #2563eb,
+    .nav-sidebar .nav-link:hover i {
 
-        #3b82f6
+        color: #0284c7 !important;
 
-    ) !important;
+    }
 
-    color:white !important;
+    .nav-sidebar .nav-link:hover i {
 
-    font-weight:700 !important;
+        color: #0284c7 !important;
 
-    border-radius:10px;
+    }
 
-    box-shadow:
+    .nav-sidebar .nav-link.active {
 
-        0 4px 10px rgba(37,99,235,.25);
+        background: linear-gradient(90deg, #2563eb, #3b82f6) !important;
 
-}
-.nav-sidebar .nav-link.active p{
+        color: #ffffff !important;
 
-    font-weight:700 !important;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, .25);
 
-}
-.nav-sidebar .nav-link.active i{
+    }
 
-    color:white !important;
+    .nav-sidebar .nav-link.active {
 
-}
+        background: linear-gradient(90deg,
+
+                #2563eb,
+
+                #3b82f6) !important;
+
+        color: white !important;
+
+        font-weight: 700 !important;
+
+        border-radius: 10px;
+
+        box-shadow:
+
+            0 4px 10px rgba(37, 99, 235, .25);
+
+    }
+
+    .nav-sidebar .nav-link.active p {
+
+        font-weight: 700 !important;
+
+    }
+
+    .nav-sidebar .nav-link.active i {
+
+        color: white !important;
+
+    }
+
+    /* Mobile Sidebar */
+
+    @media (max-width:768px) {
+
+        .main-sidebar {
+
+            box-shadow:
+
+                0 0 25px rgba(0, 0, 0, .15);
+
+        }
+
+        .nav-sidebar .nav-link {
+
+            padding: 12px 14px;
+
+            font-size: 16px;
+
+        }
+
+        .nav-header {
+
+            font-size: 12px;
+
+        }
+
+    }
 </style>
 
 <aside class="main-sidebar elevation-2">
 
-<a href="/dashboard" class="brand-link text-center">
+    <a href="/dashboard" class="brand-link text-center">
 
-    <img
-        src="/static/uploads/logo/logo.png"
-        alt="ADS ERP">
+        <img src="/static/uploads/logo/logo.png" alt="ADS ERP" style="
+            max-height:70px;
+            max-width:210px;
+            width:auto;
+            display:block;
+            margin:auto;
+            padding:5px;
+        ">
 
-</a>
+    </a>
 
-<div class="sidebar">
+<div style="
+    border-top:5px solid #dcdfe3;
+    margin-bottom:10px;
+"></div>
 
-<nav class="mt-2">
+    <div class="sidebar" style="padding-top:15px;">
 
-<ul class="nav nav-pills nav-sidebar flex-column"
+        <nav class="mt-2">
 
-    data-widget="treeview"
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-    role="menu"
+                <li class="nav-item">
 
-    data-accordion="false">
+                    <a href="/dashboard" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
 
-<a href="/dashboard" class="nav-link">
+                        <p>Dashboard</p>
 
-<i class="nav-icon fas fa-tachometer-alt"></i>
+                    </a>
 
-<p>Dashboard</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    MASTERS
 
-<li class="nav-header">
+                </li>
 
-MASTERS
+                <li class="nav-item">
 
-</li>
+                    <a href="/customers" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-users"></i>
 
-<a href="/customers" class="nav-link">
+                        <p>Customers</p>
 
-<i class="nav-icon fas fa-users"></i>
+                    </a>
 
-<p>Customers</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/suppliers" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-truck"></i>
 
-<a href="/suppliers" class="nav-link">
+                        <p>Suppliers</p>
 
-<i class="nav-icon fas fa-truck"></i>
+                    </a>
 
-<p>Suppliers</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/suppliers/outstanding" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
 
-<a href="/suppliers/outstanding" class="nav-link">
+                        <p>Supplier Outstanding</p>
 
-<i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    </a>
 
-<p>Supplier Outstanding</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/products" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-box"></i>
 
-<a href="/products" class="nav-link">
+                        <p>Products</p>
 
-<i class="nav-icon fas fa-box"></i>
+                    </a>
 
-<p>Products</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/categories" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-tags"></i>
 
-<a href="/categories" class="nav-link">
+                        <p>Categories</p>
 
-<i class="nav-icon fas fa-tags"></i>
+                    </a>
 
-<p>Categories</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    SALES
 
-<li class="nav-header">
+                </li>
 
-SALES
+                <li class="nav-item">
 
-</li>
+                    <a href="/billing" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-file-invoice"></i>
 
-<a href="/billing" class="nav-link">
+                        <p>GST Billing</p>
 
-<i class="nav-icon fas fa-file-invoice"></i>
+                    </a>
 
-<p>GST Billing</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/billing/list" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-list"></i>
 
-<a href="/billing/list" class="nav-link">
+                        <p>Invoice List</p>
 
-<i class="nav-icon fas fa-list"></i>
+                    </a>
 
-<p>Invoice List</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    INVENTORY
 
-<li class="nav-header">
+                </li>
 
-INVENTORY
+                <li class="nav-item">
 
-</li>
+                    <a href="/inventory/dashboard" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-chart-bar"></i>
 
-<a href="/inventory/dashboard" class="nav-link">
+                        <p>Inventory Dashboard</p>
 
-<i class="nav-icon fas fa-chart-bar"></i>
+                    </a>
 
-<p>Inventory Dashboard</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/inventory/current-stock" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-boxes"></i>
 
-<a href="/inventory/current-stock" class="nav-link">
+                        <p>Current Stock</p>
 
-<i class="nav-icon fas fa-boxes"></i>
+                    </a>
 
-<p>Current Stock</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/inventory" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-history"></i>
 
-<a href="/inventory" class="nav-link">
+                        <p>Stock Ledger</p>
 
-<i class="nav-icon fas fa-history"></i>
+                    </a>
 
-<p>Stock Ledger</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/inventory/low-stock" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-exclamation-triangle"></i>
 
-<a href="/inventory/low-stock" class="nav-link">
+                        <p>Low Stock Report</p>
 
-<i class="nav-icon fas fa-exclamation-triangle"></i>
+                    </a>
 
-<p>Low Stock Report</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    PURCHASE
 
-<li class="nav-header">
+                </li>
 
-PURCHASE
+                <li class="nav-item">
 
-</li>
+                    <a href="/purchase" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-shopping-cart"></i>
 
-<a href="/purchase" class="nav-link">
+                        <p>Purchase Entry</p>
 
-<i class="nav-icon fas fa-shopping-cart"></i>
+                    </a>
 
-<p>Purchase Entry</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/purchase/list" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-clipboard-list"></i>
 
-<a href="/purchase/list" class="nav-link">
+                        <p>Purchase List</p>
 
-<i class="nav-icon fas fa-clipboard-list"></i>
+                    </a>
 
-<p>Purchase List</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/supplier-payments/list" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-money-check-alt"></i>
 
-<a href="/supplier-payments/list" class="nav-link">
+                        <p>Supplier Payments</p>
 
-<i class="nav-icon fas fa-money-check-alt"></i>
+                    </a>
 
-<p>Supplier Payments</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    REPORTS
 
-<li class="nav-header">
+                </li>
 
-REPORTS
+                <li class="nav-item">
 
-</li>
+                    <a href="/reports/sales" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-chart-line"></i>
 
-<a href="/reports/sales" class="nav-link">
+                        <p>Sales Report</p>
 
-<i class="nav-icon fas fa-chart-line"></i>
+                    </a>
 
-<p>Sales Report</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/reports/purchase" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
 
-<a href="/reports/purchase" class="nav-link">
+                        <p>Purchase Report</p>
 
-<i class="nav-icon fas fa-file-invoice-dollar"></i>
+                    </a>
 
-<p>Purchase Report</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/reports/inventory" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-warehouse"></i>
 
-<a href="/reports/inventory" class="nav-link">
+                        <p>Inventory Report</p>
 
-<i class="nav-icon fas fa-warehouse"></i>
+                    </a>
 
-<p>Inventory Report</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    ACCOUNTS
 
-<li class="nav-header">
+                </li>
 
-ACCOUNTS
+                <li class="nav-item">
 
-</li>
+                    <a href="/accounts" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-book"></i>
 
-<a href="/accounts" class="nav-link">
+                        <p>Chart Of Accounts</p>
 
-<i class="nav-icon fas fa-book"></i>
+                    </a>
 
-<p>Chart Of Accounts</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    SETTINGS
 
-<li class="nav-header">
+                </li>
 
-SETTINGS
+                <li class="nav-item">
 
-</li>
+                    <a href="/settings/company" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-building"></i>
 
-<a href="/settings/company" class="nav-link">
+                        <p>Company Settings</p>
 
-<i class="nav-icon fas fa-building"></i>
+                    </a>
 
-<p>Company Settings</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    ADMINISTRATION
 
-<li class="nav-header">
+                </li>
 
-ADMINISTRATION
+                <li class="nav-item">
 
-</li>
+                    <a href="/users" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-users-cog"></i>
 
-<a href="/users" class="nav-link">
+                        <p>User Management</p>
 
-<i class="nav-icon fas fa-users-cog"></i>
+                    </a>
 
-<p>User Management</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/roles" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-user-shield"></i>
 
-<a href="/roles" class="nav-link">
+                        <p>Roles</p>
 
-<i class="nav-icon fas fa-user-shield"></i>
+                    </a>
 
-<p>Roles</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/permissions" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-lock"></i>
 
-<a href="/permissions" class="nav-link">
+                        <p>Permissions</p>
 
-<i class="nav-icon fas fa-lock"></i>
+                    </a>
 
-<p>Permissions</p>
+                </li>
 
-</a>
+                <li class="nav-header">
 
-</li>
+                    USER
 
-<li class="nav-header">
+                </li>
 
-USER
+                <li class="nav-item">
 
-</li>
+                    <a href="/profile" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-user-circle"></i>
 
-<a href="/profile" class="nav-link">
+                        <p>Profile</p>
 
-<i class="nav-icon fas fa-user-circle"></i>
+                    </a>
 
-<p>Profile</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/change-password" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-key"></i>
 
-<a href="/change-password" class="nav-link">
+                        <p>Change Password</p>
 
-<i class="nav-icon fas fa-key"></i>
+                    </a>
 
-<p>Change Password</p>
+                </li>
 
-</a>
+                <li class="nav-item">
 
-</li>
+                    <a href="/logout" class="nav-link">
 
-<li class="nav-item">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
 
-<a href="/logout" class="nav-link">
+                        <p>Logout</p>
 
-<i class="nav-icon fas fa-sign-out-alt"></i>
+                    </a>
 
-<p>Logout</p>
+                </li>
 
-</a>
+            </ul>
 
-</li>
+        </nav>
 
-</ul>
-
-</nav>
-
-</div>
+    </div>
 
 </aside>
