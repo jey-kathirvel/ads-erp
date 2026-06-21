@@ -6,30 +6,21 @@
 
     <div class="card-header">
 
-        <div class="row">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
 
-            <div class="col-md-6">
+            <h3 class="card-title mb-2 mb-md-0">
 
-                <h3 class="card-title">
+                Customers
 
-                    Customers
+            </h3>
 
-                </h3>
+            <a href="/customers/create" class="btn btn-primary btn-sm px-3">
 
-            </div>
+                <i class="fas fa-plus"></i>
 
-            <div class="col-md-6 text-right">
+                Add Customer
 
-                <a href="/customers/create"
-                   class="btn btn-primary">
-
-                    <i class="fas fa-plus"></i>
-
-                    Add Customer
-
-                </a>
-
-            </div>
+            </a>
 
         </div>
 
@@ -37,127 +28,162 @@
 
     <div class="card-body">
 
-        <table
-                id="customerTable"
-                class="table table-bordered table-striped">
+        <div class="table-responsive">
 
-            <thead>
+            <table id="customerTable" class="table table-bordered table-striped">
 
-            <tr>
+                <thead>
 
-                <th>Code</th>
+                    <tr>
 
-                <th>Name</th>
+                        <th>Code</th>
 
-                <th>Mobile</th>
+                        <th>Name</th>
 
-                <th>City</th>
+                        <th>Mobile</th>
 
-                <th>Status</th>
+                        <th>City</th>
 
-                <th width="180">
+                        <th>Status</th>
 
-                    Actions
+                        <th width="180">
 
-                </th>
+                            Actions
 
-            </tr>
+                        </th>
 
-            </thead>
+                    </tr>
 
-            <tbody>
+                </thead>
 
-            {% for customer in customers %}
+                <tbody>
 
-            <tr>
+                    {% for customer in customers %}
 
-                <td>
+                    <tr>
 
-                    {{ customer.customer_code }}
+                        <td>
 
-                </td>
+                            {{ customer.customer_code }}
 
-                <td>
+                        </td>
 
-                    {{ customer.customer_name }}
+                        <td>
 
-                </td>
+                            {{ customer.customer_name }}
 
-                <td>
+                        </td>
 
-                    {{ customer.mobile }}
+                        <td>
 
-                </td>
+                            {{ customer.mobile }}
 
-                <td>
+                        </td>
 
-                    {{ customer.city }}
+                        <td>
 
-                </td>
+                            {{ customer.city }}
 
-                <td>
+                        </td>
 
-                    {% if customer.is_active %}
+                        <td>
 
-                    <span class="badge badge-success">
+                            {% if customer.is_active %}
 
-                        Active
+                            <span class="badge badge-success">
 
-                    </span>
+                                Active
 
-                    {% else %}
+                            </span>
 
-                    <span class="badge badge-danger">
+                            {% else %}
 
-                        Inactive
+                            <span class="badge badge-danger">
 
-                    </span>
+                                Inactive
 
-                    {% endif %}
+                            </span>
 
-                </td>
+                            {% endif %}
 
-                <td>
+                        </td>
 
-                    <a
-                            href="/customers/{{customer.id}}"
+                        <td>
 
-                            class="btn btn-info btn-sm">
+                            <a href="/customers/{{customer.id}}" class="btn btn-info btn-sm">
 
-                        <i class="fas fa-eye"></i>
+                                <i class="fas fa-eye"></i>
 
-                    </a>
+                            </a>
 
-                    <a
-                            href="/customers/{{customer.id}}/edit"
+                            <a href="/customers/{{customer.id}}/edit" class="btn btn-warning btn-sm">
 
-                            class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i>
 
-                        <i class="fas fa-edit"></i>
+                            </a>
 
-                    </a>
+                            <a href="/customers/{{customer.id}}/delete" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this customer?')">
 
-                    <a
-                            href="/customers/{{customer.id}}/delete"
+                                <i class="fas fa-trash"></i>
 
-                            class="btn btn-danger btn-sm">
+                            </a>
 
-                        <i class="fas fa-trash"></i>
+                        </td>
 
-                    </a>
+                    </tr>
 
-                </td>
+                    {% endfor %}
 
-            </tr>
+                </tbody>
 
-            {% endfor %}
+            </table>
 
-            </tbody>
-
-        </table>
+        </div>
 
     </div>
 
+
 </div>
+
+<style>
+    @media (max-width: 768px) {
+
+        .card-header .row {
+            display: block;
+        }
+
+        .card-title {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .card-header .text-right {
+            text-align: left !important;
+            margin-top: 10px;
+        }
+
+        .card-header .btn {
+            width: auto !important;
+            display: inline-block;
+        }
+
+        #customerTable {
+            font-size: 13px;
+        }
+
+        #customerTable th,
+        #customerTable td {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        #customerTable .btn {
+            padding: 4px 8px;
+            margin-bottom: 2px;
+        }
+
+    }
+</style>
 
 {% endblock %}
