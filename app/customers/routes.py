@@ -16,37 +16,20 @@ from fastapi import Depends
 
 from app.auth.dependencies import login_required
 
-router = APIRouter(
-
-    dependencies=[
-
-        Depends(login_required)
-
-    ]
-
-)
+router = APIRouter(dependencies=[Depends(login_required)])
 
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
 # -------------------------------
 # Customer List
 # -------------------------------
 
-@router.get(
-    "/customers",
-    response_class=HTMLResponse
-)
+
+@router.get("/customers", response_class=HTMLResponse)
 async def customer_list(
-    request: Request,
-
-    user=Depends(login_required),
-
-    db: Session = Depends(get_db)
-
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
     # --------------------------------
@@ -60,11 +43,7 @@ async def customer_list(
     customers = CustomerService.get_all(db)
 
     return templates.TemplateResponse(
-        request=request,
-        name="customers/list.html",
-        context={
-            "customers": customers
-        }
+        request=request, name="customers/list.html", context={"customers": customers}
     )
 
 
@@ -72,27 +51,20 @@ async def customer_list(
 # Create Customer Page
 # -------------------------------
 
-@router.get(
-    "/customers/create",
-    response_class=HTMLResponse
-)
-async def customer_create_page(
-    request: Request
-):
 
-    return templates.TemplateResponse(
-        request=request,
-        name="customers/create.html"
-    )
+@router.get("/customers/create", response_class=HTMLResponse)
+async def customer_create_page(request: Request):
+
+    return templates.TemplateResponse(request=request, name="customers/create.html")
 
 
 # -------------------------------
 # Save Customer
 # -------------------------------
 
+
 @router.post("/customers/create")
 async def customer_create(
-
     customer_name: str = Form(...),
     contact_person: str = Form(""),
     mobile: str = Form(""),
@@ -105,13 +77,10 @@ async def customer_create(
     pincode: str = Form(""),
     credit_limit: float = Form(0),
     opening_balance: float = Form(0),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
     customer = CustomerCreate(
-
         customer_name=customer_name,
         contact_person=contact_person,
         mobile=mobile,
@@ -123,50 +92,28 @@ async def customer_create(
         state=state,
         pincode=pincode,
         credit_limit=credit_limit,
-        opening_balance=opening_balance
-
+        opening_balance=opening_balance,
     )
 
-    CustomerService.create(
-        db,
-        customer
-    )
+    CustomerService.create(db, customer)
 
-    return RedirectResponse(
-        "/customers",
-        status_code=303
-    )
+    return RedirectResponse("/customers", status_code=303)
 
 
 # -------------------------------
 # View Customer
 # -------------------------------
 
-@router.get(
-    "/customers/{customer_id}",
-    response_class=HTMLResponse
-)
+
+@router.get("/customers/{customer_id}", response_class=HTMLResponse)
 async def view_customer(
-
-    customer_id: int,
-
-    request: Request,
-
-    db: Session = Depends(get_db)
-
+    customer_id: int, request: Request, db: Session = Depends(get_db)
 ):
 
-    customer = CustomerService.get_by_id(
-        db,
-        customer_id
-    )
+    customer = CustomerService.get_by_id(db, customer_id)
 
     return templates.TemplateResponse(
-        request=request,
-        name="customers/view.html",
-        context={
-            "customer": customer
-        }
+        request=request, name="customers/view.html", context={"customer": customer}
     )
 
 
@@ -174,31 +121,16 @@ async def view_customer(
 # Edit Customer Page
 # -------------------------------
 
-@router.get(
-    "/customers/{customer_id}/edit",
-    response_class=HTMLResponse
-)
+
+@router.get("/customers/{customer_id}/edit", response_class=HTMLResponse)
 async def edit_customer_page(
-
-    customer_id: int,
-
-    request: Request,
-
-    db: Session = Depends(get_db)
-
+    customer_id: int, request: Request, db: Session = Depends(get_db)
 ):
 
-    customer = CustomerService.get_by_id(
-        db,
-        customer_id
-    )
+    customer = CustomerService.get_by_id(db, customer_id)
 
     return templates.TemplateResponse(
-        request=request,
-        name="customers/edit.html",
-        context={
-            "customer": customer
-        }
+        request=request, name="customers/edit.html", context={"customer": customer}
     )
 
 
@@ -206,13 +138,10 @@ async def edit_customer_page(
 # Update Customer
 # -------------------------------
 
-@router.post(
-    "/customers/{customer_id}/edit"
-)
+
+@router.post("/customers/{customer_id}/edit")
 async def update_customer(
-
     customer_id: int,
-
     customer_name: str = Form(...),
     contact_person: str = Form(""),
     mobile: str = Form(""),
@@ -225,13 +154,10 @@ async def update_customer(
     pincode: str = Form(""),
     credit_limit: float = Form(0),
     opening_balance: float = Form(0),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
     customer = CustomerCreate(
-
         customer_name=customer_name,
         contact_person=contact_person,
         mobile=mobile,
@@ -243,43 +169,22 @@ async def update_customer(
         state=state,
         pincode=pincode,
         credit_limit=credit_limit,
-        opening_balance=opening_balance
-
+        opening_balance=opening_balance,
     )
 
-    CustomerService.update(
-        db,
-        customer_id,
-        customer
-    )
+    CustomerService.update(db, customer_id, customer)
 
-    return RedirectResponse(
-        "/customers",
-        status_code=303
-    )
+    return RedirectResponse("/customers", status_code=303)
 
 
 # -------------------------------
 # Delete Customer
 # -------------------------------
 
-@router.get(
-    "/customers/{customer_id}/delete"
-)
-async def delete_customer(
 
-    customer_id: int,
+@router.get("/customers/{customer_id}/delete")
+async def delete_customer(customer_id: int, db: Session = Depends(get_db)):
 
-    db: Session = Depends(get_db)
+    CustomerService.delete(db, customer_id)
 
-):
-
-    CustomerService.delete(
-        db,
-        customer_id
-    )
-
-    return RedirectResponse(
-        "/customers",
-        status_code=303
-    )
+    return RedirectResponse("/customers", status_code=303)

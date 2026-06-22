@@ -240,7 +240,7 @@
 
     </a>
 
-<div style="
+    <div style="
     border-top:5px solid #dcdfe3;
     margin-bottom:10px;
 "></div>
@@ -574,6 +574,17 @@
                     </a>
 
                 </li>
+
+                {% if request.session.get("user", {}).get("role_code") == "ADMIN" %}
+
+                <li class="nav-item">
+                    <a href="/settings/backup" class="nav-link">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>Database Backup</p>
+                    </a>
+                </li>
+
+                {% endif %}
 
                 <li class="nav-header">
 

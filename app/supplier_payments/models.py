@@ -17,40 +17,20 @@ class SupplierPayment(Base):
 
     __tablename__ = "supplier_payments"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
 
     payment_no: Mapped[str] = mapped_column(
-        String(30),
-        unique=True,
-        nullable=False,
-        index=True
+        String(30), unique=True, nullable=False, index=True
     )
 
-    supplier_id: Mapped[int] = mapped_column(
-        index=True
-    )
+    supplier_id: Mapped[int] = mapped_column(index=True)
 
-    payment_date: Mapped[date] = mapped_column(
-        Date,
-        default=date.today
-    )
+    payment_date: Mapped[date] = mapped_column(Date, default=date.today)
 
-    payment_mode: Mapped[str | None] = mapped_column(
-        String(30)
-    )
+    payment_mode: Mapped[str | None] = mapped_column(String(30))
 
-    amount: Mapped[float] = mapped_column(
-        Numeric(14, 2),
-        default=0
-    )
+    amount: Mapped[float] = mapped_column(Numeric(14, 2), default=0)
 
-    remarks: Mapped[str | None] = mapped_column(
-        Text
-    )
+    remarks: Mapped[str | None] = mapped_column(Text)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

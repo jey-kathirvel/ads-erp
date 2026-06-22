@@ -17,70 +17,33 @@ class Role(Base):
 
     __tablename__ = "roles"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    role_code: Mapped[str] = mapped_column(
-        String(30),
-        unique=True,
-        nullable=False
-    )
+    role_code: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
 
-    role_name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False
-    )
+    role_name: Mapped[str] = mapped_column(String(100), nullable=False)
 
-    description: Mapped[str | None] = mapped_column(
-        Text
-    )
+    description: Mapped[str | None] = mapped_column(Text)
 
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True
-    )
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class RolePermission(Base):
 
     __tablename__ = "role_permissions"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    role_id: Mapped[int] = mapped_column(
-        ForeignKey("roles.id")
-    )
+    role_id: Mapped[int] = mapped_column(ForeignKey("roles.id"))
 
-    module_name: Mapped[str] = mapped_column(
-        String(100)
-    )
+    module_name: Mapped[str] = mapped_column(String(100))
 
-    can_view: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True
-    )
+    can_view: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    can_add: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False
-    )
+    can_add: Mapped[bool] = mapped_column(Boolean, default=False)
 
-    can_edit: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False
-    )
+    can_edit: Mapped[bool] = mapped_column(Boolean, default=False)
 
-    can_delete: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False
-    )
+    can_delete: Mapped[bool] = mapped_column(Boolean, default=False)

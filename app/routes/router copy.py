@@ -15,8 +15,9 @@ from app.company.routes import router as company_router
 from app.auth.routes import router as auth_router
 from app.users.routes import router as users_router
 from app.roles.routes import router as roles_router
+
+# from app.menu.routes import router as menu_router
 from app.permissions.routes import router as permission_router
-from app.settings.routes import router as settings_router
 
 api_router = APIRouter()
 
@@ -56,17 +57,20 @@ api_router.include_router(supplier_payment_router, tags=["Supplier Payments"])
 # Company
 api_router.include_router(company_router, tags=["Company"])
 
-# Settings
-api_router.include_router(settings_router, tags=["Settings"])
-
 # Authentication
 api_router.include_router(auth_router, tags=["Authentication"])
 
 # Users
 api_router.include_router(users_router, tags=["Users"])
-
 # Roles
 api_router.include_router(roles_router, tags=["Roles"])
+# Menu
+# api_router.include_router(
 
+#    menu_router,
+
+#    tags=["Menu"]
+
+# )
 # Permissions
 api_router.include_router(permission_router, tags=["Permissions"])

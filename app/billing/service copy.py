@@ -12,91 +12,34 @@ class BillingService:
     def get_all(db: Session):
 
         return (
-
             db.query(Invoice)
-
-            .options(
-
-                joinedload(Invoice.customer)
-
-            )
-
-            .order_by(
-
-                Invoice.id.desc()
-
-            )
-
+            .options(joinedload(Invoice.customer))
+            .order_by(Invoice.id.desc())
             .all()
-
         )
 
     @staticmethod
-    def get_by_id(
-
-        db: Session,
-
-        invoice_id: int
-
-    ):
+    def get_by_id(db: Session, invoice_id: int):
 
         return (
-
             db.query(Invoice)
-
-            .options(
-
-                joinedload(Invoice.customer)
-
-            )
-
-            .filter(
-
-                Invoice.id == invoice_id
-
-            )
-
+            .options(joinedload(Invoice.customer))
+            .filter(Invoice.id == invoice_id)
             .first()
-
         )
 
     @staticmethod
-    def get_items(
-
-        db: Session,
-
-        invoice_id: int
-
-    ):
+    def get_items(db: Session, invoice_id: int):
 
         return (
-
             db.query(InvoiceItem)
-
-            .options(
-
-                joinedload(InvoiceItem.product)
-
-            )
-
-            .filter(
-
-                InvoiceItem.invoice_id == invoice_id
-
-            )
-
+            .options(joinedload(InvoiceItem.product))
+            .filter(InvoiceItem.invoice_id == invoice_id)
             .all()
-
         )
 
     @staticmethod
-    def create(
-
-        db: Session,
-
-        data: InvoiceCreate
-
-    ):
+    def create(db: Session, data: InvoiceCreate):
 
         invoices = db.query(Invoice).all()
 
@@ -110,12 +53,7 @@ class BillingService:
 
                 try:
 
-                    current_no = int(
-                        inv.invoice_no.replace(
-                            "INV",
-                            ""
-                        )
-                    )
+                    current_no = int(inv.invoice_no.replace("INV", ""))
 
                     if current_no > max_no:
 
@@ -128,33 +66,19 @@ class BillingService:
             next_no = max_no + 1
 
         invoice = Invoice(
-
             invoice_no=f"INV{next_no:06}",
-
             customer_id=data.customer_id,
-
             subtotal=data.subtotal,
-
             discount=data.discount,
-
             taxable_amount=data.taxable_amount,
-
             cgst=data.cgst,
-
             sgst=data.sgst,
-
             igst=data.igst,
-
             grand_total=data.grand_total,
-
             payment_mode=data.payment_mode,
-
             payment_status=data.payment_status,
-
             remarks=data.remarks,
-
-            status="Completed"
-
+            status="Completed",
         )
 
         db.add(invoice)
@@ -167,38 +91,17 @@ class BillingService:
 
     @staticmethod
     def update(
-
         db: Session,
-
         invoice_id: int,
-
         data: InvoiceCreate,
-
         product_id: list[int],
-
         qty: list[float],
-
         rate: list[float],
-
         gst: list[float],
-
-        total: list[float]
-
+        total: list[float],
     ):
 
-        invoice = (
-
-            db.query(Invoice)
-
-            .filter(
-
-                Invoice.id == invoice_id
-
-            )
-
-            .first()
-
-        )
+        invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
 
         if invoice is None:
 
@@ -236,15 +139,7 @@ class BillingService:
         # Delete Existing Items
         # -----------------------------
 
-        db.query(
-
-            InvoiceItem
-
-        ).filter(
-
-            InvoiceItem.invoice_id == invoice_id
-
-        ).delete()
+        db.query(InvoiceItem).filter(InvoiceItem.invoice_id == invoice_id).delete()
 
         db.commit()
 
@@ -255,19 +150,12 @@ class BillingService:
         for i in range(len(product_id)):
 
             item = InvoiceItem(
-
                 invoice_id=invoice_id,
-
                 product_id=product_id[i],
-
                 qty=qty[i],
-
                 rate=rate[i],
-
                 gst_percentage=gst[i],
-
-                total=total[i]
-
+                total=total[i],
             )
 
             db.add(item)
@@ -279,46 +167,16 @@ class BillingService:
         return invoice
 
     @staticmethod
-    def delete(
+    def delete(db: Session, invoice_id: int):
 
-        db: Session,
-
-        invoice_id: int
-
-    ):
-
-        invoice = (
-
-            db.query(Invoice)
-
-            .filter(
-
-                Invoice.id == invoice_id
-
-            )
-
-            .first()
-
-        )
+        invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
 
         if invoice:
 
             (
-
-                db.query(
-
-                    InvoiceItem
-
-                )
-
-                .filter(
-
-                    InvoiceItem.invoice_id == invoice_id
-
-                )
-
+                db.query(InvoiceItem)
+                .filter(InvoiceItem.invoice_id == invoice_id)
                 .delete()
-
             )
 
             db.delete(invoice)

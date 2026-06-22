@@ -17,49 +17,22 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
-    full_name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False
-    )
+    full_name: Mapped[str] = mapped_column(String(100), nullable=False)
 
     email: Mapped[str] = mapped_column(
-        String(150),
-        unique=True,
-        nullable=False,
-        index=True
+        String(150), unique=True, nullable=False, index=True
     )
 
-    password_hash: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False
-    )
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
     role_id: Mapped[int] = mapped_column(
-        ForeignKey("roles.id"),
-        nullable=False,
-        default=1
+        ForeignKey("roles.id"), nullable=False, default=1
     )
 
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True
-    )
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    role = relationship(
-
-        "Role",
-
-        lazy="joined"
-
-    )
+    role = relationship("Role", lazy="joined")

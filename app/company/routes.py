@@ -17,34 +17,15 @@ from fastapi import Depends
 
 from app.auth.dependencies import login_required
 
-router = APIRouter(
-
-    dependencies=[
-
-        Depends(login_required)
-
-    ]
-
-)
+router = APIRouter(dependencies=[Depends(login_required)])
 
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get(
-    "/settings/company",
-    response_class=HTMLResponse
-)
+@router.get("/settings/company", response_class=HTMLResponse)
 async def company_profile(
-
-    request: Request,
-
-    user=Depends(login_required),
-
-    db: Session = Depends(get_db)
-
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
     # ------------------------------------
@@ -57,97 +38,44 @@ async def company_profile(
     company = CompanyService.get(db)
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="company/profile.html",
-
-        context={
-
-            "company": company
-
-        }
-
+        request=request, name="company/profile.html", context={"company": company}
     )
 
 
-@router.post(
-    "/settings/company"
-)
+@router.post("/settings/company")
 async def save_company(
-
     company_name: str = Form(...),
-
     gstin: str = Form(""),
-
     address: str = Form(""),
-
     city: str = Form(""),
-
     state: str = Form(""),
-
     pincode: str = Form(""),
-
     mobile: str = Form(""),
-
     email: str = Form(""),
-
     website: str = Form(""),
-
     invoice_prefix: str = Form("INV"),
-
     purchase_prefix: str = Form("PUR"),
-
     currency: str = Form("INR"),
-
     logo: str = Form(""),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
     company = CompanySettingCreate(
-
         company_name=company_name,
-
         gstin=gstin,
-
         address=address,
-
         city=city,
-
         state=state,
-
         pincode=pincode,
-
         mobile=mobile,
-
         email=email,
-
         website=website,
-
         invoice_prefix=invoice_prefix,
-
         purchase_prefix=purchase_prefix,
-
         currency=currency,
-
-        logo=logo
-
+        logo=logo,
     )
 
-    CompanyService.save(
+    CompanyService.save(db, company)
 
-        db,
-
-        company
-
-    )
-
-    return RedirectResponse(
-
-        url="/settings/company",
-
-        status_code=303
-
-    )
+    return RedirectResponse(url="/settings/company", status_code=303)

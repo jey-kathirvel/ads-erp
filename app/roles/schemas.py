@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
-
 # ----------------------------------------------------
 # Create Role
 # ----------------------------------------------------
+
 
 class RoleCreate(BaseModel):
 
@@ -20,6 +20,7 @@ class RoleCreate(BaseModel):
 # Update Role
 # ----------------------------------------------------
 
+
 class RoleUpdate(BaseModel):
 
     role_code: str
@@ -34,6 +35,7 @@ class RoleUpdate(BaseModel):
 # ----------------------------------------------------
 # Permission
 # ----------------------------------------------------
+
 
 class PermissionUpdate(BaseModel):
 
