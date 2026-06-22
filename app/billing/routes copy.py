@@ -19,6 +19,7 @@ from app.inventory.service import InventoryService
 from app.accounts.service import AutoPostingService
 from app.billing.item_models import InvoiceItem
 from app.auth.dependencies import login_required
+from app.company.service import CompanyService
 
 from fastapi import Depends
 
@@ -94,7 +95,9 @@ async def billing_page(
 @router.post("/billing/save")
 async def save_invoice(
 
-    customer_id: int = Form(...),
+    customer_id: int | None = Form(None),
+
+    manual_customer_name: str = Form(""),
 
     subtotal: float = Form(...),
 
@@ -110,9 +113,11 @@ async def save_invoice(
 
     grand_total: float = Form(...),
 
-    payment_mode: str = Form(...),
+payment_mode: str = Form(...),
 
-    remarks: str = Form(""),
+payment_status: str = Form("Paid"),
+
+remarks: str = Form(""),
 
     product_id: list[int] = Form(...),
 
@@ -128,9 +133,35 @@ async def save_invoice(
 
 ):
 
+
+    # ------------------------------------
+    # Customer Handling
+    # ------------------------------------
+
+    final_customer_id = None
+
+    if customer_id:
+
+        final_customer_id = customer_id
+
+    elif manual_customer_name.strip():
+
+        customer = CustomerService.create_walkin_customer(
+            db,
+            manual_customer_name.strip()
+        )
+
+        final_customer_id = customer.id
+
+    else:
+
+        guest = CustomerService.get_guest_customer(db)
+
+        final_customer_id = guest.id
+
     invoice = InvoiceCreate(
 
-        customer_id=customer_id,
+        customer_id=final_customer_id,
 
         subtotal=subtotal,
 
@@ -148,14 +179,11 @@ async def save_invoice(
 
         payment_mode=payment_mode,
 
+        payment_status=payment_status,
+
         remarks=remarks
 
     )
-
-    # -------------------------
-    # Save Invoice
-    # -------------------------
-
     saved_invoice = BillingService.create(
 
         db,
@@ -319,20 +347,26 @@ async def view_invoice(
         invoice_id
 
     )
+    company = CompanyService.get(
 
+    db
+
+    )
     return templates.TemplateResponse(
 
         request=request,
 
         name="billing/view.html",
 
-        context={
+    context={
 
-            "invoice": invoice,
+    "invoice": invoice,
 
-            "items": items
+    "items": items,
 
-        }
+    "company": company
+
+    }
 
     )
 # ----------------------------------------------------
@@ -427,9 +461,11 @@ async def update_invoice(
 
     grand_total: float = Form(...),
 
-    payment_mode: str = Form(...),
+payment_mode: str = Form(...),
 
-    remarks: str = Form(""),
+payment_status: str = Form("Paid"),
+
+remarks: str = Form(""),
 
     product_id: list[int] = Form(...),
 
@@ -463,9 +499,11 @@ async def update_invoice(
 
         grand_total=grand_total,
 
-        payment_mode=payment_mode,
+payment_mode=payment_mode,
 
-        remarks=remarks
+payment_status=payment_status,
+
+remarks=remarks
 
     )
 
@@ -559,19 +597,25 @@ async def print_invoice(
         invoice_id
 
     )
+    company = CompanyService.get(
 
+    db
+
+    )
     return templates.TemplateResponse(
 
         request=request,
 
         name="billing/view.html",
 
-        context={
+    context={
 
-            "invoice": invoice,
+    "invoice": invoice,
 
-            "items": items
+    "items": items,
 
-        }
+    "company": company
+
+    }
 
     )

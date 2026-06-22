@@ -98,11 +98,38 @@ class BillingService:
 
     ):
 
-        count = db.query(Invoice).count() + 1
+        invoices = db.query(Invoice).all()
+
+        next_no = 1
+
+        if invoices:
+
+            max_no = 0
+
+            for inv in invoices:
+
+                try:
+
+                    current_no = int(
+                        inv.invoice_no.replace(
+                            "INV",
+                            ""
+                        )
+                    )
+
+                    if current_no > max_no:
+
+                        max_no = current_no
+
+                except Exception:
+
+                    pass
+
+            next_no = max_no + 1
 
         invoice = Invoice(
 
-            invoice_no=f"INV{count:06}",
+            invoice_no=f"INV{next_no:06}",
 
             customer_id=data.customer_id,
 
@@ -121,6 +148,8 @@ class BillingService:
             grand_total=data.grand_total,
 
             payment_mode=data.payment_mode,
+
+            payment_status=data.payment_status,
 
             remarks=data.remarks,
 
@@ -143,7 +172,17 @@ class BillingService:
 
         invoice_id: int,
 
-        data: InvoiceCreate
+        data: InvoiceCreate,
+
+        product_id: list[int],
+
+        qty: list[float],
+
+        rate: list[float],
+
+        gst: list[float],
+
+        total: list[float]
 
     ):
 
@@ -165,6 +204,10 @@ class BillingService:
 
             return None
 
+        # -----------------------------
+        # Update Invoice Header
+        # -----------------------------
+
         invoice.customer_id = data.customer_id
 
         invoice.subtotal = data.subtotal
@@ -183,7 +226,51 @@ class BillingService:
 
         invoice.payment_mode = data.payment_mode
 
+        invoice.payment_status = data.payment_status
+
         invoice.remarks = data.remarks
+
+        db.commit()
+
+        # -----------------------------
+        # Delete Existing Items
+        # -----------------------------
+
+        db.query(
+
+            InvoiceItem
+
+        ).filter(
+
+            InvoiceItem.invoice_id == invoice_id
+
+        ).delete()
+
+        db.commit()
+
+        # -----------------------------
+        # Insert Updated Items
+        # -----------------------------
+
+        for i in range(len(product_id)):
+
+            item = InvoiceItem(
+
+                invoice_id=invoice_id,
+
+                product_id=product_id[i],
+
+                qty=qty[i],
+
+                rate=rate[i],
+
+                gst_percentage=gst[i],
+
+                total=total[i]
+
+            )
+
+            db.add(item)
 
         db.commit()
 

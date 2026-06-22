@@ -98,11 +98,38 @@ class BillingService:
 
     ):
 
-        count = db.query(Invoice).count() + 1
+        invoices = db.query(Invoice).all()
+
+        next_no = 1
+
+        if invoices:
+
+            max_no = 0
+
+            for inv in invoices:
+
+                try:
+
+                    current_no = int(
+                        inv.invoice_no.replace(
+                            "INV",
+                            ""
+                        )
+                    )
+
+                    if current_no > max_no:
+
+                        max_no = current_no
+
+                except Exception:
+
+                    pass
+
+            next_no = max_no + 1
 
         invoice = Invoice(
 
-            invoice_no=f"INV{count:06}",
+            invoice_no=f"INV{next_no:06}",
 
             customer_id=data.customer_id,
 
@@ -121,6 +148,8 @@ class BillingService:
             grand_total=data.grand_total,
 
             payment_mode=data.payment_mode,
+
+            payment_status=data.payment_status,
 
             remarks=data.remarks,
 
@@ -196,6 +225,8 @@ class BillingService:
         invoice.grand_total = data.grand_total
 
         invoice.payment_mode = data.payment_mode
+
+        invoice.payment_status = data.payment_status
 
         invoice.remarks = data.remarks
 
@@ -297,3 +328,41 @@ class BillingService:
             return True
 
         return False
+    
+    @staticmethod
+    def search_invoices(
+        db: Session,
+        from_date: str = "",
+        to_date: str = "",
+        payment_status: str = "",
+        payment_mode: str = ""
+    ):
+        query = db.query(Invoice).options(
+            joinedload(Invoice.customer)
+        )
+
+        if from_date:
+            query = query.filter(
+                Invoice.invoice_date >= from_date
+            )
+
+        if to_date:
+            query = query.filter(
+                Invoice.invoice_date <= to_date
+            )
+
+        if payment_status:
+            query = query.filter(
+                Invoice.payment_status == payment_status
+            )
+
+        if payment_mode:
+            query = query.filter(
+                Invoice.payment_mode == payment_mode
+            )
+
+        return (
+            query
+            .order_by(Invoice.id.desc())
+            .all()
+        )

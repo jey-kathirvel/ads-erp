@@ -38,15 +38,15 @@
 
                     <label>
 
-                        Customer (Optional)
+                        Customer
 
                     </label>
 
-                    <select name="customer_id" class="form-control">
+                    <select class="form-control" name="customer_id" required>
 
                         <option value="">
 
-                            Guest / Walk-in Customer
+                            Select Customer
 
                         </option>
 
@@ -61,26 +61,6 @@
                         {% endfor %}
 
                     </select>
-
-                    <div class="mt-2">
-
-                        <label>
-
-                            Walk-in Customer Name
-
-                        </label>
-
-                        <input type="text" name="manual_customer_name" class="form-control"
-                            placeholder="Enter customer name">
-
-                        <small class="text-muted">
-
-                            Select existing customer OR enter walk-in customer name.
-                            If both are blank, invoice will be saved as Guest.
-
-                        </small>
-
-                    </div>
 
                 </div>
 
@@ -121,21 +101,7 @@
                     </select>
 
                 </div>
-                <div class="form-group">
-                    <label>Payment Status</label>
 
-                    <select name="payment_status" class="form-control">
-
-                        <option value="Paid" selected>
-                            Paid
-                        </option>
-
-                        <option value="Unpaid">
-                            Unpaid
-                        </option>
-
-                    </select>
-                </div>
                 <div class="col-md-5">
 
                     <label>
@@ -760,12 +726,19 @@
 
             ).value;
 
-            // customer is optional now
+            if (customer == "") {
 
-            // if(customerId == ""){
-            //     alert("Please select customer.");
-            //     return false;
-            // }
+                alert(
+
+                    "Please select customer."
+
+                );
+
+                e.preventDefault();
+
+                return;
+
+            }
 
             let valid = true;
 

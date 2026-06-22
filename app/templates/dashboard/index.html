@@ -4,160 +4,204 @@
 
 <div class="row">
 
-<div class="col-lg-3">
+    <div class="col-6 col-md-3">
 
-<div class="small-box bg-info">
+        <div class="small-box bg-info">
 
-<div class="inner">
+            <div class="inner">
 
-<h3>{{ customer_count }}</h3>
+                <h3>{{ customer_count }}</h3>
 
-<p>Customers</p>
+                <p>Customers</p>
 
-</div>
+            </div>
 
-<div class="icon">
+            <div class="icon">
 
-<i class="fas fa-users"></i>
+                <i class="fas fa-users"></i>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="col-lg-3">
+    <div class="col-6 col-md-3">
 
-<div class="small-box bg-success">
+        <div class="small-box bg-success">
 
-<div class="inner">
+            <div class="inner">
 
-<h3>{{ product_count }}</h3>
+                <h3>{{ product_count }}</h3>
 
-<p>Products</p>
+                <p>Products</p>
 
-</div>
+            </div>
 
-<div class="icon">
+            <div class="icon">
 
-<i class="fas fa-box"></i>
+                <i class="fas fa-box"></i>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="col-lg-3">
+    <div class="col-6 col-md-3">
 
-<div class="small-box bg-warning">
+        <div class="small-box bg-warning">
 
-<div class="inner">
+            <div class="inner">
 
-<h3>{{ invoice_count }}</h3>
+                <h3>{{ invoice_count }}</h3>
 
-<p>Invoices</p>
+                <p>Invoices</p>
 
-</div>
+            </div>
 
-<div class="icon">
+            <div class="icon">
 
-<i class="fas fa-file-invoice"></i>
+                <i class="fas fa-file-invoice"></i>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="col-lg-3">
+    <div class="col-6 col-md-3">
 
-<div class="small-box bg-danger">
+        <div class="small-box bg-danger">
 
-<div class="inner">
+            <div class="inner">
 
-<h3>{{ low_stock }}</h3>
+                <h3>{{ low_stock }}</h3>
 
-<p>Low Stock</p>
+                <p>Low Stock</p>
 
-</div>
+            </div>
 
-<div class="icon">
+            <div class="icon">
 
-<i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-exclamation-triangle"></i>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
 <div class="card">
 
-<div class="card-header">
+    <div class="card-header">
 
-<h3 class="card-title">
+        <h3 class="card-title">
 
-Recent Stock Transactions
+            Recent Stock Transactions
 
-</h3>
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Transaction</th>
+
+                        <th>Type</th>
+
+                        <th>Product</th>
+
+                        <th>Qty</th>
+
+                        <th>Balance</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for stock in recent_transactions %}
+
+                    <tr>
+
+                        <td>{{ stock.id }}</td>
+
+                        <td>{{ stock.transaction_no }}</td>
+
+                        <td>{{ stock.transaction_type }}</td>
+
+                        <td>{{ stock.product_id }}</td>
+
+                        <td>{{ stock.qty }}</td>
+
+                        <td>{{ stock.balance_qty }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
-<div class="card-body">
+<style>
 
-<table class="table table-bordered table-striped">
+@media (max-width: 768px) {
 
-<thead>
+    .small-box {
 
-<tr>
+        min-height: 120px !important;
 
-<th>ID</th>
+        margin-bottom: 15px;
+    }
 
-<th>Transaction</th>
+    .small-box .inner h3 {
 
-<th>Type</th>
+        font-size: 32px !important;
+    }
 
-<th>Product</th>
+    .small-box .inner p {
 
-<th>Qty</th>
+        font-size: 14px !important;
+    }
 
-<th>Balance</th>
+    .small-box .icon {
 
-</tr>
+        display: none;
+    }
 
-</thead>
+    .card-body {
 
-<tbody>
+        padding: 10px;
+    }
 
-{% for stock in recent_transactions %}
+    .table {
 
-<tr>
+        font-size: 12px;
+    }
 
-<td>{{ stock.id }}</td>
+}
 
-<td>{{ stock.transaction_no }}</td>
-
-<td>{{ stock.transaction_type }}</td>
-
-<td>{{ stock.product_id }}</td>
-
-<td>{{ stock.qty }}</td>
-
-<td>{{ stock.balance_qty }}</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+</style>
 
 {% endblock %}

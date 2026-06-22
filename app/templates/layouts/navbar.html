@@ -6,13 +6,7 @@
 
         <li class="nav-item">
 
-            <a class="nav-link"
-
-               data-widget="pushmenu"
-
-               href="#"
-
-               role="button">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
 
                 <i class="fas fa-bars"></i>
 
@@ -28,7 +22,7 @@
 
         <li class="nav-item">
 
-            <span class="nav-link text-primary font-weight-bold">
+            <span class="nav-link text-primary font-weight-bold d-none d-md-block">
 
                 <i class="fas fa-building"></i>
 
@@ -40,11 +34,7 @@
 
         <li class="nav-item dropdown">
 
-            <a class="nav-link"
-
-               data-toggle="dropdown"
-
-               href="#">
+            <a class="nav-link" data-toggle="dropdown" href="#">
 
                 <i class="fas fa-user-circle"></i>
 
@@ -64,16 +54,14 @@
 
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 
-<span class="dropdown-item dropdown-header">
+                <span class="dropdown-item dropdown-header">
 
-    {{ request.session.get("user","") }}
+                    {{ request.session.get("user","") }}
 
-</span>
+                </span>
                 <div class="dropdown-divider"></div>
 
-                <a href="/profile"
-
-                   class="dropdown-item">
+                <a href="/profile" class="dropdown-item">
 
                     <i class="fas fa-user mr-2"></i>
 
@@ -81,9 +69,7 @@
 
                 </a>
 
-                <a href="/change-password"
-
-                   class="dropdown-item">
+                <a href="/change-password" class="dropdown-item">
 
                     <i class="fas fa-key mr-2"></i>
 
@@ -93,9 +79,7 @@
 
                 <div class="dropdown-divider"></div>
 
-                <a href="/logout"
-
-                   class="dropdown-item text-danger">
+                <a href="/logout" class="dropdown-item text-danger">
 
                     <i class="fas fa-sign-out-alt mr-2"></i>
 

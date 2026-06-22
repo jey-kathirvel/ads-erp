@@ -79,7 +79,14 @@ class Invoice(Base):
         default="Cash"
     )
 
-    remarks: Mapped[str | None] = mapped_column(nullable=True)
+    payment_status: Mapped[str] = mapped_column(
+        String(20),
+        default="Paid"
+    )
+
+    remarks: Mapped[str | None] = mapped_column(
+        nullable=True
+    )
 
     status: Mapped[str] = mapped_column(
         String(20),
