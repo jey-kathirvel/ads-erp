@@ -212,13 +212,25 @@
 
                     Status :
 
-                </strong>
+                </strong><br>
+
+                Mode : {{ invoice.payment_mode }}<br>
+
+                Status :
+
+                {% if invoice.payment_status == "Paid" %}
 
                 <span class="badge badge-success">
-
-                    {{ invoice.status }}
-
+                    Paid
                 </span>
+
+                {% else %}
+
+                <span class="badge badge-danger">
+                    Unpaid
+                </span>
+
+                {% endif %}
 
             </div>
 

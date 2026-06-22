@@ -14,6 +14,7 @@ from app.billing.service import BillingService
 from app.billing.item_service import InvoiceItemService
 
 from app.customers.service import CustomerService
+from app.billing.models import Invoice
 from app.products.service import ProductService
 from app.inventory.service import InventoryService
 from app.accounts.service import AutoPostingService
@@ -95,7 +96,9 @@ async def billing_page(
 @router.post("/billing/save")
 async def save_invoice(
 
-    customer_id: int = Form(...),
+    customer_id: int | None = Form(None),
+
+    manual_customer_name: str = Form(""),
 
     subtotal: float = Form(...),
 
@@ -111,9 +114,11 @@ async def save_invoice(
 
     grand_total: float = Form(...),
 
-    payment_mode: str = Form(...),
+payment_mode: str = Form(...),
 
-    remarks: str = Form(""),
+payment_status: str = Form("Paid"),
+
+remarks: str = Form(""),
 
     product_id: list[int] = Form(...),
 
@@ -129,9 +134,35 @@ async def save_invoice(
 
 ):
 
+
+    # ------------------------------------
+    # Customer Handling
+    # ------------------------------------
+
+    final_customer_id = None
+
+    if customer_id:
+
+        final_customer_id = customer_id
+
+    elif manual_customer_name.strip():
+
+        customer = CustomerService.create_walkin_customer(
+            db,
+            manual_customer_name.strip()
+        )
+
+        final_customer_id = customer.id
+
+    else:
+
+        guest = CustomerService.get_guest_customer(db)
+
+        final_customer_id = guest.id
+
     invoice = InvoiceCreate(
 
-        customer_id=customer_id,
+        customer_id=final_customer_id,
 
         subtotal=subtotal,
 
@@ -149,14 +180,11 @@ async def save_invoice(
 
         payment_mode=payment_mode,
 
+        payment_status=payment_status,
+
         remarks=remarks
 
     )
-
-    # -------------------------
-    # Save Invoice
-    # -------------------------
-
     saved_invoice = BillingService.create(
 
         db,
@@ -258,19 +286,80 @@ async def save_invoice(
 # Invoice List
 # ----------------------------------------------------
 
+# ----------------------------------------------------
+# Invoice List
+# ----------------------------------------------------
+
 @router.get(
     "/billing/list",
     response_class=HTMLResponse
 )
 async def invoice_list(
-
     request: Request,
-
+    from_date: str | None = None,
+    to_date: str | None = None,
+    payment_status: str | None = None,
+    payment_mode: str | None = None,
     db: Session = Depends(get_db)
-
 ):
+    print("===================================")
+    print("FROM DATE :", from_date)
+    print("TO DATE   :", to_date)
+    print("STATUS    :", payment_status)
+    print("MODE      :", payment_mode)
+    print("===================================")
 
-    invoices = BillingService.get_all(db)
+    query = db.query(Invoice)
+
+    # ------------------------------------
+    # Date Filter
+    # ------------------------------------
+
+    if from_date:
+
+        query = query.filter(
+            Invoice.invoice_date >= from_date
+        )
+
+    if to_date:
+
+        query = query.filter(
+            Invoice.invoice_date <= to_date
+        )
+
+    # ------------------------------------
+    # Payment Status Filter
+    # ------------------------------------
+
+    if payment_status:
+
+        query = query.filter(
+            Invoice.payment_status == payment_status
+        )
+
+    # ------------------------------------
+    # Payment Mode Filter
+    # ------------------------------------
+
+    if payment_mode:
+
+        query = query.filter(
+            Invoice.payment_mode == payment_mode
+        )
+
+    invoices = (
+
+        query
+
+        .order_by(
+
+            Invoice.id.desc()
+
+        )
+
+        .all()
+
+    )
 
     return templates.TemplateResponse(
 
@@ -280,7 +369,15 @@ async def invoice_list(
 
         context={
 
-            "invoices": invoices
+            "invoices": invoices,
+
+            "from_date": from_date,
+
+            "to_date": to_date,
+
+            "payment_status": payment_status,
+
+            "payment_mode": payment_mode
 
         }
 
@@ -434,9 +531,11 @@ async def update_invoice(
 
     grand_total: float = Form(...),
 
-    payment_mode: str = Form(...),
+payment_mode: str = Form(...),
 
-    remarks: str = Form(""),
+payment_status: str = Form("Paid"),
+
+remarks: str = Form(""),
 
     product_id: list[int] = Form(...),
 
@@ -470,9 +569,11 @@ async def update_invoice(
 
         grand_total=grand_total,
 
-        payment_mode=payment_mode,
+payment_mode=payment_mode,
 
-        remarks=remarks
+payment_status=payment_status,
+
+remarks=remarks
 
     )
 
