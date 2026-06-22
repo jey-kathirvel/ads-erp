@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi import Request
 from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -56,18 +57,26 @@ app.include_router(api_router)
 # ----------------------------------------------------
 
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
+@app.get(
+    "/",
+    response_class=HTMLResponse
+)
+async def index(
+    request: Request
+):
 
     if request.session.get("user"):
 
-        return templates.TemplateResponse(
-            request=request,
-            name="dashboard/index.html",
-            context={"user": request.session.get("user")},
+        return RedirectResponse(
+            url="/dashboard",
+            status_code=303
         )
 
-    return templates.TemplateResponse(request=request, name="index.html", context={})
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={}
+    )
 
 
 # ----------------------------------------------------
