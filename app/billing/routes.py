@@ -14,6 +14,7 @@ from app.billing.service import BillingService
 from app.billing.item_service import InvoiceItemService
 
 from app.customers.service import CustomerService
+from app.billing.models import Invoice
 from app.products.service import ProductService
 from app.inventory.service import InventoryService
 from app.accounts.service import AutoPostingService
@@ -285,19 +286,80 @@ remarks: str = Form(""),
 # Invoice List
 # ----------------------------------------------------
 
+# ----------------------------------------------------
+# Invoice List
+# ----------------------------------------------------
+
 @router.get(
     "/billing/list",
     response_class=HTMLResponse
 )
 async def invoice_list(
-
     request: Request,
-
+    from_date: str | None = None,
+    to_date: str | None = None,
+    payment_status: str | None = None,
+    payment_mode: str | None = None,
     db: Session = Depends(get_db)
-
 ):
+    print("===================================")
+    print("FROM DATE :", from_date)
+    print("TO DATE   :", to_date)
+    print("STATUS    :", payment_status)
+    print("MODE      :", payment_mode)
+    print("===================================")
 
-    invoices = BillingService.get_all(db)
+    query = db.query(Invoice)
+
+    # ------------------------------------
+    # Date Filter
+    # ------------------------------------
+
+    if from_date:
+
+        query = query.filter(
+            Invoice.invoice_date >= from_date
+        )
+
+    if to_date:
+
+        query = query.filter(
+            Invoice.invoice_date <= to_date
+        )
+
+    # ------------------------------------
+    # Payment Status Filter
+    # ------------------------------------
+
+    if payment_status:
+
+        query = query.filter(
+            Invoice.payment_status == payment_status
+        )
+
+    # ------------------------------------
+    # Payment Mode Filter
+    # ------------------------------------
+
+    if payment_mode:
+
+        query = query.filter(
+            Invoice.payment_mode == payment_mode
+        )
+
+    invoices = (
+
+        query
+
+        .order_by(
+
+            Invoice.id.desc()
+
+        )
+
+        .all()
+
+    )
 
     return templates.TemplateResponse(
 
@@ -307,7 +369,15 @@ async def invoice_list(
 
         context={
 
-            "invoices": invoices
+            "invoices": invoices,
+
+            "from_date": from_date,
+
+            "to_date": to_date,
+
+            "payment_status": payment_status,
+
+            "payment_mode": payment_mode
 
         }
 

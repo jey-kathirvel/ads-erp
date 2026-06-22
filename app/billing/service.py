@@ -328,3 +328,41 @@ class BillingService:
             return True
 
         return False
+    
+    @staticmethod
+    def search_invoices(
+        db: Session,
+        from_date: str = "",
+        to_date: str = "",
+        payment_status: str = "",
+        payment_mode: str = ""
+    ):
+        query = db.query(Invoice).options(
+            joinedload(Invoice.customer)
+        )
+
+        if from_date:
+            query = query.filter(
+                Invoice.invoice_date >= from_date
+            )
+
+        if to_date:
+            query = query.filter(
+                Invoice.invoice_date <= to_date
+            )
+
+        if payment_status:
+            query = query.filter(
+                Invoice.payment_status == payment_status
+            )
+
+        if payment_mode:
+            query = query.filter(
+                Invoice.payment_mode == payment_mode
+            )
+
+        return (
+            query
+            .order_by(Invoice.id.desc())
+            .all()
+        )
