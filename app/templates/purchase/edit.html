@@ -1,0 +1,168 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card card-primary">
+
+    <div class="card-header">
+        <h3 class="card-title">
+            Edit Purchase - {{ purchase.purchase_no }}
+        </h3>
+    </div>
+
+    <form method="post" action="/purchase/update/{{ purchase.id }}">
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <label>Supplier</label>
+
+                    <select name="supplier_id" class="form-control" required>
+
+                        {% for supplier in suppliers %}
+
+                        <option value="{{ supplier.id }}"
+                            {% if supplier.id == purchase.supplier_id %}selected{% endif %}>
+
+                            {{ supplier.supplier_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+
+                    <label>Payment Mode</label>
+
+                    <input
+                        type="text"
+                        name="payment_mode"
+                        class="form-control"
+                        value="{{ purchase.payment_mode }}">
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            {% for item in items %}
+
+            <div class="row mb-2">
+
+                <div class="col-md-3">
+
+                    <select name="product_id" class="form-control">
+
+                        {% for product in products %}
+
+                        <option value="{{ product.id }}"
+                            {% if product.id == item.product_id %}selected{% endif %}>
+
+                            {{ product.product_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="qty"
+                        class="form-control"
+                        value="{{ item.qty }}">
+                </div>
+
+                <div class="col-md-2">
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="rate"
+                        class="form-control"
+                        value="{{ item.rate }}">
+                </div>
+
+                <div class="col-md-2">
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="gst"
+                        class="form-control"
+                        value="{{ item.gst_percentage }}">
+                </div>
+
+                <div class="col-md-3">
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="total"
+                        class="form-control"
+                        value="{{ item.total }}">
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            <hr>
+
+            <input type="hidden" name="subtotal" value="{{ purchase.subtotal }}">
+            <input type="hidden" name="discount" value="{{ purchase.discount }}">
+            <input type="hidden" name="taxable_amount" value="{{ purchase.taxable_amount }}">
+            <input type="hidden" name="cgst" value="{{ purchase.cgst }}">
+            <input type="hidden" name="sgst" value="{{ purchase.sgst }}">
+            <input type="hidden" name="igst" value="{{ purchase.igst }}">
+            <input type="hidden" name="grand_total" value="{{ purchase.grand_total }}">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <strong>Subtotal :</strong>
+                    ₹ {{ purchase.subtotal }}
+                </div>
+
+                <div class="col-md-4">
+                    <strong>GST :</strong>
+                    ₹ {{ purchase.cgst + purchase.sgst }}
+                </div>
+
+                <div class="col-md-4 text-right">
+                    <h4>
+                        Grand Total :
+                        ₹ {{ purchase.grand_total }}
+                    </h4>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card-footer">
+
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save"></i>
+                Update Purchase
+            </button>
+
+            <a href="/purchase/view/{{ purchase.id }}"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
