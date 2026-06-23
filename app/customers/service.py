@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.customers.models import Customer
 from app.customers.schemas import CustomerCreate
+from sqlalchemy.exc import IntegrityError
 
 
 class CustomerService:
@@ -152,19 +153,31 @@ class CustomerService:
 
         return customer
 
-    @staticmethod
-    def delete(db: Session, customer_id: int):
+@staticmethod
+def delete(db: Session, customer_id: int):
 
-        customer = db.query(Customer).filter(Customer.id == customer_id).first()
+    customer = (
+        db.query(Customer)
+        .filter(Customer.id == customer_id)
+        .first()
+    )
 
-        if customer is None:
-            return False
+    if not customer:
+        return "not_found"
+
+    try:
 
         db.delete(customer)
 
         db.commit()
 
-        return True
+        return "deleted"
+
+    except IntegrityError:
+
+        db.rollback()
+
+        return "in_use"
 
     @staticmethod
     def search(db: Session, keyword: str):
