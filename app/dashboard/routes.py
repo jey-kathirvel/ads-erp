@@ -22,33 +22,14 @@ from fastapi import Depends
 
 from app.auth.dependencies import login_required
 
-router = APIRouter(
+router = APIRouter(dependencies=[Depends(login_required)])
 
-    dependencies=[
-
-        Depends(login_required)
-
-    ]
-
-)
-
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
-@router.get(
-    "/dashboard",
-    response_class=HTMLResponse
-)
+@router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(
-
-    request: Request,
-
-    user=Depends(login_required),
-
-    db: Session = Depends(get_db)
-
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
     # ------------------------------------
@@ -63,168 +44,59 @@ async def dashboard(
     # Dashboard Counts
     # ------------------------------------
 
-    customer_count = (
+    customer_count = db.query(Customer).count()
 
-        db.query(Customer)
+    product_count = db.query(Product).count()
 
-        .count()
-
-    )
-
-    product_count = (
-
-        db.query(Product)
-
-        .count()
-
-    )
-
-    invoice_count = (
-
-        db.query(Invoice)
-
-        .count()
-
-    )
+    invoice_count = db.query(Invoice).count()
 
     low_stock = (
-
-        db.query(Product)
-
-        .filter(
-
-            Product.current_stock <= Product.minimum_stock
-
-        )
-
-        .count()
-
+        db.query(Product).filter(Product.current_stock <= Product.minimum_stock).count()
     )
 
-    out_of_stock = (
-
-        db.query(Product)
-
-        .filter(
-
-            Product.current_stock <= 0
-
-        )
-
-        .count()
-
-    )
+    out_of_stock = db.query(Product).filter(Product.current_stock <= 0).count()
 
     # ------------------------------------
     # Inventory Value
     # ------------------------------------
 
     inventory_value = (
-
-        db.query(
-
-            func.sum(
-
-                Product.current_stock *
-
-                Product.purchase_price
-
-            )
-
-        )
-
-        .scalar()
-
+        db.query(func.sum(Product.current_stock * Product.purchase_price)).scalar()
     ) or 0
 
     # ------------------------------------
     # Recent Invoices
     # ------------------------------------
 
-    recent_invoices = (
-
-        db.query(Invoice)
-
-        .order_by(
-
-            Invoice.id.desc()
-
-        )
-
-        .limit(10)
-
-        .all()
-
-    )
+    recent_invoices = db.query(Invoice).order_by(Invoice.id.desc()).limit(10).all()
 
     # ------------------------------------
     # Recent Stock Transactions
     # ------------------------------------
 
     recent_transactions = (
-
-        db.query(StockTransaction)
-
-        .order_by(
-
-            StockTransaction.id.desc()
-
-        )
-
-        .limit(10)
-
-        .all()
-
+        db.query(StockTransaction).order_by(StockTransaction.id.desc()).limit(10).all()
     )
 
     # ------------------------------------
     # Current Stock Quantity
     # ------------------------------------
 
-    total_stock_qty = (
-
-        db.query(
-
-            func.sum(
-
-                Product.current_stock
-
-            )
-
-        )
-
-        .scalar()
-
-    ) or 0
+    total_stock_qty = (db.query(func.sum(Product.current_stock)).scalar()) or 0
 
     return templates.TemplateResponse(
-
         request=request,
-
         name="dashboard/index.html",
-
         context={
-
             "customer_count": customer_count,
-
             "product_count": product_count,
-
             "invoice_count": invoice_count,
-
             "low_stock": low_stock,
-
             "out_of_stock": out_of_stock,
-
             "inventory_value": float(inventory_value),
-
             "total_stock_qty": float(total_stock_qty),
-
             "recent_invoices": recent_invoices,
-
             "recent_transactions": recent_transactions,
-
-            "user": user
-
-        }
-
+            "user": user,
+        },
     )

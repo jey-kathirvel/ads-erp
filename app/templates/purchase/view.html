@@ -2,92 +2,329 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card card-primary">
 
-<div class="card-header bg-success">
+    <div class="card-header">
 
-<h3>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
 
-Purchase {{ purchase.purchase_no }}
+            <h3 class="card-title mb-2 mb-md-0">
 
-</h3>
+                <i class="fas fa-file-invoice"></i>
+
+                Purchase Details - {{ purchase.purchase_no }}
+
+            </h3>
+
+            <div class="text-center text-md-right">
+
+                <a href="/purchase/edit/{{ purchase.id }}"
+                   class="btn btn-warning btn-sm mb-1">
+
+                    <i class="fas fa-edit"></i>
+                    Edit
+
+                </a>
+
+                <button type="button"
+                        onclick="printPurchase()"
+                        class="btn btn-success btn-sm mb-1">
+
+                    <i class="fas fa-print"></i>
+                    Print
+
+                </button>
+
+                <a href="/purchase/list"
+                   class="btn btn-secondary btn-sm mb-1">
+
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <table class="table table-bordered">
+
+                    <tr>
+                        <th width="40%">Purchase No</th>
+                        <td>{{ purchase.purchase_no }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Purchase Date</th>
+                        <td>{{ purchase.purchase_date }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Supplier</th>
+                        <td>{{ supplier_map.get(purchase.supplier_id, purchase.supplier_id) }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Payment Mode</th>
+                        <td>{{ purchase.payment_mode }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="small-box bg-success">
+
+                    <div class="inner">
+
+                        <h3>₹ {{ purchase.grand_total }}</h3>
+
+                        <p>Grand Total</p>
+
+                    </div>
+
+                    <div class="icon">
+
+                        <i class="fas fa-rupee-sign"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h5>
+
+            <i class="fas fa-shopping-cart"></i>
+
+            Purchase Items
+
+        </h5>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped">
+
+                <thead class="thead-light">
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Rate</th>
+                        <th>GST %</th>
+                        <th>Total</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in items %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ product_map.get(item.product_id, item.product_id) }}</td>
+
+                        <td>{{ item.qty }}</td>
+
+                        <td>₹ {{ item.rate }}</td>
+
+                        <td>{{ item.gst_percentage }}%</td>
+
+                        <td>₹ {{ item.total }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <hr>
+
+        <div class="row">
+
+            <div class="col-12 col-md-3 mb-2">
+
+                <div class="info-box">
+
+                    <span class="info-box-icon bg-info">
+                        <i class="fas fa-calculator"></i>
+                    </span>
+
+                    <div class="info-box-content">
+
+                        <span class="info-box-text">
+                            Subtotal
+                        </span>
+
+                        <span class="info-box-number">
+                            ₹ {{ purchase.subtotal }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-3 mb-2">
+
+                <div class="info-box">
+
+                    <span class="info-box-icon bg-warning">
+                        <i class="fas fa-percent"></i>
+                    </span>
+
+                    <div class="info-box-content">
+
+                        <span class="info-box-text">
+                            CGST
+                        </span>
+
+                        <span class="info-box-number">
+                            ₹ {{ purchase.cgst }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-3 mb-2">
+
+                <div class="info-box">
+
+                    <span class="info-box-icon bg-warning">
+                        <i class="fas fa-percent"></i>
+                    </span>
+
+                    <div class="info-box-content">
+
+                        <span class="info-box-text">
+                            SGST
+                        </span>
+
+                        <span class="info-box-number">
+                            ₹ {{ purchase.sgst }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-12 col-md-3 mb-2">
+
+                <div class="info-box">
+
+                    <span class="info-box-icon bg-success">
+                        <i class="fas fa-rupee-sign"></i>
+                    </span>
+
+                    <div class="info-box-content">
+
+                        <span class="info-box-text">
+                            Grand Total
+                        </span>
+
+                        <span class="info-box-number">
+                            ₹ {{ purchase.grand_total }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
-<div class="card-body">
+<style>
 
-<table class="table table-bordered">
+@media (max-width: 768px) {
 
-<tr>
+    .card-title {
+        font-size: 18px;
+        line-height: 1.4;
+    }
 
-<th>Supplier</th>
+    .table {
+        font-size: 13px;
+    }
 
-<td>{{ purchase.supplier_id }}</td>
+    .info-box-number {
+        font-size: 18px;
+    }
 
-</tr>
+    .btn-sm {
+        margin-bottom: 5px;
+    }
 
-<tr>
+}
 
-<th>Grand Total</th>
+@media print {
 
-<td>₹ {{ purchase.grand_total }}</td>
+    .main-sidebar,
+    .main-header,
+    .navbar,
+    .card-header .btn,
+    button,
+    .content-header {
+        display: none !important;
+    }
 
-</tr>
+    .content-wrapper,
+    .card,
+    .card-body {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
 
-<tr>
+    body {
+        background: #fff !important;
+    }
 
-<th>Payment</th>
+}
 
-<td>{{ purchase.payment_mode }}</td>
+</style>
 
-</tr>
+<script>
 
-</table>
+function printPurchase() {
+    window.print();
+}
 
-<hr>
-
-<table class="table table-striped">
-
-<thead>
-
-<tr>
-
-<th>Product</th>
-
-<th>Qty</th>
-
-<th>Rate</th>
-
-<th>Total</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for item in items %}
-
-<tr>
-
-<td>{{ item.product_id }}</td>
-
-<td>{{ item.qty }}</td>
-
-<td>{{ item.rate }}</td>
-
-<td>{{ item.total }}</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+</script>
 
 {% endblock %}

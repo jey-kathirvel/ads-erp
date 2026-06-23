@@ -9,82 +9,32 @@ class SupplierService:
     @staticmethod
     def get_all(db: Session):
 
-        return (
-
-            db.query(Supplier)
-
-            .order_by(
-
-                Supplier.supplier_name
-
-            )
-
-            .all()
-
-        )
+        return db.query(Supplier).order_by(Supplier.supplier_name).all()
 
     @staticmethod
-    def get_by_id(
+    def get_by_id(db: Session, supplier_id: int):
 
-        db: Session,
-
-        supplier_id: int
-
-    ):
-
-        return (
-
-            db.query(Supplier)
-
-            .filter(
-
-                Supplier.id == supplier_id
-
-            )
-
-            .first()
-
-        )
+        return db.query(Supplier).filter(Supplier.id == supplier_id).first()
 
     @staticmethod
-    def create(
-
-        db: Session,
-
-        data: SupplierCreate
-
-    ):
+    def create(db: Session, data: SupplierCreate):
 
         count = db.query(Supplier).count() + 1
 
         supplier = Supplier(
-
             supplier_code=f"SUP{count:06}",
-
             supplier_name=data.supplier_name,
-
             contact_person=data.contact_person,
-
             mobile=data.mobile,
-
             email=data.email,
-
             gstin=data.gstin,
-
             address1=data.address1,
-
             address2=data.address2,
-
             city=data.city,
-
             state=data.state,
-
             pincode=data.pincode,
-
             opening_balance=data.opening_balance,
-
-            is_active=data.is_active
-
+            is_active=data.is_active,
         )
 
         db.add(supplier)
@@ -96,29 +46,9 @@ class SupplierService:
         return supplier
 
     @staticmethod
-    def update(
+    def update(db: Session, supplier_id: int, data: SupplierCreate):
 
-        db: Session,
-
-        supplier_id: int,
-
-        data: SupplierCreate
-
-    ):
-
-        supplier = (
-
-            db.query(Supplier)
-
-            .filter(
-
-                Supplier.id == supplier_id
-
-            )
-
-            .first()
-
-        )
+        supplier = db.query(Supplier).filter(Supplier.id == supplier_id).first()
 
         if supplier is None:
 
@@ -144,27 +74,9 @@ class SupplierService:
         return supplier
 
     @staticmethod
-    def delete(
+    def delete(db: Session, supplier_id: int):
 
-        db: Session,
-
-        supplier_id: int
-
-    ):
-
-        supplier = (
-
-            db.query(Supplier)
-
-            .filter(
-
-                Supplier.id == supplier_id
-
-            )
-
-            .first()
-
-        )
+        supplier = db.query(Supplier).filter(Supplier.id == supplier_id).first()
 
         if supplier:
 

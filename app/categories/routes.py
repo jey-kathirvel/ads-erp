@@ -16,37 +16,20 @@ from fastapi import Depends
 
 from app.auth.dependencies import login_required
 
-router = APIRouter(
-
-    dependencies=[
-
-        Depends(login_required)
-
-    ]
-
-)
+router = APIRouter(dependencies=[Depends(login_required)])
 
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
 # -----------------------------------
 # Category List
 # -----------------------------------
 
-@router.get(
-    "/categories",
-    response_class=HTMLResponse
-)
+
+@router.get("/categories", response_class=HTMLResponse)
 async def category_list(
-    request: Request,
-
-    user=Depends(login_required),
-
-    db: Session = Depends(get_db)
-
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
     # ------------------------------------
@@ -60,11 +43,7 @@ async def category_list(
     categories = CategoryService.get_all(db)
 
     return templates.TemplateResponse(
-        request=request,
-        name="categories/list.html",
-        context={
-            "categories": categories
-        }
+        request=request, name="categories/list.html", context={"categories": categories}
     )
 
 
@@ -72,55 +51,27 @@ async def category_list(
 # Create Category Page
 # -----------------------------------
 
-@router.get(
-    "/categories/create",
-    response_class=HTMLResponse
-)
-async def create_category_page(
-    request: Request
-):
 
-    return templates.TemplateResponse(
-        request=request,
-        name="categories/create.html"
-    )
+@router.get("/categories/create", response_class=HTMLResponse)
+async def create_category_page(request: Request):
+
+    return templates.TemplateResponse(request=request, name="categories/create.html")
 
 
 # -----------------------------------
 # Save Category
 # -----------------------------------
 
+
 @router.post("/categories/create")
 async def create_category(
-
     category_name: str = Form(...),
-
     description: str = Form(""),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
-    category = CategoryCreate(
+    category = CategoryCreate(category_name=category_name, description=description)
 
-        category_name=category_name,
+    CategoryService.create(db, category)
 
-        description=description
-
-    )
-
-    CategoryService.create(
-
-        db,
-
-        category
-
-    )
-
-    return RedirectResponse(
-
-        "/categories",
-
-        status_code=303
-
-    )
+    return RedirectResponse("/categories", status_code=303)

@@ -1,0 +1,208 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="row">
+
+    <div class="col-md-3">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{ total_products }}</h3>
+                <p>Total Products</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ "%.2f"|format(total_qty) }}</h3>
+                <p>Total Stock Qty</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{ low_stock_count }}</h3>
+                <p>Low Stock Items</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>₹ {{ "%.2f"|format(inventory_value) }}</h3>
+                <p>Inventory Value</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card card-outline card-primary">
+
+    <div class="card-header">
+
+        <h3 class="card-title">
+            Inventory Report
+        </h3>
+
+        <div class="card-tools">
+
+            <a href="/reports/inventory/pdf?stock_status={{ stock_status }}&search={{ search }}"
+                class="btn btn-danger btn-sm">
+
+                <i class="fas fa-file-pdf"></i>
+                PDF
+
+            </a>
+
+            <a href="/reports/inventory/excel?stock_status={{ stock_status }}&search={{ search }}"
+                class="btn btn-success btn-sm">
+
+                <i class="fas fa-file-excel"></i>
+                Excel
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <form method="get">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <input type="text" name="search" value="{{ search }}" placeholder="Search Product"
+                        class="form-control">
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <select name="stock_status" class="form-control">
+
+                        <option value="">All Stock</option>
+
+                        <option value="instock" {% if stock_status=='instock' %}selected{% endif %}>
+                            In Stock
+                        </option>
+
+                        <option value="low" {% if stock_status=='low' %}selected{% endif %}>
+                            Low Stock
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <button type="submit" class="btn btn-primary btn-block">
+
+                        Search
+
+                    </button>
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <a href="/reports/inventory" class="btn btn-secondary btn-block">
+
+                        Reset
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="card-body table-responsive">
+
+        <table class="table table-bordered table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>Product</th>
+                    <th>Purchase Price</th>
+                    <th>Selling Price</th>
+                    <th>Current Stock</th>
+                    <th>Minimum Stock</th>
+                    <th>Stock Value</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for product in products %}
+
+                <tr>
+
+                    <td>{{ product.product_name }}</td>
+
+                    <td>
+                        ₹ {{ "%.2f"|format(product.purchase_price) }}
+                    </td>
+
+                    <td>
+                        ₹ {{ "%.2f"|format(product.selling_price) }}
+                    </td>
+
+                    <td>
+                        {{ product.current_stock }}
+                    </td>
+
+                    <td>
+                        {{ product.minimum_stock }}
+                    </td>
+
+                    <td>
+                        ₹ {{ "%.2f"|format(product.current_stock * product.purchase_price) }}
+                    </td>
+
+                    <td>
+
+                        {% if product.current_stock <= product.minimum_stock %} <span class="badge badge-danger">
+                            Low Stock
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge badge-success">
+                                In Stock
+                            </span>
+
+                            {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

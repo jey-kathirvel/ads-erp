@@ -15,44 +15,22 @@ from app.roles.schemas import RoleUpdate
 
 router = APIRouter()
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 # ----------------------------------------------------
 # Role List
 # ----------------------------------------------------
 
-@router.get(
-    "/roles",
-    response_class=HTMLResponse
-)
+
+@router.get("/roles", response_class=HTMLResponse)
 async def role_list(
-
-    request: Request,
-
-    db: Session = Depends(get_db),
-
-    user=Depends(login_required)
-
+    request: Request, db: Session = Depends(get_db), user=Depends(login_required)
 ):
 
     roles = RoleService.get_all(db)
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="roles/list.html",
-
-        context={
-
-            "roles": roles,
-
-            "user": user
-
-        }
-
+        request=request, name="roles/list.html", context={"roles": roles, "user": user}
     )
 
 
@@ -60,30 +38,12 @@ async def role_list(
 # Create Role Page
 # ----------------------------------------------------
 
-@router.get(
-    "/roles/create",
-    response_class=HTMLResponse
-)
-async def create_role_page(
 
-    request: Request,
-
-    user=Depends(login_required)
-
-):
+@router.get("/roles/create", response_class=HTMLResponse)
+async def create_role_page(request: Request, user=Depends(login_required)):
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="roles/create.html",
-
-        context={
-
-            "user": user
-
-        }
-
+        request=request, name="roles/create.html", context={"user": user}
     )
 
 
@@ -91,94 +51,46 @@ async def create_role_page(
 # Save Role
 # ----------------------------------------------------
 
+
 @router.post("/roles/create")
 async def create_role(
-
     role_code: str = Form(...),
-
     role_name: str = Form(...),
-
     description: str = Form(""),
-
     is_active: bool = Form(True),
-
     db: Session = Depends(get_db),
-
-    user=Depends(login_required)
-
+    user=Depends(login_required),
 ):
 
     data = RoleCreate(
-
         role_code=role_code,
-
         role_name=role_name,
-
         description=description,
-
-        is_active=is_active
-
+        is_active=is_active,
     )
 
-    RoleService.create(
+    RoleService.create(db, data)
 
-        db,
-
-        data
-
-    )
-
-    return RedirectResponse(
-
-        "/roles",
-
-        status_code=303
-
-    )
+    return RedirectResponse("/roles", status_code=303)
 
 
 # ----------------------------------------------------
 # Edit Role Page
 # ----------------------------------------------------
 
-@router.get(
-    "/roles/{role_id}/edit",
-    response_class=HTMLResponse
-)
+
+@router.get("/roles/{role_id}/edit", response_class=HTMLResponse)
 async def edit_role_page(
-
     role_id: int,
-
     request: Request,
-
     db: Session = Depends(get_db),
-
-    user=Depends(login_required)
-
+    user=Depends(login_required),
 ):
 
-    role = RoleService.get_by_id(
-
-        db,
-
-        role_id
-
-    )
+    role = RoleService.get_by_id(db, role_id)
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="roles/edit.html",
-
-        context={
-
-            "role": role,
-
-            "user": user
-
-        }
-
+        request=request, name="roles/edit.html", context={"role": role, "user": user}
     )
 
 
@@ -186,142 +98,64 @@ async def edit_role_page(
 # Update Role
 # ----------------------------------------------------
 
-@router.post(
-    "/roles/{role_id}/edit"
-)
+
+@router.post("/roles/{role_id}/edit")
 async def update_role(
-
     role_id: int,
-
     role_code: str = Form(...),
-
     role_name: str = Form(...),
-
     description: str = Form(""),
-
     is_active: bool = Form(True),
-
     db: Session = Depends(get_db),
-
-    user=Depends(login_required)
-
+    user=Depends(login_required),
 ):
 
     data = RoleUpdate(
-
         role_code=role_code,
-
         role_name=role_name,
-
         description=description,
-
-        is_active=is_active
-
+        is_active=is_active,
     )
 
-    RoleService.update(
+    RoleService.update(db, role_id, data)
 
-        db,
-
-        role_id,
-
-        data
-
-    )
-
-    return RedirectResponse(
-
-        "/roles",
-
-        status_code=303
-
-    )
+    return RedirectResponse("/roles", status_code=303)
 
 
 # ----------------------------------------------------
 # Enable / Disable
 # ----------------------------------------------------
 
-@router.get(
-    "/roles/{role_id}/toggle"
-)
+
+@router.get("/roles/{role_id}/toggle")
 async def toggle_role(
-
-    role_id: int,
-
-    db: Session = Depends(get_db),
-
-    user=Depends(login_required)
-
+    role_id: int, db: Session = Depends(get_db), user=Depends(login_required)
 ):
 
-    RoleService.toggle_status(
+    RoleService.toggle_status(db, role_id)
 
-        db,
-
-        role_id
-
-    )
-
-    return RedirectResponse(
-
-        "/roles",
-
-        status_code=303
-
-    )
+    return RedirectResponse("/roles", status_code=303)
 
 
 # ----------------------------------------------------
 # Permissions
 # ----------------------------------------------------
 
-@router.get(
-    "/roles/{role_id}/permissions",
-    response_class=HTMLResponse
-)
+
+@router.get("/roles/{role_id}/permissions", response_class=HTMLResponse)
 async def role_permissions(
-
     role_id: int,
-
     request: Request,
-
     db: Session = Depends(get_db),
-
-    user=Depends(login_required)
-
+    user=Depends(login_required),
 ):
 
-    role = RoleService.get_by_id(
+    role = RoleService.get_by_id(db, role_id)
 
-        db,
-
-        role_id
-
-    )
-
-    permissions = RoleService.get_permissions(
-
-        db,
-
-        role_id
-
-    )
+    permissions = RoleService.get_permissions(db, role_id)
 
     return templates.TemplateResponse(
-
         request=request,
-
         name="roles/permissions.html",
-
-        context={
-
-            "role": role,
-
-            "permissions": permissions,
-
-            "user": user
-
-        }
-
+        context={"role": role, "permissions": permissions, "user": user},
     )

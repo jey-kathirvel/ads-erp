@@ -9,20 +9,12 @@ class CustomerService:
     @staticmethod
     def get_guest_customer(db: Session):
 
-        guest = (
-            db.query(Customer)
-            .filter(Customer.customer_name == "Guest")
-            .first()
-        )
+        guest = db.query(Customer).filter(Customer.customer_name == "Guest").first()
 
         if guest:
             return guest
 
-        last_customer = (
-            db.query(Customer)
-            .order_by(Customer.id.desc())
-            .first()
-        )
+        last_customer = db.query(Customer).order_by(Customer.id.desc()).first()
 
         next_no = 1
 
@@ -30,33 +22,19 @@ class CustomerService:
             next_no = last_customer.id + 1
 
         guest = Customer(
-
             customer_code=f"CUS{next_no:06}",
-
             customer_name="Guest",
-
             contact_person="",
-
             mobile="",
-
             email="",
-
             gstin="",
-
             address1="",
-
             address2="",
-
             city="",
-
             state="",
-
             pincode="",
-
             credit_limit=0,
-
-            opening_balance=0
-
+            opening_balance=0,
         )
 
         db.add(guest)
@@ -68,25 +46,16 @@ class CustomerService:
         return guest
 
     @staticmethod
-    def create_walkin_customer(
-        db: Session,
-        customer_name: str
-    ):
+    def create_walkin_customer(db: Session, customer_name: str):
 
         existing = (
-            db.query(Customer)
-            .filter(Customer.customer_name == customer_name)
-            .first()
+            db.query(Customer).filter(Customer.customer_name == customer_name).first()
         )
 
         if existing:
             return existing
 
-        last_customer = (
-            db.query(Customer)
-            .order_by(Customer.id.desc())
-            .first()
-        )
+        last_customer = db.query(Customer).order_by(Customer.id.desc()).first()
 
         next_no = 1
 
@@ -94,33 +63,19 @@ class CustomerService:
             next_no = last_customer.id + 1
 
         customer = Customer(
-
             customer_code=f"CUS{next_no:06}",
-
             customer_name=customer_name,
-
             contact_person="",
-
             mobile="",
-
             email="",
-
             gstin="",
-
             address1="",
-
             address2="",
-
             city="",
-
             state="",
-
             pincode="",
-
             credit_limit=0,
-
-            opening_balance=0
-
+            opening_balance=0,
         )
 
         db.add(customer)
@@ -134,60 +89,32 @@ class CustomerService:
     @staticmethod
     def get_all(db: Session):
 
-        return (
-            db.query(Customer)
-            .order_by(Customer.customer_name)
-            .all()
-        )
+        return db.query(Customer).order_by(Customer.customer_name).all()
 
     @staticmethod
-    def get_by_id(
-        db: Session,
-        customer_id: int
-    ):
+    def get_by_id(db: Session, customer_id: int):
 
-        return (
-            db.query(Customer)
-            .filter(Customer.id == customer_id)
-            .first()
-        )
+        return db.query(Customer).filter(Customer.id == customer_id).first()
 
     @staticmethod
-    def create(
-        db: Session,
-        data: CustomerCreate
-    ):
+    def create(db: Session, data: CustomerCreate):
 
         count = db.query(Customer).count() + 1
 
         customer = Customer(
-
             customer_code=f"CUS{count:06}",
-
             customer_name=data.customer_name,
-
             contact_person=data.contact_person,
-
             mobile=data.mobile,
-
             email=data.email,
-
             gstin=data.gstin,
-
             address1=data.address1,
-
             address2=data.address2,
-
             city=data.city,
-
             state=data.state,
-
             pincode=data.pincode,
-
             credit_limit=data.credit_limit,
-
-            opening_balance=data.opening_balance
-
+            opening_balance=data.opening_balance,
         )
 
         db.add(customer)
@@ -199,17 +126,9 @@ class CustomerService:
         return customer
 
     @staticmethod
-    def update(
-        db: Session,
-        customer_id: int,
-        data: CustomerCreate
-    ):
+    def update(db: Session, customer_id: int, data: CustomerCreate):
 
-        customer = (
-            db.query(Customer)
-            .filter(Customer.id == customer_id)
-            .first()
-        )
+        customer = db.query(Customer).filter(Customer.id == customer_id).first()
 
         if customer is None:
             return None
@@ -234,16 +153,9 @@ class CustomerService:
         return customer
 
     @staticmethod
-    def delete(
-        db: Session,
-        customer_id: int
-    ):
+    def delete(db: Session, customer_id: int):
 
-        customer = (
-            db.query(Customer)
-            .filter(Customer.id == customer_id)
-            .first()
-        )
+        customer = db.query(Customer).filter(Customer.id == customer_id).first()
 
         if customer is None:
             return False
@@ -255,23 +167,16 @@ class CustomerService:
         return True
 
     @staticmethod
-    def search(
-        db: Session,
-        keyword: str
-    ):
+    def search(db: Session, keyword: str):
 
         return (
             db.query(Customer)
-            .filter(
-                Customer.customer_name.ilike(f"%{keyword}%")
-            )
+            .filter(Customer.customer_name.ilike(f"%{keyword}%"))
             .order_by(Customer.customer_name)
             .all()
         )
 
     @staticmethod
-    def get_count(
-        db: Session
-    ):
+    def get_count(db: Session):
 
         return db.query(Customer).count()

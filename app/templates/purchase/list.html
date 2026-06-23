@@ -4,83 +4,96 @@
 
 <div class="card">
 
-<div class="card-header">
+    <div class="card-header">
 
-<h3 class="card-title">
+        <h3 class="card-title">
+            Purchase List
+        </h3>
 
-Purchase List
+        <a href="/purchase" class="btn btn-primary float-right">
+            New Purchase
+        </a>
 
-</h3>
+    </div>
 
-<a href="/purchase"
+    <div class="card-body table-responsive">
 
-class="btn btn-primary float-right">
+        <table class="table table-bordered table-striped">
 
-New Purchase
+            <thead>
 
-</a>
+                <tr>
 
-</div>
+                    <th>No</th>
 
-<div class="card-body">
+                    <th>Supplier</th>
 
-<table class="table table-bordered table-striped">
+                    <th>Total</th>
 
-<thead>
+                    <th>Payment</th>
 
-<tr>
+                    <th width="180">Actions</th>
 
-<th>No</th>
+                </tr>
 
-<th>Supplier</th>
+            </thead>
 
-<th>Total</th>
+            <tbody>
 
-<th>Payment</th>
+                {% for purchase in purchases %}
 
-<th></th>
+                <tr>
 
-</tr>
+                    <td>{{ purchase.purchase_no }}</td>
 
-</thead>
+                    <td>{{ purchase.supplier_id }}</td>
 
-<tbody>
+                    <td>₹ {{ purchase.grand_total }}</td>
 
-{% for purchase in purchases %}
+                    <td>{{ purchase.payment_mode }}</td>
 
-<tr>
+                    <td class="text-center">
 
-<td>{{ purchase.purchase_no }}</td>
+                        <div class="btn-group">
 
-<td>{{ purchase.supplier_id }}</td>
+                            <a href="/purchase/view/{{ purchase.id }}"
+                               class="btn btn-info btn-sm"
+                               title="View">
 
-<td>₹ {{ purchase.grand_total }}</td>
+                                <i class="fas fa-eye"></i>
 
-<td>{{ purchase.payment_mode }}</td>
+                            </a>
 
-<td>
+                            <a href="/purchase/edit/{{ purchase.id }}"
+                               class="btn btn-warning btn-sm"
+                               title="Edit">
 
-<a
+                                <i class="fas fa-edit"></i>
 
-href="/purchase/view/{{ purchase.id }}"
+                            </a>
 
-class="btn btn-info btn-sm">
+                            <a href="/purchase/delete/{{ purchase.id }}"
+                               class="btn btn-danger btn-sm"
+                               title="Delete"
+                               onclick="return confirm('Delete this purchase?')">
 
-View
+                                <i class="fas fa-trash"></i>
 
-</a>
+                            </a>
 
-</td>
+                        </div>
 
-</tr>
+                    </td>
 
-{% endfor %}
+                </tr>
 
-</tbody>
+                {% endfor %}
 
-</table>
+            </tbody>
 
-</div>
+        </table>
+
+    </div>
 
 </div>
 

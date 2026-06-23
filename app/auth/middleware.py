@@ -9,21 +9,13 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         path = request.url.path
 
         public_urls = [
-
             "/",
-
             "/login",
-
             "/logout",
-
             "/health",
-
             "/docs",
-
             "/redoc",
-
-            "/openapi.json"
-
+            "/openapi.json",
         ]
 
         # Static Files
@@ -50,13 +42,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         except Exception:
 
-            return RedirectResponse(
-
-                "/login",
-
-                status_code=303
-
-            )
+            return RedirectResponse("/login", status_code=303)
 
         # Debug
 
@@ -64,12 +50,6 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         if "user" not in session:
 
-            return RedirectResponse(
-
-                url=f"/login?next={path}",
-
-                status_code=303
-
-            )
+            return RedirectResponse(url=f"/login?next={path}", status_code=303)
 
         return await call_next(request)

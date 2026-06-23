@@ -18,38 +18,20 @@ from fastapi import Depends
 
 from app.auth.dependencies import login_required
 
-router = APIRouter(
-
-    dependencies=[
-
-        Depends(login_required)
-
-    ]
-
-)
+router = APIRouter(dependencies=[Depends(login_required)])
 
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
 # ----------------------------------------------------
 # Chart Of Accounts
 # ----------------------------------------------------
 
-@router.get(
-    "/accounts",
-    response_class=HTMLResponse
-)
+
+@router.get("/accounts", response_class=HTMLResponse)
 async def account_list(
-
-    request: Request,
-
-    user=Depends(login_required),
-
-    db: Session = Depends(get_db)
-
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
     # ------------------------------------
@@ -63,17 +45,7 @@ async def account_list(
     accounts = AccountService.get_all(db)
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="accounts/list.html",
-
-        context={
-
-            "accounts": accounts
-
-        }
-
+        request=request, name="accounts/list.html", context={"accounts": accounts}
     )
 
 
@@ -81,115 +53,51 @@ async def account_list(
 # Create Account Page
 # ----------------------------------------------------
 
-@router.get(
-    "/accounts/create",
-    response_class=HTMLResponse
-)
-async def create_account_page(
 
-    request: Request
+@router.get("/accounts/create", response_class=HTMLResponse)
+async def create_account_page(request: Request):
 
-):
-
-    return templates.TemplateResponse(
-
-        request=request,
-
-        name="accounts/create.html"
-
-    )
+    return templates.TemplateResponse(request=request, name="accounts/create.html")
 
 
 # ----------------------------------------------------
 # Save Account
 # ----------------------------------------------------
 
+
 @router.post("/accounts/create")
 async def create_account(
-
     account_name: str = Form(...),
-
     account_group: str = Form(...),
-
     opening_balance: float = Form(0),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
     account = AccountCreate(
-
         account_name=account_name,
-
         account_group=account_group,
-
-        opening_balance=opening_balance
-
+        opening_balance=opening_balance,
     )
 
-    AccountService.create(
+    AccountService.create(db, account)
 
-        db,
-
-        account
-
-    )
-
-    return RedirectResponse(
-
-        "/accounts",
-
-        status_code=303
-
-    )
+    return RedirectResponse("/accounts", status_code=303)
 
 
 # ----------------------------------------------------
 # Ledger
 # ----------------------------------------------------
 
-@router.get(
-    "/accounts/{account_id}/ledger",
-    response_class=HTMLResponse
-)
-async def ledger(
 
-    account_id: int,
+@router.get("/accounts/{account_id}/ledger", response_class=HTMLResponse)
+async def ledger(account_id: int, request: Request, db: Session = Depends(get_db)):
 
-    request: Request,
+    account = AccountService.get_by_id(db, account_id)
 
-    db: Session = Depends(get_db)
-
-):
-
-    account = AccountService.get_by_id(
-
-        db,
-
-        account_id
-
-    )
-
-    entries = LedgerService.get_account_entries(
-
-        db,
-
-        account_id
-
-    )
+    entries = LedgerService.get_account_entries(db, account_id)
 
     return templates.TemplateResponse(
-
         request=request,
-
         name="accounts/ledger.html",
-
-        context={
-
-            "account": account,
-
-            "entries": entries
-
-        }
-
+        context={"account": account, "entries": entries},
     )

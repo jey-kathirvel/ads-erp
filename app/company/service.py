@@ -9,34 +9,12 @@ class CompanyService:
     @staticmethod
     def get(db: Session):
 
-        return (
-
-            db.query(
-
-                CompanySetting
-
-            ).first()
-
-        )
+        return db.query(CompanySetting).first()
 
     @staticmethod
-    def save(
+    def save(db: Session, data: CompanySettingCreate):
 
-        db: Session,
-
-        data: CompanySettingCreate
-
-    ):
-
-        company = (
-
-            db.query(
-
-                CompanySetting
-
-            ).first()
-
-        )
+        company = db.query(CompanySetting).first()
 
         if company is None:
 
