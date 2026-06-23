@@ -144,19 +144,39 @@ async def purchase_list(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/purchase/view/{purchase_id}", response_class=HTMLResponse)
 async def purchase_view(
-    purchase_id: int, request: Request, db: Session = Depends(get_db)
+    purchase_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
 ):
 
     purchase = PurchaseService.get_by_id(db, purchase_id)
 
     items = PurchaseService.get_items(db, purchase_id)
 
+    suppliers = SupplierService.get_all(db)
+
+    products = ProductService.get_all(db)
+
+    supplier_map = {
+        supplier.id: supplier.supplier_name
+        for supplier in suppliers
+    }
+
+    product_map = {
+        product.id: product.product_name
+        for product in products
+    }
+
     return templates.TemplateResponse(
         request=request,
         name="purchase/view.html",
-        context={"purchase": purchase, "items": items},
+        context={
+            "purchase": purchase,
+            "items": items,
+            "supplier_map": supplier_map,
+            "product_map": product_map,
+        },
     )
-
 @router.get("/purchase/edit/{purchase_id}", response_class=HTMLResponse)
 async def edit_purchase(
     purchase_id: int,
@@ -254,8 +274,101 @@ async def update_purchase(
         status_code=303
     )
 
-@staticmethod
-def update(db: Session, purchase_id: int, data: PurchaseCreate):
+@router.post("/purchase/update/{purchase_id}")
+async def update_purchase(
+    purchase_id: int,
+    supplier_id: int = Form(...),
+    subtotal: float = Form(...),
+    discount: float = Form(0),
+    taxable_amount: float = Form(...),
+    cgst: float = Form(...),
+    sgst: float = Form(...),
+    igst: float = Form(0),
+    grand_total: float = Form(...),
+    payment_mode: str = Form(...),
+    remarks: str = Form(""),
+    product_id: list[int] = Form(...),
+    qty: list[float] = Form(...),
+    rate: list[float] = Form(...),
+    gst: list[float] = Form(...),
+    total: list[float] = Form(...),
+    db: Session = Depends(get_db),
+):
+
+    # ------------------------------------
+    # Rollback old stock
+    # ------------------------------------
+
+    PurchaseItemService.rollback_stock(
+        db,
+        purchase_id
+    )
+
+    PurchaseItemService.delete_items(
+        db,
+        purchase_id
+    )
+
+    # ------------------------------------
+    # Recalculate Totals
+    # ------------------------------------
+
+    calculated_subtotal = sum(float(x) for x in total)
+
+    calculated_gst = sum(
+        float(total[i]) * float(gst[i]) / 100
+        for i in range(len(total))
+    )
+
+    calculated_cgst = calculated_gst / 2
+
+    calculated_sgst = calculated_gst / 2
+
+    calculated_grand_total = (
+        calculated_subtotal
+        + calculated_cgst
+        + calculated_sgst
+    )
+
+    purchase = PurchaseCreate(
+        supplier_id=supplier_id,
+        subtotal=calculated_subtotal,
+        discount=0,
+        taxable_amount=calculated_subtotal,
+        cgst=calculated_cgst,
+        sgst=calculated_sgst,
+        igst=0,
+        grand_total=calculated_grand_total,
+        payment_mode=payment_mode,
+        remarks=remarks,
+    )
+
+    PurchaseService.update(
+        db,
+        purchase_id,
+        purchase
+    )
+
+    # ------------------------------------
+    # Save New Items
+    # ------------------------------------
+
+    for i in range(len(product_id)):
+
+        PurchaseItemService.create(
+            db=db,
+            purchase_id=purchase_id,
+            product_id=product_id[i],
+            qty=qty[i],
+            rate=rate[i],
+            gst_percentage=gst[i],
+            total=total[i],
+        )
+
+    return RedirectResponse(
+        url=f"/purchase/view/{purchase_id}",
+        status_code=303
+    )
 
     purchase = (
         db.query(Purchase)
@@ -305,15 +418,37 @@ async def delete_purchase(purchase_id: int, db: Session = Depends(get_db)):
 
 @router.get("/purchase/print/{purchase_id}", response_class=HTMLResponse)
 async def print_purchase(
-    purchase_id: int, request: Request, db: Session = Depends(get_db)
+    purchase_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
 ):
 
     purchase = PurchaseService.get_by_id(db, purchase_id)
 
     items = PurchaseService.get_items(db, purchase_id)
 
+    suppliers = SupplierService.get_all(db)
+
+    products = ProductService.get_all(db)
+
+    supplier_map = {
+        supplier.id: supplier.supplier_name
+        for supplier in suppliers
+    }
+
+    product_map = {
+        product.id: product.product_name
+        for product in products
+    }
+
     return templates.TemplateResponse(
         request=request,
         name="purchase/view.html",
-        context={"purchase": purchase, "items": items, "print_mode": True},
+        context={
+            "purchase": purchase,
+            "items": items,
+            "supplier_map": supplier_map,
+            "product_map": product_map,
+            "print_mode": True,
+        },
     )
