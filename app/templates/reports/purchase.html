@@ -2,51 +2,192 @@
 
 {% block content %}
 
-<div class="card">
+<div class="row">
 
-<div class="card-header bg-success">
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>Rs {{ "%.2f"|format(total_purchase) }}</h3>
+                <p>Total Purchase</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+        </div>
+    </div>
 
-<h3>Purchase Report</h3>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ total_bills }}</h3>
+                <p>Total Purchases</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </div>
+    </div>
 
-</div>
-
-<div class="card-body">
-
-<table class="table table-bordered">
-
-<thead>
-
-<tr>
-
-<th>Purchase</th>
-<th>Supplier</th>
-<th>Total</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for purchase in purchases %}
-
-<tr>
-
-<td>{{ purchase.purchase_no }}</td>
-
-<td>{{ purchase.supplier_id }}</td>
-
-<td>₹ {{ purchase.grand_total }}</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>₹ {{ "%.2f"|format(avg_purchase) }}</h3>
+                <p>Average Purchase Value</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
 
 </div>
+
+<div class="card card-outline card-success">
+
+    <div class="card-body">
+
+        <form method="get" action="/reports/purchase">
+
+            <div class="row">
+
+                <div class="col-md-3 mb-2">
+                    <input type="date" name="from_date" value="{{ from_date }}" class="form-control">
+                </div>
+
+                <div class="col-md-3 mb-2">
+                    <input type="date" name="to_date" value="{{ to_date }}" class="form-control">
+                </div>
+
+                <div class="col-md-3 mb-2">
+
+                    <select name="supplier_id" class="form-control">
+
+                        <option value="">
+                            All Suppliers
+                        </option>
+
+                        {% for supplier in suppliers %}
+
+                        <option value="{{ supplier.id }}" {% if supplier_id|string==supplier.id|string %}selected{%
+                            endif %}>
+
+                            {{ supplier.supplier_name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3 mb-2">
+
+                    <button type="submit" class="btn btn-success btn-block">
+
+                        <i class="fas fa-search"></i>
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="card-header">
+
+        <h3 class="card-title">
+
+            <i class="fas fa-shopping-cart"></i>
+
+            Purchase Report
+
+        </h3> <br><br>
+
+
+        <a href="/reports/purchase/pdf?from_date={{ from_date or '' }}&to_date={{ to_date or '' }}&supplier_id={{ supplier_id or '' }}"
+            class="btn btn-danger btn-sm">
+
+            <i class="fas fa-file-pdf"></i>
+            PDF
+
+        </a>
+
+    </div>
+
+    <div class="card-body table-responsive">
+
+        <table class="table table-bordered table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>Purchase No</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Payment Mode</th>
+                    <th class="text-right">Amount</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for purchase in purchases %}
+
+                <tr>
+
+                    <td>
+                        {{ purchase.purchase_no }}
+                    </td>
+
+                    <td>
+                        {{ purchase.purchase_date }}
+                    </td>
+
+                    <td>
+                        {{ purchase.supplier.supplier_name if purchase.supplier else '-' }}
+                    </td>
+
+                    <td>
+                        {{ purchase.payment_mode or '-' }}
+                    </td>
+
+                    <td class="text-right">
+                        ₹ {{ "%.2f"|format(purchase.grand_total) }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+            <tfoot>
+
+                <tr>
+
+                    <th colspan="4">
+                        Grand Total
+                    </th>
+
+                    <th class="text-right">
+                        Rs {{ "%.2f"|format(total_purchase) }}
+                    </th>
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+    </div>
 
 </div>
 

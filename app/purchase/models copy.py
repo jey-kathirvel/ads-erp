@@ -9,9 +9,6 @@ from sqlalchemy import String
 from sqlalchemy import Text
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
@@ -27,11 +24,6 @@ class Purchase(Base):
     )
 
     supplier_id: Mapped[int] = mapped_column(ForeignKey("suppliers.id"))
-
-    supplier = relationship(
-    "Supplier",
-    lazy="joined"
-)
 
     purchase_date: Mapped[date] = mapped_column(Date, default=date.today)
 
