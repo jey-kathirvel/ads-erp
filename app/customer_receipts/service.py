@@ -8,74 +8,26 @@ class CustomerReceiptService:
     @staticmethod
     def get_all(db: Session):
 
+        return db.query(CustomerReceipt).order_by(CustomerReceipt.id.desc()).all()
+
+    @staticmethod
+    def get_by_id(db: Session, receipt_id: int):
+
         return (
-
-            db.query(CustomerReceipt)
-
-            .order_by(
-
-                CustomerReceipt.id.desc()
-
-            )
-
-            .all()
-
+            db.query(CustomerReceipt).filter(CustomerReceipt.id == receipt_id).first()
         )
 
     @staticmethod
-    def get_by_id(
+    def create(db: Session, data):
 
-        db: Session,
-
-        receipt_id: int
-
-    ):
-
-        return (
-
-            db.query(CustomerReceipt)
-
-            .filter(
-
-                CustomerReceipt.id == receipt_id
-
-            )
-
-            .first()
-
-        )
-
-    @staticmethod
-    def create(
-
-        db: Session,
-
-        data
-
-    ):
-
-        count = (
-
-            db.query(CustomerReceipt)
-
-            .count()
-
-            + 1
-
-        )
+        count = db.query(CustomerReceipt).count() + 1
 
         receipt = CustomerReceipt(
-
             receipt_no=f"REC{count:06}",
-
             customer_id=data.customer_id,
-
             receipt_mode=data.receipt_mode,
-
             amount=data.amount,
-
-            remarks=data.remarks
-
+            remarks=data.remarks,
         )
 
         db.add(receipt)

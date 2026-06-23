@@ -7,10 +7,10 @@ from fastapi import status
 from app.config.database import SessionLocal
 from app.auth.service import AuthService
 
-
 # ----------------------------------------------------
 # Login Required
 # ----------------------------------------------------
+
 
 def login_required(request: Request):
 
@@ -19,15 +19,7 @@ def login_required(request: Request):
     if not user:
 
         raise HTTPException(
-
-            status_code=status.HTTP_303_SEE_OTHER,
-
-            headers={
-
-                "Location": "/login"
-
-            }
-
+            status_code=status.HTTP_303_SEE_OTHER, headers={"Location": "/login"}
         )
 
     return user
@@ -44,18 +36,12 @@ require_login = login_required
 # Permission Required
 # ----------------------------------------------------
 
-def permission_required(
 
-    module_name: str,
-
-    action: str = "can_view"
-
-):
+def permission_required(module_name: str, action: str = "can_view"):
 
     def decorator(func):
 
         @wraps(func)
-
         async def wrapper(*args, **kwargs):
 
             request = kwargs.get("request")
@@ -73,15 +59,8 @@ def permission_required(
             if request is None:
 
                 raise HTTPException(
-
                     status_code=status.HTTP_303_SEE_OTHER,
-
-                    headers={
-
-                        "Location": "/login"
-
-                    }
-
+                    headers={"Location": "/login"},
                 )
 
             user = login_required(request)
@@ -91,15 +70,10 @@ def permission_required(
             try:
 
                 allowed = AuthService.has_permission(
-
                     db=db,
-
                     role_id=user["role_id"],
-
                     module_name=module_name,
-
-                    action=action
-
+                    action=action,
                 )
 
             finally:
@@ -109,15 +83,8 @@ def permission_required(
             if not allowed:
 
                 raise HTTPException(
-
                     status_code=status.HTTP_303_SEE_OTHER,
-
-                    headers={
-
-                        "Location": "/dashboard"
-
-                    }
-
+                    headers={"Location": "/dashboard"},
                 )
 
             return await func(*args, **kwargs)

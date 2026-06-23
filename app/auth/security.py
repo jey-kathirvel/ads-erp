@@ -1,12 +1,6 @@
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(
-
-    schemes=["bcrypt"],
-
-    deprecated="auto"
-
-)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class PasswordSecurity:
@@ -17,18 +11,6 @@ class PasswordSecurity:
         return pwd_context.hash(password)
 
     @staticmethod
-    def verify_password(
+    def verify_password(plain_password: str, hashed_password: str) -> bool:
 
-        plain_password: str,
-
-        hashed_password: str
-
-    ) -> bool:
-
-        return pwd_context.verify(
-
-            plain_password,
-
-            hashed_password
-
-        )
+        return pwd_context.verify(plain_password, hashed_password)

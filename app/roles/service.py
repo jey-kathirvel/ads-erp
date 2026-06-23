@@ -16,84 +16,35 @@ class RoleService:
     @staticmethod
     def get_all(db: Session):
 
-        return (
-
-            db.query(Role)
-
-            .order_by(Role.role_name)
-
-            .all()
-
-        )
+        return db.query(Role).order_by(Role.role_name).all()
 
     # ----------------------------------------------------
     # Get Role
     # ----------------------------------------------------
 
     @staticmethod
-    def get_by_id(
+    def get_by_id(db: Session, role_id: int):
 
-        db: Session,
-
-        role_id: int
-
-    ):
-
-        return (
-
-            db.query(Role)
-
-            .filter(
-
-                Role.id == role_id
-
-            )
-
-            .first()
-
-        )
+        return db.query(Role).filter(Role.id == role_id).first()
 
     # ----------------------------------------------------
     # Create Role
     # ----------------------------------------------------
 
     @staticmethod
-    def create(
+    def create(db: Session, data: RoleCreate):
 
-        db: Session,
-
-        data: RoleCreate
-
-    ):
-
-        existing = (
-
-            db.query(Role)
-
-            .filter(
-
-                Role.role_code == data.role_code
-
-            )
-
-            .first()
-
-        )
+        existing = db.query(Role).filter(Role.role_code == data.role_code).first()
 
         if existing:
 
             return None
 
         role = Role(
-
             role_code=data.role_code,
-
             role_name=data.role_name,
-
             description=data.description,
-
-            is_active=data.is_active
-
+            is_active=data.is_active,
         )
 
         db.add(role)
@@ -109,23 +60,9 @@ class RoleService:
     # ----------------------------------------------------
 
     @staticmethod
-    def update(
+    def update(db: Session, role_id: int, data: RoleUpdate):
 
-        db: Session,
-
-        role_id: int,
-
-        data: RoleUpdate
-
-    ):
-
-        role = RoleService.get_by_id(
-
-            db,
-
-            role_id
-
-        )
+        role = RoleService.get_by_id(db, role_id)
 
         if role is None:
 
@@ -150,21 +87,9 @@ class RoleService:
     # ----------------------------------------------------
 
     @staticmethod
-    def toggle_status(
+    def toggle_status(db: Session, role_id: int):
 
-        db: Session,
-
-        role_id: int
-
-    ):
-
-        role = RoleService.get_by_id(
-
-            db,
-
-            role_id
-
-        )
+        role = RoleService.get_by_id(db, role_id)
 
         if role is None:
 
@@ -183,32 +108,13 @@ class RoleService:
     # ----------------------------------------------------
 
     @staticmethod
-    def get_permissions(
-
-        db: Session,
-
-        role_id: int
-
-    ):
+    def get_permissions(db: Session, role_id: int):
 
         return (
-
             db.query(RolePermission)
-
-            .filter(
-
-                RolePermission.role_id == role_id
-
-            )
-
-            .order_by(
-
-                RolePermission.module_name
-
-            )
-
+            .filter(RolePermission.role_id == role_id)
+            .order_by(RolePermission.module_name)
             .all()
-
         )
 
     # ----------------------------------------------------
@@ -217,55 +123,33 @@ class RoleService:
 
     @staticmethod
     def save_permission(
-
         db: Session,
-
         role_id: int,
-
         module_name: str,
-
         can_view: bool,
-
         can_add: bool,
-
         can_edit: bool,
-
-        can_delete: bool
-
+        can_delete: bool,
     ):
 
         permission = (
-
             db.query(RolePermission)
-
             .filter(
-
                 RolePermission.role_id == role_id,
-
-                RolePermission.module_name == module_name
-
+                RolePermission.module_name == module_name,
             )
-
             .first()
-
         )
 
         if permission is None:
 
             permission = RolePermission(
-
                 role_id=role_id,
-
                 module_name=module_name,
-
                 can_view=can_view,
-
                 can_add=can_add,
-
                 can_edit=can_edit,
-
-                can_delete=can_delete
-
+                can_delete=can_delete,
             )
 
             db.add(permission)

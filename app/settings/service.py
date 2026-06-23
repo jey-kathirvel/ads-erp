@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.settings.models import CompanySettings
+from app.company.models import CompanySetting
 
 
 class CompanyService:
@@ -8,39 +8,17 @@ class CompanyService:
     @staticmethod
     def get(db: Session):
 
-        return (
+        return db.query(CompanySetting).first()
 
-            db.query(CompanySettings)
-
-            .first()
-
-        )
-@staticmethod
-def get_company(db: Session):
-
-    return (
-
-        db.query(CompanySettings)
-
-        .first()
-
-    )
     @staticmethod
-    def save(
+    def get_company(db: Session):
 
-        db: Session,
+        return db.query(CompanySetting).first()
 
-        company
+    @staticmethod
+    def save(db: Session, company):
 
-    ):
-
-        existing = (
-
-            db.query(CompanySettings)
-
-            .first()
-
-        )
+        existing = db.query(CompanySetting).first()
 
         if existing:
 

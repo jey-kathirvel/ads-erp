@@ -16,37 +16,20 @@ from fastapi import Depends
 
 from app.auth.dependencies import login_required
 
-router = APIRouter(
-
-    dependencies=[
-
-        Depends(login_required)
-
-    ]
-
-)
+router = APIRouter(dependencies=[Depends(login_required)])
 
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
 # ---------------------------------
 # Product List
 # ---------------------------------
 
-@router.get(
-    "/products",
-    response_class=HTMLResponse
-)
+
+@router.get("/products", response_class=HTMLResponse)
 async def product_list(
-    request: Request,
-
-    user=Depends(login_required),
-
-    db: Session = Depends(get_db)
-
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
     # ------------------------------------
@@ -60,11 +43,7 @@ async def product_list(
     products = ProductService.get_all(db)
 
     return templates.TemplateResponse(
-        request=request,
-        name="products/list.html",
-        context={
-            "products": products
-        }
+        request=request, name="products/list.html", context={"products": products}
     )
 
 
@@ -72,27 +51,20 @@ async def product_list(
 # Add Product Page
 # ---------------------------------
 
-@router.get(
-    "/products/create",
-    response_class=HTMLResponse
-)
-async def create_product_page(
-    request: Request
-):
 
-    return templates.TemplateResponse(
-        request=request,
-        name="products/create.html"
-    )
+@router.get("/products/create", response_class=HTMLResponse)
+async def create_product_page(request: Request):
+
+    return templates.TemplateResponse(request=request, name="products/create.html")
 
 
 # ---------------------------------
 # Save Product
 # ---------------------------------
 
+
 @router.post("/products/create")
 async def create_product(
-
     product_name: str = Form(...),
     category_id: int = Form(1),
     unit_id: int = Form(1),
@@ -104,13 +76,10 @@ async def create_product(
     minimum_stock: float = Form(0),
     barcode: str = Form(""),
     description: str = Form(""),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
     product = ProductCreate(
-
         product_name=product_name,
         category_id=category_id,
         unit_id=unit_id,
@@ -121,50 +90,28 @@ async def create_product(
         opening_stock=opening_stock,
         minimum_stock=minimum_stock,
         barcode=barcode,
-        description=description
-
+        description=description,
     )
 
-    ProductService.create(
-        db,
-        product
-    )
+    ProductService.create(db, product)
 
-    return RedirectResponse(
-        "/products",
-        status_code=303
-    )
+    return RedirectResponse("/products", status_code=303)
 
 
 # ---------------------------------
 # View Product
 # ---------------------------------
 
-@router.get(
-    "/products/{product_id}",
-    response_class=HTMLResponse
-)
+
+@router.get("/products/{product_id}", response_class=HTMLResponse)
 async def view_product(
-
-    product_id: int,
-
-    request: Request,
-
-    db: Session = Depends(get_db)
-
+    product_id: int, request: Request, db: Session = Depends(get_db)
 ):
 
-    product = ProductService.get_by_id(
-        db,
-        product_id
-    )
+    product = ProductService.get_by_id(db, product_id)
 
     return templates.TemplateResponse(
-        request=request,
-        name="products/view.html",
-        context={
-            "product": product
-        }
+        request=request, name="products/view.html", context={"product": product}
     )
 
 
@@ -172,31 +119,16 @@ async def view_product(
 # Edit Product Page
 # ---------------------------------
 
-@router.get(
-    "/products/{product_id}/edit",
-    response_class=HTMLResponse
-)
+
+@router.get("/products/{product_id}/edit", response_class=HTMLResponse)
 async def edit_product_page(
-
-    product_id: int,
-
-    request: Request,
-
-    db: Session = Depends(get_db)
-
+    product_id: int, request: Request, db: Session = Depends(get_db)
 ):
 
-    product = ProductService.get_by_id(
-        db,
-        product_id
-    )
+    product = ProductService.get_by_id(db, product_id)
 
     return templates.TemplateResponse(
-        request=request,
-        name="products/edit.html",
-        context={
-            "product": product
-        }
+        request=request, name="products/edit.html", context={"product": product}
     )
 
 
@@ -204,13 +136,10 @@ async def edit_product_page(
 # Update Product
 # ---------------------------------
 
-@router.post(
-    "/products/{product_id}/edit"
-)
+
+@router.post("/products/{product_id}/edit")
 async def update_product(
-
     product_id: int,
-
     product_name: str = Form(...),
     category_id: int = Form(1),
     unit_id: int = Form(1),
@@ -222,13 +151,10 @@ async def update_product(
     minimum_stock: float = Form(0),
     barcode: str = Form(""),
     description: str = Form(""),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
     product = ProductCreate(
-
         product_name=product_name,
         category_id=category_id,
         unit_id=unit_id,
@@ -239,43 +165,22 @@ async def update_product(
         opening_stock=opening_stock,
         minimum_stock=minimum_stock,
         barcode=barcode,
-        description=description
-
+        description=description,
     )
 
-    ProductService.update(
-        db,
-        product_id,
-        product
-    )
+    ProductService.update(db, product_id, product)
 
-    return RedirectResponse(
-        "/products",
-        status_code=303
-    )
+    return RedirectResponse("/products", status_code=303)
 
 
 # ---------------------------------
 # Delete Product
 # ---------------------------------
 
-@router.get(
-    "/products/{product_id}/delete"
-)
-async def delete_product(
 
-    product_id: int,
+@router.get("/products/{product_id}/delete")
+async def delete_product(product_id: int, db: Session = Depends(get_db)):
 
-    db: Session = Depends(get_db)
+    ProductService.delete(db, product_id)
 
-):
-
-    ProductService.delete(
-        db,
-        product_id
-    )
-
-    return RedirectResponse(
-        "/products",
-        status_code=303
-    )
+    return RedirectResponse("/products", status_code=303)

@@ -9,60 +9,32 @@ class ProductService:
     @staticmethod
     def get_all(db: Session):
 
-        return (
-            db.query(Product)
-            .order_by(Product.product_name)
-            .all()
-        )
+        return db.query(Product).order_by(Product.product_name).all()
 
     @staticmethod
-    def get_by_id(
-        db: Session,
-        product_id: int
-    ):
+    def get_by_id(db: Session, product_id: int):
 
-        return (
-            db.query(Product)
-            .filter(Product.id == product_id)
-            .first()
-        )
+        return db.query(Product).filter(Product.id == product_id).first()
 
     @staticmethod
-    def create(
-        db: Session,
-        data: ProductCreate
-    ):
+    def create(db: Session, data: ProductCreate):
 
         count = db.query(Product).count() + 1
 
         product = Product(
-
             product_code=f"PRD{count:06}",
-
             product_name=data.product_name,
-
             category_id=data.category_id,
-
             unit_id=data.unit_id,
-
             hsn_code=data.hsn_code,
-
             gst_percentage=data.gst_percentage,
-
             purchase_price=data.purchase_price,
-
             selling_price=data.selling_price,
-
             opening_stock=data.opening_stock,
-
             current_stock=data.opening_stock,
-
             minimum_stock=data.minimum_stock,
-
             barcode=data.barcode,
-
-            description=data.description
-
+            description=data.description,
         )
 
         db.add(product)
@@ -74,17 +46,9 @@ class ProductService:
         return product
 
     @staticmethod
-    def update(
-        db: Session,
-        product_id: int,
-        data: ProductCreate
-    ):
+    def update(db: Session, product_id: int, data: ProductCreate):
 
-        product = (
-            db.query(Product)
-            .filter(Product.id == product_id)
-            .first()
-        )
+        product = db.query(Product).filter(Product.id == product_id).first()
 
         if product is None:
 
@@ -109,83 +73,34 @@ class ProductService:
         return product
 
     @staticmethod
-    def get_current_stock(
-        db: Session
-    ):
+    def get_current_stock(db: Session):
 
-        return (
-
-            db.query(Product)
-
-            .order_by(
-
-                Product.product_name
-
-            )
-
-            .all()
-
-        )
+        return db.query(Product).order_by(Product.product_name).all()
 
     @staticmethod
-    def get_low_stock(
-        db: Session
-    ):
+    def get_low_stock(db: Session):
 
         products = ProductService.get_all(db)
 
         return [
-
             product
-
             for product in products
-
-            if float(product.current_stock or 0)
-            <= float(product.minimum_stock or 0)
-
+            if float(product.current_stock or 0) <= float(product.minimum_stock or 0)
         ]
 
     @staticmethod
-    def get_out_of_stock(
-        db: Session
-    ):
+    def get_out_of_stock(db: Session):
 
         products = ProductService.get_all(db)
 
         return [
-
-            product
-
-            for product in products
-
-            if float(product.current_stock or 0) <= 0
-
+            product for product in products if float(product.current_stock or 0) <= 0
         ]
 
     @staticmethod
-    def update_stock(
+    def update_stock(db: Session, product_id: int, qty: float):
 
-        db: Session,
-
-        product_id: int,
-
-        qty: float
-
-    ):
-
-        product = (
-
-            db.query(Product)
-
-            .filter(
-
-                Product.id == product_id
-
-            )
-
-            .first()
-
-        )
+        product = db.query(Product).filter(Product.id == product_id).first()
 
         if product:
 
@@ -202,29 +117,9 @@ class ProductService:
         return None
 
     @staticmethod
-    def stock_in(
+    def stock_in(db: Session, product_id: int, qty: float):
 
-        db: Session,
-
-        product_id: int,
-
-        qty: float
-
-    ):
-
-        product = (
-
-            db.query(Product)
-
-            .filter(
-
-                Product.id == product_id
-
-            )
-
-            .first()
-
-        )
+        product = db.query(Product).filter(Product.id == product_id).first()
 
         if product:
 
@@ -241,16 +136,9 @@ class ProductService:
         return None
 
     @staticmethod
-    def delete(
-        db: Session,
-        product_id: int
-    ):
+    def delete(db: Session, product_id: int):
 
-        product = (
-            db.query(Product)
-            .filter(Product.id == product_id)
-            .first()
-        )
+        product = db.query(Product).filter(Product.id == product_id).first()
 
         if product:
 

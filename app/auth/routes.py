@@ -13,40 +13,22 @@ from app.auth.service import AuthService
 
 router = APIRouter()
 
-templates = Jinja2Templates(
-    directory="app/templates"
-)
+templates = Jinja2Templates(directory="app/templates")
 
 
 # ----------------------------------------------------
 # Login Page
 # ----------------------------------------------------
 
-@router.get(
-    "/login",
-    response_class=HTMLResponse
-)
-async def login_page(
 
-    request: Request
-
-):
+@router.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
 
     # Temporarily always show login page
     # (Disable auto redirect while debugging)
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="auth/login.html",
-
-        context={
-
-            "message": ""
-
-        }
-
+        request=request, name="auth/login.html", context={"message": ""}
     )
 
 
@@ -54,69 +36,34 @@ async def login_page(
 # Login
 # ----------------------------------------------------
 
-@router.post(
-    "/login"
-)
+
+@router.post("/login")
 async def login(
-
     request: Request,
-
     email: str = Form(...),
-
     password: str = Form(...),
-
-    db: Session = Depends(get_db)
-
+    db: Session = Depends(get_db),
 ):
 
-    user = UserService.authenticate(
-
-        db,
-
-        email,
-
-        password
-
-    )
+    user = UserService.authenticate(db, email, password)
 
     if user is None:
 
         return templates.TemplateResponse(
-
             request=request,
-
             name="auth/login.html",
-
-            context={
-
-                "message": "Invalid Email or Password"
-
-            }
-
+            context={"message": "Invalid Email or Password"},
         )
 
-    role = AuthService.get_role(
-
-        db,
-
-        user.role_id
-
-    )
+    role = AuthService.get_role(db, user.role_id)
 
     request.session["user"] = {
-
         "id": user.id,
-
         "email": user.email,
-
         "name": user.full_name,
-
         "role_id": role.id,
-
         "role_code": role.role_code,
-
-        "role_name": role.role_name
-
+        "role_name": role.role_name,
     }
 
     request.session["name"] = user.full_name
@@ -126,34 +73,17 @@ async def login(
     print(request.session)
     print("=================================")
 
-    return RedirectResponse(
-
-        url="/dashboard",
-
-        status_code=303
-
-    )
+    return RedirectResponse(url="/dashboard", status_code=303)
 
 
 # ----------------------------------------------------
 # Logout
 # ----------------------------------------------------
 
-@router.get(
-    "/logout"
-)
-async def logout(
 
-    request: Request
-
-):
+@router.get("/logout")
+async def logout(request: Request):
 
     request.session.clear()
 
-    return RedirectResponse(
-
-        url="/login",
-
-        status_code=303
-
-    )
+    return RedirectResponse(url="/login", status_code=303)

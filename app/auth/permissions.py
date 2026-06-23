@@ -6,93 +6,21 @@ from app.auth.service import AuthService
 class Permission:
 
     @staticmethod
-    def can_view(
+    def can_view(db: Session, role_id: int, module: str):
 
-        db: Session,
-
-        role_id: int,
-
-        module: str
-
-    ):
-
-        return AuthService.has_permission(
-
-            db,
-
-            role_id,
-
-            module,
-
-            "can_view"
-
-        )
+        return AuthService.has_permission(db, role_id, module, "can_view")
 
     @staticmethod
-    def can_add(
+    def can_add(db, role_id, module):
 
-        db,
-
-        role_id,
-
-        module
-
-    ):
-
-        return AuthService.has_permission(
-
-            db,
-
-            role_id,
-
-            module,
-
-            "can_add"
-
-        )
+        return AuthService.has_permission(db, role_id, module, "can_add")
 
     @staticmethod
-    def can_edit(
+    def can_edit(db, role_id, module):
 
-        db,
-
-        role_id,
-
-        module
-
-    ):
-
-        return AuthService.has_permission(
-
-            db,
-
-            role_id,
-
-            module,
-
-            "can_edit"
-
-        )
+        return AuthService.has_permission(db, role_id, module, "can_edit")
 
     @staticmethod
-    def can_delete(
+    def can_delete(db, role_id, module):
 
-        db,
-
-        role_id,
-
-        module
-
-    ):
-
-        return AuthService.has_permission(
-
-            db,
-
-            role_id,
-
-            module,
-
-            "can_delete"
-
-        )
+        return AuthService.has_permission(db, role_id, module, "can_delete")

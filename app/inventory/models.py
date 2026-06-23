@@ -15,43 +15,20 @@ class StockTransaction(Base):
 
     __tablename__ = "stock_transactions"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
 
-    transaction_no: Mapped[str | None] = mapped_column(
-        String(30)
-    )
+    transaction_no: Mapped[str | None] = mapped_column(String(30))
 
-    transaction_type: Mapped[str | None] = mapped_column(
-        String(30)
-    )
+    transaction_type: Mapped[str | None] = mapped_column(String(30))
 
-    product_id: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        index=True
-    )
+    product_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
 
-    reference_id: Mapped[int | None] = mapped_column(
-        Integer
-    )
+    reference_id: Mapped[int | None] = mapped_column(Integer)
 
-    qty: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        default=0
-    )
+    qty: Mapped[float] = mapped_column(Numeric(12, 2), default=0)
 
-    balance_qty: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        default=0
-    )
+    balance_qty: Mapped[float] = mapped_column(Numeric(12, 2), default=0)
 
-    remarks: Mapped[str | None] = mapped_column(
-        Text
-    )
+    remarks: Mapped[str | None] = mapped_column(Text)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

@@ -10,169 +10,56 @@ from app.auth.security import PasswordSecurity
 class AuthService:
 
     @staticmethod
-    def authenticate(
-
-        db: Session,
-
-        email: str,
-
-        password: str
-
-    ):
+    def authenticate(db: Session, email: str, password: str):
 
         user = (
-
-            db.query(User)
-
-            .filter(
-
-                User.email == email,
-
-                User.is_active == True
-
-            )
-
-            .first()
-
+            db.query(User).filter(User.email == email, User.is_active == True).first()
         )
 
         if user is None:
 
             return None
 
-        if not PasswordSecurity.verify_password(
-
-            password,
-
-            user.password_hash
-
-        ):
+        if not PasswordSecurity.verify_password(password, user.password_hash):
 
             return None
 
         return user
 
     @staticmethod
-    def get_user(
+    def get_user(db: Session, user_id: int):
 
-        db: Session,
+        return db.query(User).filter(User.id == user_id).first()
 
-        user_id: int
+    @staticmethod
+    def get_role(db: Session, role_id: int):
 
-    ):
+        return db.query(Role).filter(Role.id == role_id).first()
+
+    @staticmethod
+    def get_all_roles(db: Session):
 
         return (
-
-            db.query(User)
-
-            .filter(
-
-                User.id == user_id
-
-            )
-
-            .first()
-
+            db.query(Role).filter(Role.is_active == True).order_by(Role.role_name).all()
         )
 
     @staticmethod
-    def get_role(
+    def get_permissions(db: Session, role_id: int):
 
-        db: Session,
-
-        role_id: int
-
-    ):
-
-        return (
-
-            db.query(Role)
-
-            .filter(
-
-                Role.id == role_id
-
-            )
-
-            .first()
-
-        )
-    @staticmethod
-    def get_all_roles(
-
-        db: Session
-
-    ):
-
-        return (
-
-            db.query(Role)
-
-            .filter(
-
-                Role.is_active == True
-
-            )
-
-            .order_by(
-
-                Role.role_name
-
-            )
-
-            .all()
-
-        )
-    @staticmethod
-    def get_permissions(
-
-        db: Session,
-
-        role_id: int
-
-    ):
-
-        return (
-
-            db.query(RolePermission)
-
-            .filter(
-
-                RolePermission.role_id == role_id
-
-            )
-
-            .all()
-
-        )
+        return db.query(RolePermission).filter(RolePermission.role_id == role_id).all()
 
     @staticmethod
     def has_permission(
-
-        db: Session,
-
-        role_id: int,
-
-        module_name: str,
-
-        action: str = "can_view"
-
+        db: Session, role_id: int, module_name: str, action: str = "can_view"
     ):
 
         permission = (
-
             db.query(RolePermission)
-
             .filter(
-
                 RolePermission.role_id == role_id,
-
-                RolePermission.module_name == module_name
-
+                RolePermission.module_name == module_name,
             )
-
             .first()
-
         )
 
         if permission is None:
