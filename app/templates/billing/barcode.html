@@ -400,11 +400,40 @@
 
                                 <td>${data.name}</td>
 
-                                <td class="qty">1</td>
+                                <td>
 
-                                <td class="rate">
-                                    ${parseFloat(data.price).toFixed(2)}
-                                </td>
+    <div class="btn-group btn-group-sm">
+
+        <button
+            type="button"
+            class="btn btn-danger qty-minus">
+
+            -
+
+        </button>
+
+        <span
+            class="qty px-3 pt-1">
+
+            1
+
+        </span>
+
+        <button
+            type="button"
+            class="btn btn-success qty-plus">
+
+            +
+
+        </button>
+
+    </div>
+
+</td>
+
+<td class="rate">
+    ${parseFloat(data.price).toFixed(2)}
+</td>
 
                                 <td class="line-total">
                                     ${parseFloat(data.price).toFixed(2)}
@@ -449,26 +478,106 @@
         }
     );
 
-    document.addEventListener(
-        "click",
-        function (e) {
+document.addEventListener(
+    "click",
+    function(e){
 
-            if (
-                e.target.closest(
-                    ".remove-item"
-                )
-            ) {
+        // =========================
+        // PLUS BUTTON
+        // =========================
 
-                e.target
-                    .closest("tr")
-                    .remove();
+        if(
+            e.target.closest(".qty-plus")
+        ){
 
-                recalculateTotals();
+            let row =
+                e.target.closest("tr");
 
+            let qtySpan =
+                row.querySelector(".qty");
+
+            let rate =
+                parseFloat(
+                    row.querySelector(".rate")
+                    .innerText
+                );
+
+            let qty =
+                parseInt(
+                    qtySpan.innerText
+                );
+
+            qty++;
+
+            qtySpan.innerText = qty;
+
+            row.querySelector(
+                ".line-total"
+            ).innerText =
+                (qty * rate).toFixed(2);
+
+            recalculateTotals();
+        }
+
+        // =========================
+        // MINUS BUTTON
+        // =========================
+
+        if(
+            e.target.closest(".qty-minus")
+        ){
+
+            let row =
+                e.target.closest("tr");
+
+            let qtySpan =
+                row.querySelector(".qty");
+
+            let rate =
+                parseFloat(
+                    row.querySelector(".rate")
+                    .innerText
+                );
+
+            let qty =
+                parseInt(
+                    qtySpan.innerText
+                );
+
+            if(qty <= 1){
+                return;
             }
 
+            qty--;
+
+            qtySpan.innerText = qty;
+
+            row.querySelector(
+                ".line-total"
+            ).innerText =
+                (qty * rate).toFixed(2);
+
+            recalculateTotals();
         }
-    );
+
+        // =========================
+        // REMOVE ITEM BUTTON
+        // =========================
+
+        if(
+            e.target.closest(".remove-item")
+        ){
+
+            e.target
+                .closest("tr")
+                .remove();
+
+            recalculateTotals();
+
+        }
+
+    }
+);
 
     document.getElementById(
         "clear_bill_btn"

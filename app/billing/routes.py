@@ -128,20 +128,36 @@ async def save_invoice(
         payment_status=payment_status,
         remarks=remarks,
     )
-    saved_invoice = BillingService.create(db, invoice)
+
+    saved_invoice = BillingService.create(
+        db,
+        invoice
+    )
+
+    # -------------------------
+    # Mark as Manual Billing
+    # -------------------------
+
+    saved_invoice.billing_type = "MANUAL"
+
+    db.commit()
+
+    db.refresh(saved_invoice)
 
     # -------------------------
     # Auto Accounting Entry
     # -------------------------
 
-    AutoPostingService.post_sales(db, saved_invoice)
+    AutoPostingService.post_sales(
+        db,
+        saved_invoice
+    )
 
     # -------------------------
     # Save Items & Inventory
     # -------------------------
 
     for i in range(len(product_id)):
-
         InvoiceItemService.create(
             db=db,
             invoice_id=saved_invoice.id,
@@ -157,7 +173,6 @@ async def save_invoice(
         balance = 0
 
         if product:
-
             balance = float(product.current_stock or 0) - float(qty[i])
 
         InventoryService.create(
@@ -508,25 +523,13 @@ async def save_barcode_invoice(
         db,
         invoice
     )
+    saved_invoice.billing_type = "BARCODE"
 
-    AutoPostingService.post_sales(
-        db,
-        saved_invoice
-    )
+    db.commit()
+
+    db.refresh(saved_invoice)
 
     for item in items:
-
-        InvoiceItemService.create(
-            db=db,
-            invoice_id=saved_invoice.id,
-            product_id=item["product_id"],
-            qty=item["qty"],
-            rate=item["rate"],
-            gst_percentage=gst_percent,
-            total=float(item["qty"])
-                  * float(item["rate"]),
-        )
-
         product = ProductService.get_by_id(
             db,
             item["product_id"]
