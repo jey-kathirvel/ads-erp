@@ -181,10 +181,40 @@ async def update_customer(
 # Delete Customer
 # -------------------------------
 
-
 @router.get("/customers/{customer_id}/delete")
-async def delete_customer(customer_id: int, db: Session = Depends(get_db)):
+async def delete_customer(
+    customer_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
 
-    CustomerService.delete(db, customer_id)
+    try:
 
-    return RedirectResponse("/customers", status_code=303)
+        CustomerService.delete(db, customer_id)
+
+        customers = CustomerService.get_all(db)
+
+        return templates.TemplateResponse(
+            request=request,
+            name="customers/list.html",
+            context={
+                "customers": customers,
+                "success_message": "Customer deleted successfully.",
+            },
+        )
+
+    except Exception:
+
+        customers = CustomerService.get_all(db)
+
+        return templates.TemplateResponse(
+            request=request,
+            name="customers/list.html",
+            context={
+                "customers": customers,
+                "error_message": (
+                    "Cannot delete customer. "
+                    "Customer is already used in invoices."
+                ),
+            },
+        )

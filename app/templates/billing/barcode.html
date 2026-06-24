@@ -1,0 +1,766 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="card card-primary">
+
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="fas fa-barcode"></i>
+            Barcode Billing
+        </h3>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label>Customer</label>
+
+                <select id="customer_id" class="form-control">
+
+                    {% for customer in customers %}
+
+                    <option value="{{ customer.id }}">
+                        {{ customer.customer_name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label>Scan Barcode</label>
+
+                <input type="text" id="barcode_input" class="form-control" placeholder="Scan barcode and press Enter"
+                    autofocus>
+
+            </div>
+            <div class="row mt-3">
+
+                <div class="col-md-3">
+
+                    <label>Payment Status</label>
+
+                    <select id="payment_status" class="form-control">
+
+                        <option value="Paid" selected>
+                            Paid
+                        </option>
+
+                        <option value="Unpaid">
+                            Unpaid
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>Payment Mode</label>
+
+                    <select id="payment_mode" class="form-control">
+
+                        <option value="Cash" selected>Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Card">Card</option>
+                        <option value="Bank">Bank</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>Discount</label>
+
+                    <input type="number" id="discount" value="0" step="0.01" class="form-control">
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <label>GST %</label>
+
+                    <select id="gst_percent" class="form-control">
+
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18" selected>18%</option>
+                        <option value="28">28%</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+        </div>
+
+        <hr>
+
+        <table class="table table-bordered" id="barcodeItems">
+
+            <thead>
+
+                <tr>
+                    <th>Barcode</th>
+                    <th>Product</th>
+                    <th width="100">Qty</th>
+                    <th width="120">Rate</th>
+                    <th width="120">Total</th>
+                    <th width="80">Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+        <div class="row mt-3">
+
+            <div class="col-md-8">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <table class="table table-bordered">
+
+                    <tr>
+                        <th>Total Items</th>
+                        <td id="total_items">0</td>
+                    </tr>
+
+                    <tr>
+                        <th>Total Qty</th>
+                        <td id="total_qty">0</td>
+                    </tr>
+
+                    <tr>
+                        <th>Subtotal</th>
+                        <td>₹ <span id="subtotal">0.00</span></td>
+                    </tr>
+
+                    <tr>
+                        <th>Discount</th>
+                        <td>₹ <span id="discount_amount">0.00</span></td>
+                    </tr>
+
+                    <tr>
+                        <th>Taxable Amount</th>
+                        <td>₹ <span id="taxable_amount">0.00</span></td>
+                    </tr>
+
+                    <tr>
+                        <th>CGST</th>
+                        <td>₹ <span id="cgst">0.00</span></td>
+                    </tr>
+
+                    <tr>
+                        <th>SGST</th>
+                        <td>₹ <span id="sgst">0.00</span></td>
+                    </tr>
+
+                    <tr>
+                        <th>Grand Total</th>
+                        <td>₹ <span id="grand_total">0.00</span></td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="col-md-12 text-right">
+
+                <button id="save_invoice_btn" class="btn btn-success btn-lg">
+
+                    <i class="fas fa-save"></i>
+                    Generate Invoice
+
+                </button>
+
+                <button id="clear_bill_btn" class="btn btn-secondary btn-lg">
+
+                    New Bill
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    function recalculateTotals() {
+
+        let totalItems = 0;
+        let totalQty = 0;
+        let subtotal = 0;
+
+        document
+            .querySelectorAll("#barcodeItems tbody tr")
+            .forEach(function (row) {
+
+                totalItems++;
+
+                let qty =
+                    parseFloat(
+                        row.querySelector(".qty").innerText
+                    );
+
+                let total =
+                    parseFloat(
+                        row.querySelector(".line-total").innerText
+                    );
+
+                totalQty += qty;
+
+                subtotal += total;
+
+            });
+
+        let discount =
+            parseFloat(
+                document.getElementById(
+                    "discount"
+                ).value || 0
+            );
+
+        let taxable =
+            subtotal - discount;
+
+        let gstPercent =
+            parseFloat(
+                document.getElementById(
+                    "gst_percent"
+                ).value || 0
+            );
+
+        let gstAmount =
+            taxable * gstPercent / 100;
+
+        let cgst =
+            gstAmount / 2;
+
+        let sgst =
+            gstAmount / 2;
+
+        let grandTotal =
+            taxable + gstAmount;
+
+        document.getElementById(
+            "total_items"
+        ).innerText = totalItems;
+
+        document.getElementById(
+            "total_qty"
+        ).innerText = totalQty;
+
+        document.getElementById(
+            "subtotal"
+        ).innerText = subtotal.toFixed(2);
+
+        document.getElementById(
+            "discount_amount"
+        ).innerText = discount.toFixed(2);
+
+        document.getElementById(
+            "taxable_amount"
+        ).innerText = taxable.toFixed(2);
+
+        document.getElementById(
+            "cgst"
+        ).innerText = cgst.toFixed(2);
+
+        document.getElementById(
+            "sgst"
+        ).innerText = sgst.toFixed(2);
+
+        document.getElementById(
+            "grand_total"
+        ).innerText = grandTotal.toFixed(2);
+
+    }
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const barcodeInput =
+                document.getElementById(
+                    "barcode_input"
+                );
+            document
+                .getElementById("discount")
+                .addEventListener(
+                    "input",
+                    recalculateTotals
+                );
+
+            document
+                .getElementById("gst_percent")
+                .addEventListener(
+                    "change",
+                    recalculateTotals
+                );
+            barcodeInput.addEventListener(
+                "keydown",
+                function (e) {
+
+                    if (e.key !== "Enter") {
+                        return;
+                    }
+
+                    e.preventDefault();
+
+                    const barcode =
+                        barcodeInput.value.trim();
+
+                    if (!barcode) {
+                        return;
+                    }
+
+                    fetch(
+                        "/billing/barcode/product?barcode=" +
+                        encodeURIComponent(barcode)
+                    )
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (!data.success) {
+
+                                alert("Product not found");
+
+                                return;
+                            }
+
+                            const tbody =
+                                document.querySelector(
+                                    "#barcodeItems tbody"
+                                );
+
+                            let existingRow =
+                                document.querySelector(
+                                    `tr[data-barcode="${data.barcode}"]`
+                                );
+
+                            if (existingRow) {
+
+                                let qtyCell =
+                                    existingRow.querySelector(".qty");
+
+                                let qty =
+                                    parseInt(qtyCell.innerText);
+
+                                qty++;
+
+                                qtyCell.innerText = qty;
+
+                                let rate =
+                                    parseFloat(
+                                        existingRow.dataset.rate
+                                    );
+
+                                existingRow.querySelector(
+                                    ".line-total"
+                                ).innerText =
+                                    (
+                                        qty * rate
+                                    ).toFixed(2);
+
+                            }
+                            else {
+
+                                tbody.insertAdjacentHTML(
+                                    "beforeend",
+                                    `
+                            <tr
+                                data-product-id="${data.id}"
+                                data-barcode="${data.barcode}"
+                                data-rate="${data.price}">
+
+                                <td>${data.barcode}</td>
+
+                                <td>${data.name}</td>
+
+                                <td>
+
+    <div class="btn-group btn-group-sm">
+
+        <button
+            type="button"
+            class="btn btn-danger qty-minus">
+
+            -
+
+        </button>
+
+        <span
+            class="qty px-3 pt-1">
+
+            1
+
+        </span>
+
+        <button
+            type="button"
+            class="btn btn-success qty-plus">
+
+            +
+
+        </button>
+
+    </div>
+
+</td>
+
+<td class="rate">
+    ${parseFloat(data.price).toFixed(2)}
+</td>
+
+                                <td class="line-total">
+                                    ${parseFloat(data.price).toFixed(2)}
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-danger btn-sm remove-item">
+
+                                        <i class="fas fa-trash"></i>
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+                            `
+                                );
+
+                            }
+
+                            recalculateTotals();
+
+                            barcodeInput.value = "";
+
+                            barcodeInput.focus();
+
+                        })
+                        .catch(error => {
+
+                            console.error(error);
+
+                            alert("Error loading product");
+
+                        });
+
+                }
+            );
+
+        }
+    );
+
+document.addEventListener(
+    "click",
+    function(e){
+
+        // =========================
+        // PLUS BUTTON
+        // =========================
+
+        if(
+            e.target.closest(".qty-plus")
+        ){
+
+            let row =
+                e.target.closest("tr");
+
+            let qtySpan =
+                row.querySelector(".qty");
+
+            let rate =
+                parseFloat(
+                    row.querySelector(".rate")
+                    .innerText
+                );
+
+            let qty =
+                parseInt(
+                    qtySpan.innerText
+                );
+
+            qty++;
+
+            qtySpan.innerText = qty;
+
+            row.querySelector(
+                ".line-total"
+            ).innerText =
+                (qty * rate).toFixed(2);
+
+            recalculateTotals();
+        }
+
+        // =========================
+        // MINUS BUTTON
+        // =========================
+
+        if(
+            e.target.closest(".qty-minus")
+        ){
+
+            let row =
+                e.target.closest("tr");
+
+            let qtySpan =
+                row.querySelector(".qty");
+
+            let rate =
+                parseFloat(
+                    row.querySelector(".rate")
+                    .innerText
+                );
+
+            let qty =
+                parseInt(
+                    qtySpan.innerText
+                );
+
+            if(qty <= 1){
+                return;
+            }
+
+            qty--;
+
+            qtySpan.innerText = qty;
+
+            row.querySelector(
+                ".line-total"
+            ).innerText =
+                (qty * rate).toFixed(2);
+
+            recalculateTotals();
+        }
+
+        // =========================
+        // REMOVE ITEM BUTTON
+        // =========================
+
+        if(
+            e.target.closest(".remove-item")
+        ){
+
+            e.target
+                .closest("tr")
+                .remove();
+
+            recalculateTotals();
+
+        }
+
+    }
+);
+
+    document.getElementById(
+        "clear_bill_btn"
+    ).addEventListener(
+        "click",
+        function () {
+
+            document.querySelector(
+                "#barcodeItems tbody"
+            ).innerHTML = "";
+
+            recalculateTotals();
+
+            document.getElementById(
+                "barcode_input"
+            ).focus();
+
+        }
+    );
+
+    document.getElementById(
+        "save_invoice_btn"
+    ).addEventListener(
+        "click",
+        function () {
+
+            let rows =
+                document.querySelectorAll(
+                    "#barcodeItems tbody tr"
+                );
+
+            if (rows.length === 0) {
+
+                alert("No items in bill");
+
+                return;
+            }
+
+            let items = [];
+
+            rows.forEach(function (row) {
+
+                items.push({
+
+                    product_id:
+                        row.dataset.productId,
+
+                    qty:
+                        parseFloat(
+                            row.querySelector(".qty")
+                                .innerText
+                        ),
+
+                    rate:
+                        parseFloat(
+                            row.querySelector(".rate")
+                                .innerText
+                        )
+
+                });
+
+            });
+
+            fetch(
+                "/billing/barcode/save",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        customer_id:
+                            document.getElementById(
+                                "customer_id"
+                            ).value,
+
+                        payment_status:
+                            document.getElementById(
+                                "payment_status"
+                            ).value,
+
+                        payment_mode:
+                            document.getElementById(
+                                "payment_mode"
+                            ).value,
+
+                        discount:
+                            parseFloat(
+                                document.getElementById(
+                                    "discount"
+                                ).value || 0
+                            ),
+
+                        gst_percent:
+                            parseFloat(
+                                document.getElementById(
+                                    "gst_percent"
+                                ).value || 0
+                            ),
+
+                        subtotal:
+                            parseFloat(
+                                document.getElementById(
+                                    "subtotal"
+                                ).innerText
+                            ),
+
+                        taxable_amount:
+                            parseFloat(
+                                document.getElementById(
+                                    "taxable_amount"
+                                ).innerText
+                            ),
+
+                        cgst:
+                            parseFloat(
+                                document.getElementById(
+                                    "cgst"
+                                ).innerText
+                            ),
+
+                        sgst:
+                            parseFloat(
+                                document.getElementById(
+                                    "sgst"
+                                ).innerText
+                            ),
+
+                        grand_total:
+                            parseFloat(
+                                document.getElementById(
+                                    "grand_total"
+                                ).innerText
+                            ),
+
+                        items: items
+
+                    })
+
+                }
+            )
+                .then(r => r.json())
+                .then(data => {
+
+                    if (data.success) {
+
+                        alert(
+                            "Invoice Created : " +
+                            data.invoice_no
+                        );
+
+                        window.location =
+                            "/billing/view/" +
+                            data.invoice_id;
+
+                    }
+                    else {
+
+                        alert(
+                            data.message ||
+                            "Unable to save invoice"
+                        );
+
+                    }
+
+                })
+                .catch(error => {
+
+                    console.error(error);
+
+                    alert(
+                        "Error saving invoice"
+                    );
+
+                });
+
+        }
+    );
+
+</script>
+
+{% endblock %}
