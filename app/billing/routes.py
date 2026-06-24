@@ -6,6 +6,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from fastapi.responses import JSONResponse
+from app.products.models import Product
+from fastapi import Body
 
 from app.config.database import get_db
 
@@ -379,4 +382,182 @@ async def print_invoice(
         request=request,
         name="billing/view.html",
         context={"invoice": invoice, "items": items, "company": company},
+    )
+
+#Barcode Billing Page
+
+@router.get(
+    "/billing/barcode",
+    response_class=HTMLResponse
+)
+async def barcode_billing_page(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+
+    customers = CustomerService.get_all(db)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="billing/barcode.html",
+        context={
+            "customers": customers,
+        },
+    )
+
+@router.get("/billing/barcode/product")
+async def get_product_by_barcode(
+    barcode: str,
+    db: Session = Depends(get_db),
+):
+
+    product = (
+        db.query(Product)
+        .filter(Product.barcode == barcode)
+        .first()
+    )
+
+    if not product:
+
+        return JSONResponse(
+            {
+                "success": False
+            }
+        )
+
+    return {
+        "success": True,
+        "id": product.id,
+        "name": product.product_name,
+        "price": float(product.selling_price),
+        "barcode": product.barcode,
+    }
+
+@router.post("/billing/barcode/save")
+async def save_barcode_invoice(
+    payload: dict = Body(...),
+    db: Session = Depends(get_db),
+):
+
+    customer_id = payload.get("customer_id")
+
+    items = payload.get("items", [])
+
+    if not items:
+
+        return JSONResponse(
+            {
+                "success": False,
+                "message": "No items found"
+            }
+        )
+
+    subtotal = float(
+        payload.get("subtotal", 0)
+    )
+
+    discount = float(
+        payload.get("discount", 0)
+    )
+
+    taxable_amount = float(
+        payload.get("taxable_amount", subtotal)
+    )
+
+    cgst = float(
+        payload.get("cgst", 0)
+    )
+
+    sgst = float(
+        payload.get("sgst", 0)
+    )
+
+    grand_total = float(
+        payload.get("grand_total", subtotal)
+    )
+
+    payment_mode = payload.get(
+        "payment_mode",
+        "Cash"
+    )
+
+    payment_status = payload.get(
+        "payment_status",
+        "Paid"
+    )
+
+    gst_percent = float(
+        payload.get("gst_percent", 0)
+    )
+
+    invoice = InvoiceCreate(
+        customer_id=customer_id,
+        subtotal=subtotal,
+        discount=discount,
+        taxable_amount=taxable_amount,
+        cgst=cgst,
+        sgst=sgst,
+        igst=0,
+        grand_total=grand_total,
+        payment_mode=payment_mode,
+        payment_status=payment_status,
+        remarks="Barcode Billing",
+    )
+
+    saved_invoice = BillingService.create(
+        db,
+        invoice
+    )
+
+    AutoPostingService.post_sales(
+        db,
+        saved_invoice
+    )
+
+    for item in items:
+
+        InvoiceItemService.create(
+            db=db,
+            invoice_id=saved_invoice.id,
+            product_id=item["product_id"],
+            qty=item["qty"],
+            rate=item["rate"],
+            gst_percentage=gst_percent,
+            total=float(item["qty"])
+                  * float(item["rate"]),
+        )
+
+        product = ProductService.get_by_id(
+            db,
+            item["product_id"]
+        )
+
+        balance = (
+            float(product.current_stock)
+            - float(item["qty"])
+        )
+
+        InventoryService.create(
+            db=db,
+            transaction_no=saved_invoice.invoice_no,
+            transaction_type="SALE",
+            product_id=item["product_id"],
+            reference_id=saved_invoice.id,
+            qty=item["qty"],
+            balance_qty=balance,
+            remarks="Barcode Billing",
+        )
+
+        ProductService.update_stock(
+            db,
+            item["product_id"],
+            item["qty"],
+        )
+
+    return JSONResponse(
+        {
+            "success": True,
+            "invoice_id": saved_invoice.id,
+            "invoice_no": saved_invoice.invoice_no,
+        }
     )
