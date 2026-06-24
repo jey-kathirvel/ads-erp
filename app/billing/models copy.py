@@ -45,8 +45,6 @@ class Invoice(Base):
 
     payment_status: Mapped[str] = mapped_column(String(20), default="Paid")
 
-    billing_type: Mapped[str] = mapped_column(String(20), default="MANUAL")
-
     remarks: Mapped[str | None] = mapped_column(nullable=True)
 
     status: Mapped[str] = mapped_column(String(20), default="Completed")
