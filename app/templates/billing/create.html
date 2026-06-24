@@ -206,7 +206,7 @@
 
                             <td>
 
-                                <select class="form-control product" name="product_id">
+                                <select name="product_id" class="form-control product product-select">
 
                                     {% for product in products %}
 
@@ -660,47 +660,46 @@
 
             );
 
-            clone.querySelector(
+            $(clone).find(".select2").remove();
 
-                ".qty"
+            $(clone)
+                .find(".product-select")
+                .removeClass("select2-hidden-accessible")
+                .removeAttr("data-select2-id");
 
-            ).value = 1;
+            $(clone)
+                .find("option")
+                .removeAttr("data-select2-id");
 
-            clone.querySelector(
+            clone.querySelector(".qty").value = 1;
 
-                ".rate"
+            clone.querySelector(".total").value = "";
 
-            ).value = 0;
+            clone.querySelector(".product").selectedIndex = 0;
 
-            clone.querySelector(
+            tbody.appendChild(clone);
 
-                ".gst"
+            $(clone)
+                .find('.product-select')
+                .select2({
+                    width: '100%',
+                    placeholder: 'Search Product'
+                })
+                .on('change', function () {
 
-            ).value = 18;
+                    productChanged(this);
 
-            clone.querySelector(
+                });
 
-                ".total"
+            setTimeout(function () {
 
-            ).value = "";
+                productChanged(
+                    clone.querySelector(".product")
+                );
 
-            tbody.appendChild(
+                calculateInvoice();
 
-                clone
-
-            );
-
-            productChanged(
-
-                clone.querySelector(
-
-                    ".product"
-
-                )
-
-            );
-
-            calculateInvoice();
+            }, 100);
 
         }
 
@@ -744,6 +743,24 @@
 
     );
 
+    document.addEventListener(
+        "change",
+        function (e) {
+
+            if (
+                e.target.classList.contains(
+                    "product"
+                )
+            ) {
+
+                productChanged(
+                    e.target
+                );
+
+            }
+
+        }
+    );
     document.getElementById(
 
         "invoiceForm"
@@ -847,28 +864,42 @@
 
     );
 
-    window.onload = function () {
+window.onload = function () {
 
-        document.querySelectorAll(
+    $('.product-select')
+        .select2({
+            width: '100%',
+            placeholder: 'Search Product'
+        })
+        .on('select2:select', function () {
 
-            ".product"
-
-        ).forEach(function (select) {
-
-            productChanged(
-
-                select
-
-            );
+            productChanged(this);
 
         });
 
-        calculateInvoice();
+    document.querySelectorAll(
+        ".product"
+    ).forEach(function (select) {
 
-    };
+        productChanged(select);
+
+    });
+
+    calculateInvoice();
+
+};
 
 </script>
 <style>
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-selection--single {
+        height: 38px !important;
+        padding-top: 4px;
+    }
+
     @media (max-width: 768px) {
 
         .billing-table-wrapper {
@@ -910,4 +941,7 @@
 
     }
 </style>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {% endblock %}
