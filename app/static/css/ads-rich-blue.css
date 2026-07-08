@@ -1,0 +1,759 @@
+:root {
+    --ads-blue-950: #061a40;
+    --ads-blue-900: #082a63;
+    --ads-blue-850: #0a3478;
+    --ads-blue-800: #0b3d91;
+    --ads-blue-700: #0d5bd7;
+    --ads-blue-600: #1677ff;
+    --ads-blue-500: #2f8cff;
+    --ads-blue-100: #eaf3ff;
+    --ads-blue-050: #f5f9ff;
+
+    --ads-text: #17233c;
+    --ads-muted: #6b7890;
+    --ads-border: #d9e4f2;
+    --ads-surface: #ffffff;
+
+    --ads-shadow:
+        0 8px 24px rgba(8, 42, 99, 0.10);
+}
+
+/* =========================================
+   GLOBAL ERP SURFACE
+   ========================================= */
+
+body {
+    background:
+        linear-gradient(
+            135deg,
+            #f7faff 0%,
+            #eef5ff 100%
+        );
+    color: var(--ads-text);
+}
+
+.content-wrapper {
+    background:
+        linear-gradient(
+            135deg,
+            #f7faff 0%,
+            #eef5ff 100%
+        ) !important;
+}
+
+.content-header h1,
+.content h1,
+.content h2,
+.content h3 {
+    color: var(--ads-blue-950);
+}
+
+/* =========================================
+   TOP NAVBAR
+   ========================================= */
+
+.main-header.navbar {
+    background:
+        linear-gradient(
+            90deg,
+            var(--ads-blue-950) 0%,
+            var(--ads-blue-800) 52%,
+            var(--ads-blue-600) 100%
+        ) !important;
+
+    border-bottom: 0 !important;
+
+    box-shadow:
+        0 4px 18px rgba(6, 26, 64, 0.24);
+}
+
+.main-header .nav-link,
+.main-header .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.94) !important;
+}
+
+.main-header .nav-link:hover {
+    color: #ffffff !important;
+}
+
+/* =========================================
+   SIDEBAR
+   ========================================= */
+
+.main-sidebar {
+    background:
+        linear-gradient(
+            180deg,
+            var(--ads-blue-950) 0%,
+            var(--ads-blue-900) 48%,
+            #04142f 100%
+        ) !important;
+
+    box-shadow:
+        6px 0 22px rgba(6, 26, 64, 0.16);
+}
+
+.brand-link {
+    background:
+        rgba(255, 255, 255, 0.05) !important;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.brand-text {
+    color: #ffffff !important;
+}
+
+.nav-sidebar .nav-header {
+    color:
+        rgba(195, 219, 255, 0.72) !important;
+
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.nav-sidebar .nav-link {
+    color:
+        rgba(235, 244, 255, 0.90) !important;
+
+    border-radius: 8px;
+
+    margin:
+        2px 8px;
+}
+
+.nav-sidebar .nav-link p,
+.nav-sidebar .nav-link .nav-icon {
+    color: inherit !important;
+}
+
+.nav-sidebar .nav-link:hover {
+    background:
+        rgba(47, 140, 255, 0.18) !important;
+
+    color: #ffffff !important;
+
+    transform:
+        translateX(2px);
+}
+
+.nav-sidebar .nav-link.active {
+    background:
+        linear-gradient(
+            90deg,
+            var(--ads-blue-600),
+            var(--ads-blue-500)
+        ) !important;
+
+    color: #ffffff !important;
+
+    box-shadow:
+        0 6px 16px rgba(22, 119, 255, 0.30);
+}
+
+/* =========================================
+   CARDS
+   ========================================= */
+
+.card {
+    border:
+        1px solid var(--ads-border);
+
+    border-radius:
+        10px;
+
+    box-shadow:
+        var(--ads-shadow);
+
+    overflow:
+        hidden;
+}
+
+.card-header {
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff 0%,
+            var(--ads-blue-050) 100%
+        );
+
+    border-bottom:
+        1px solid var(--ads-border);
+}
+
+.card-title {
+    color:
+        var(--ads-blue-950);
+
+    font-weight:
+        700;
+}
+
+.card-primary.card-outline {
+    border-top:
+        3px solid var(--ads-blue-600);
+}
+
+.card-info.card-outline {
+    border-top:
+        3px solid var(--ads-blue-500);
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.btn-primary {
+    background:
+        linear-gradient(
+            135deg,
+            var(--ads-blue-700),
+            var(--ads-blue-500)
+        ) !important;
+
+    border-color:
+        var(--ads-blue-700) !important;
+
+    box-shadow:
+        0 5px 14px rgba(13, 91, 215, 0.22);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background:
+        linear-gradient(
+            135deg,
+            var(--ads-blue-800),
+            var(--ads-blue-600)
+        ) !important;
+
+    border-color:
+        var(--ads-blue-800) !important;
+
+    transform:
+        translateY(-1px);
+}
+
+.btn-outline-primary {
+    color:
+        var(--ads-blue-700);
+
+    border-color:
+        var(--ads-blue-600);
+}
+
+.btn-outline-primary:hover {
+    background:
+        var(--ads-blue-700);
+
+    border-color:
+        var(--ads-blue-700);
+}
+
+/* =========================================
+   FORMS
+   ========================================= */
+
+.form-control,
+.custom-select,
+.select2-container--default
+.select2-selection--single {
+    border:
+        1px solid var(--ads-border);
+
+    border-radius:
+        7px;
+}
+
+.form-control:focus,
+.custom-select:focus {
+    border-color:
+        var(--ads-blue-500);
+
+    box-shadow:
+        0 0 0 0.18rem
+        rgba(47, 140, 255, 0.16);
+}
+
+label {
+    color:
+        #203253;
+}
+
+/* =========================================
+   TABLES
+   ========================================= */
+
+.table thead th {
+    background:
+        linear-gradient(
+            180deg,
+            var(--ads-blue-100),
+            #dcecff
+        );
+
+    color:
+        var(--ads-blue-950);
+
+    border-bottom:
+        2px solid #bdd7f8;
+}
+
+.table-hover tbody tr:hover {
+    background:
+        var(--ads-blue-050);
+}
+
+/* =========================================
+   SMALL BOX DASHBOARD WIDGETS
+   ========================================= */
+
+.small-box {
+    border-radius:
+        10px;
+
+    box-shadow:
+        var(--ads-shadow);
+
+    overflow:
+        hidden;
+}
+
+.small-box.bg-info {
+    background:
+        linear-gradient(
+            135deg,
+            #0b5ed7,
+            #36a3ff
+        ) !important;
+}
+
+.small-box.bg-primary {
+    background:
+        linear-gradient(
+            135deg,
+            var(--ads-blue-900),
+            var(--ads-blue-600)
+        ) !important;
+}
+
+/* =========================================
+   BADGES
+   ========================================= */
+
+.badge-primary {
+    background:
+        var(--ads-blue-700);
+}
+
+/* =========================================
+   PAGINATION
+   ========================================= */
+
+.page-item.active .page-link {
+    background:
+        var(--ads-blue-700);
+
+    border-color:
+        var(--ads-blue-700);
+}
+
+.page-link {
+    color:
+        var(--ads-blue-700);
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+.main-footer {
+    background:
+        #ffffff;
+
+    border-top:
+        1px solid var(--ads-border);
+
+    color:
+        var(--ads-muted);
+}
+
+/* =========================================
+   SMOOTH INTERACTIONS
+   ========================================= */
+
+.nav-link,
+.btn,
+.card,
+.form-control {
+    transition:
+        all 0.18s ease;
+}
+
+/* =========================================
+   STEP 34: PREMIUM DEEP NAVY SIDEBAR
+   CSS-ONLY OVERRIDE
+   ========================================= */
+
+/* Full sidebar shell */
+.main-sidebar,
+.main-sidebar.sidebar-dark-primary,
+.main-sidebar.sidebar-light-primary {
+    background:
+        linear-gradient(
+            180deg,
+            #061a40 0%,
+            #082a63 52%,
+            #0a3478 100%
+        ) !important;
+
+    box-shadow:
+        8px 0 24px rgba(6, 26, 64, 0.18) !important;
+
+    border-right:
+        1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Brand / logo zone */
+.main-sidebar .brand-link {
+    background:
+        linear-gradient(
+            135deg,
+            #061a40 0%,
+            #0b3d91 100%
+        ) !important;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.10) !important;
+
+    color:
+        #ffffff !important;
+}
+
+/* Sidebar inner surface */
+.main-sidebar .sidebar {
+    background:
+        transparent !important;
+}
+
+/* Standard menu links */
+.main-sidebar .nav-sidebar .nav-link {
+    color:
+        rgba(255, 255, 255, 0.88) !important;
+
+    border-radius:
+        9px !important;
+
+    margin:
+        3px 8px !important;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease !important;
+}
+
+/* Menu icons */
+.main-sidebar .nav-sidebar .nav-link .nav-icon {
+    color:
+        #9ecbff !important;
+
+    transition:
+        color 0.18s ease,
+        transform 0.18s ease !important;
+}
+
+/* Hover state */
+.main-sidebar .nav-sidebar .nav-link:hover {
+    background:
+        rgba(47, 140, 255, 0.18) !important;
+
+    color:
+        #ffffff !important;
+
+    transform:
+        translateX(2px);
+}
+
+/* Hover icon */
+.main-sidebar .nav-sidebar .nav-link:hover .nav-icon {
+    color:
+        #ffffff !important;
+
+    transform:
+        scale(1.04);
+}
+
+/* Active navigation item */
+.main-sidebar .nav-sidebar .nav-link.active {
+    background:
+        linear-gradient(
+            135deg,
+            #1677ff 0%,
+            #0d5bd7 100%
+        ) !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0 8px 18px rgba(22, 119, 255, 0.30) !important;
+
+    font-weight:
+        600 !important;
+}
+
+/* Active icon */
+.main-sidebar .nav-sidebar .nav-link.active .nav-icon {
+    color:
+        #ffffff !important;
+}
+
+/* Section headers:
+   MASTERS / SALES / BOOKING / INVENTORY */
+.main-sidebar .nav-sidebar .nav-header {
+    color:
+        #8fc5ff !important;
+
+    font-size:
+        0.72rem !important;
+
+    font-weight:
+        700 !important;
+
+    letter-spacing:
+        0.08em !important;
+
+    text-transform:
+        uppercase !important;
+
+    padding:
+        18px 16px 7px !important;
+
+    opacity:
+        1 !important;
+}
+
+/* Menu text */
+.main-sidebar .nav-sidebar .nav-link p {
+    color:
+        inherit !important;
+}
+
+/* Treeview submenu */
+.main-sidebar .nav-treeview {
+    background:
+        rgba(0, 0, 0, 0.08) !important;
+
+    border-radius:
+        10px !important;
+
+    margin:
+        2px 8px 6px !important;
+
+    padding:
+        4px 0 !important;
+}
+
+.main-sidebar .nav-treeview > .nav-item > .nav-link {
+    color:
+        rgba(255, 255, 255, 0.78) !important;
+}
+
+.main-sidebar .nav-treeview > .nav-item > .nav-link:hover {
+    color:
+        #ffffff !important;
+}
+
+/* Sidebar scrollbar */
+.main-sidebar .os-scrollbar-handle {
+    background:
+        rgba(255, 255, 255, 0.28) !important;
+}
+
+/* Small NEW / status badges stay visible */
+.main-sidebar .badge {
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+/* Collapsed sidebar icon visibility */
+.sidebar-collapse .main-sidebar .nav-sidebar .nav-link .nav-icon {
+    color:
+        #b9dcff !important;
+}
+
+/* Mobile / responsive consistency */
+@media (max-width: 991.98px) {
+    .main-sidebar {
+        box-shadow:
+            10px 0 30px rgba(6, 26, 64, 0.28) !important;
+    }
+}
+
+
+/* =========================================
+   STEP 34C: FORCE FULL BLUE SIDEBAR
+   BLUE BACKGROUND + WHITE TEXT
+   ========================================= */
+
+/* Entire sidebar outer shell */
+body:not(.sidebar-collapse) .main-sidebar,
+.main-sidebar,
+aside.main-sidebar {
+    background:
+        linear-gradient(
+            180deg,
+            #061a40 0%,
+            #082a63 48%,
+            #0b3d91 100%
+        ) !important;
+
+    color:
+        #ffffff !important;
+}
+
+/* Critical: actual visible sidebar menu body */
+.main-sidebar .sidebar,
+aside.main-sidebar .sidebar,
+.sidebar-mini .main-sidebar .sidebar {
+    background:
+        linear-gradient(
+            180deg,
+            #061a40 0%,
+            #082a63 48%,
+            #0b3d91 100%
+        ) !important;
+
+    color:
+        #ffffff !important;
+}
+
+/* OverlayScrollbars wrappers can hold white background */
+.main-sidebar .os-host,
+.main-sidebar .os-padding,
+.main-sidebar .os-viewport,
+.main-sidebar .os-content,
+.main-sidebar .os-content-glue {
+    background:
+        transparent !important;
+}
+
+/* Navigation container */
+.main-sidebar nav,
+.main-sidebar .nav-sidebar,
+.main-sidebar .nav {
+    background:
+        transparent !important;
+}
+
+/* Every sidebar menu link */
+.main-sidebar .nav-sidebar > .nav-item > .nav-link,
+.main-sidebar .nav-sidebar .nav-link {
+    color:
+        #ffffff !important;
+
+    background:
+        transparent !important;
+
+    border-radius:
+        8px !important;
+
+    margin:
+        3px 8px !important;
+}
+
+/* Menu text explicitly white */
+.main-sidebar .nav-sidebar .nav-link p,
+.main-sidebar .nav-sidebar .nav-link span {
+    color:
+        #ffffff !important;
+}
+
+/* Icons */
+.main-sidebar .nav-sidebar .nav-icon,
+.main-sidebar .nav-sidebar .nav-link i {
+    color:
+        #b9dcff !important;
+}
+
+/* Section headings */
+.main-sidebar .nav-sidebar .nav-header {
+    color:
+        #8fc5ff !important;
+
+    font-weight:
+        700 !important;
+
+    opacity:
+        1 !important;
+}
+
+/* Hover */
+.main-sidebar .nav-sidebar .nav-link:hover {
+    background:
+        rgba(255, 255, 255, 0.12) !important;
+
+    color:
+        #ffffff !important;
+}
+
+.main-sidebar .nav-sidebar .nav-link:hover p,
+.main-sidebar .nav-sidebar .nav-link:hover span,
+.main-sidebar .nav-sidebar .nav-link:hover i,
+.main-sidebar .nav-sidebar .nav-link:hover .nav-icon {
+    color:
+        #ffffff !important;
+}
+
+/* Active item */
+.main-sidebar .nav-sidebar .nav-link.active {
+    background:
+        linear-gradient(
+            135deg,
+            #1677ff 0%,
+            #0d5bd7 100%
+        ) !important;
+
+    color:
+        #ffffff !important;
+
+    box-shadow:
+        0 7px 18px rgba(22, 119, 255, 0.30) !important;
+}
+
+.main-sidebar .nav-sidebar .nav-link.active p,
+.main-sidebar .nav-sidebar .nav-link.active span,
+.main-sidebar .nav-sidebar .nav-link.active i,
+.main-sidebar .nav-sidebar .nav-link.active .nav-icon {
+    color:
+        #ffffff !important;
+}
+
+/* Brand area remains blue */
+.main-sidebar .brand-link {
+    background:
+        #061a40 !important;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Remove any white pseudo/background layers */
+.main-sidebar::before,
+.main-sidebar::after,
+.main-sidebar .sidebar::before,
+.main-sidebar .sidebar::after {
+    background:
+        transparent !important;
+}
+
+/* Sidebar bottom area consistency */
+.main-sidebar,
+.main-sidebar .sidebar {
+    min-height:
+        100vh !important;
+}
+

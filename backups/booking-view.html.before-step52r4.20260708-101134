@@ -1,0 +1,234 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Booking Details{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        <i class="fas fa-eye mr-2"></i>
+                        Booking Details
+                    </h1>
+                    <small class="text-muted">
+                        {{ booking.booking_no }}
+                    </small>
+                </div>
+
+                <div class="col-sm-6 text-sm-right mt-2 mt-sm-0">
+                    <a
+                        href="/booking/{{ booking.id }}/edit"
+                        class="btn btn-warning"
+                    >
+                        <i class="fas fa-edit mr-1"></i>
+                        Edit
+                    </a>
+
+                    <a
+                        href="/booking/dashboard"
+                        class="btn btn-outline-secondary"
+                    >
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-user mr-2"></i>
+                                Guest & Stay Details
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">
+                                        Guest Name
+                                    </small>
+                                    <strong>
+                                        {{ booking.guest_name }}
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">
+                                        Mobile Number
+                                    </small>
+                                    <strong>
+                                        {{ booking.mobile }}
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">
+                                        Check-in
+                                    </small>
+                                    <strong>
+                                        {{
+                                            booking.check_in_at.strftime(
+                                                "%d %b %Y, %I:%M %p"
+                                            )
+                                        }}
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">
+                                        Check-out
+                                    </small>
+                                    <strong>
+                                        {{
+                                            booking.check_out_at.strftime(
+                                                "%d %b %Y, %I:%M %p"
+                                            )
+                                        }}
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">
+                                        Number of Days
+                                    </small>
+                                    <strong>
+                                        {{ booking.number_of_days }}
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">
+                                        Number of Rooms
+                                    </small>
+                                    <strong>
+                                        {{ booking.number_of_rooms }}
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-info card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-bed mr-2"></i>
+                                Assigned Rooms
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+                            {% if booking.booking_rooms %}
+                                {% for link in booking.booking_rooms %}
+                                    {% if link.room %}
+                                        <span
+                                            class="badge badge-success
+                                                   p-2 mr-2 mb-2"
+                                        >
+                                            <i class="fas fa-bed mr-1"></i>
+                                            Room
+                                            {{ link.room.room_number }}
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <span class="text-muted">
+                                    No rooms assigned
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card card-success card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-receipt mr-2"></i>
+                                Booking Summary
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-6">
+                                    Booking No
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    {{ booking.booking_no }}
+                                </dd>
+
+                                <dt class="col-6">
+                                    Status
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    <span class="badge badge-primary">
+                                        {{ booking.status }}
+                                    </span>
+                                </dd>
+
+                                <dt class="col-6">
+                                    Room Rate
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    ₹{{ booking.room_rate }}
+                                </dd>
+
+                                <dt class="col-6">
+                                    Total Amount
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    <strong>
+                                        ₹{{ booking.total_amount }}
+                                    </strong>
+                                </dd>
+
+                                <dt class="col-6">
+                                    Advance
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    ₹{{ booking.advance_amount }}
+                                </dd>
+
+                                <dt class="col-6">
+                                    Payment Mode
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    {{
+                                        booking.payment_mode
+                                        or "-"
+                                    }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card card-secondary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-sticky-note mr-2"></i>
+                                Notes
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+                            {{
+                                booking.notes
+                                or "No notes"
+                            }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

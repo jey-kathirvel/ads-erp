@@ -369,6 +369,81 @@
 
                 <li class="nav-header">
 
+                    BOOKING
+
+                </li>
+
+                <li class="nav-item has-treeview
+                    {% if request.url.path == "/booking"
+                          or request.url.path == "/booking/new"
+                          or request.url.path.startswith("/booking/")
+                    %}menu-open{% endif %}">
+
+                    <a
+                        href="#"
+                        class="nav-link
+                            {% if request.url.path == "/booking"
+                                  or request.url.path == "/booking/new"
+                                  or request.url.path.startswith("/booking/")
+                            %}active{% endif %}"
+                    >
+
+                        <i class="nav-icon fas fa-hotel"></i>
+
+                        <p>
+                            Booking
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+
+                            <a
+                                href="/booking"
+                                class="nav-link
+                                    {% if request.url.path == "/booking"
+                                          or (
+                                              request.url.path.startswith("/booking/")
+                                              and request.url.path != "/booking/new"
+                                              and not request.url.path.endswith("/new")
+                                          )
+                                    %}active{% endif %}"
+                            >
+
+                                <i class="far fa-circle nav-icon"></i>
+
+                                <p>Booking Dashboard</p>
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a
+                                href="/booking/new"
+                                class="nav-link
+                                    {% if request.url.path == "/booking/new"
+                                    %}active{% endif %}"
+                            >
+
+                                <i class="fas fa-plus-circle nav-icon"></i>
+
+                                <p>New Booking</p>
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </li>
+
+                <li class="nav-header">
+
                     INVENTORY
 
                 </li>
