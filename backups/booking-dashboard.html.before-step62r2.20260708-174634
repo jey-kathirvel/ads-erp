@@ -347,19 +347,6 @@
                                     <i class="fas fa-eye"></i>
                                 </a>
 
-                                <button
-                                    type="button"
-                                    class="btn btn-success btn-sm js-whatsapp-booking"
-                                    title="Send Message"
-                                    data-mobile="{{ booking.mobile }}"
-                                    data-booking-no="{{ booking.booking_no }}"
-                                    data-guest-name="{{ booking.guest_name }}"
-                                    data-check-in="{{ booking.check_in_at.strftime('%d %b %Y, %I:%M %p') }}"
-                                    data-check-out="{{ booking.check_out_at.strftime('%d %b %Y, %I:%M %p') }}"
-                                >
-                                    <i class="fab fa-whatsapp"></i>
-                                </button>
-
                                 <a
                                     href="/booking/{{ booking.id }}/edit"
                                     class="btn btn-warning btn-sm"
@@ -437,92 +424,5 @@
     }
 }
 </style>
-
-
-<script id="dashboardWhatsAppMessagingScript">
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-        const buttons = document.querySelectorAll(
-            ".js-whatsapp-booking"
-        );
-
-        buttons.forEach(
-            function (button) {
-                button.addEventListener(
-                    "click",
-                    function () {
-                        const rawMobile = (
-                            button.dataset.mobile || ""
-                        );
-
-                        let mobile = rawMobile.replace(
-                            /\D/g,
-                            ""
-                        );
-
-                        if (!mobile) {
-                            alert(
-                                "Mobile number is not available "
-                                + "for this booking."
-                            );
-                            return;
-                        }
-
-                        if (
-                            mobile.length === 10
-                        ) {
-                            mobile = "91" + mobile;
-                        }
-
-                        const bookingNo = (
-                            button.dataset.bookingNo || "-"
-                        );
-
-                        const guestName = (
-                            button.dataset.guestName || "Guest"
-                        );
-
-                        const checkIn = (
-                            button.dataset.checkIn || "-"
-                        );
-
-                        const checkOut = (
-                            button.dataset.checkOut || "-"
-                        );
-
-                        const message = [
-                            "*Akshat Royal Stay*",
-                            "",
-                            "Dear " + guestName + ",",
-                            "",
-                            "Your booking details:",
-                            "Booking No: " + bookingNo,
-                            "Check-in: " + checkIn,
-                            "Check-out: " + checkOut,
-                            "",
-                            "Thank you for choosing "
-                            + "Akshat Royal Stay."
-                        ].join("\n");
-
-                        const whatsappUrl = (
-                            "https://wa.me/"
-                            + mobile
-                            + "?text="
-                            + encodeURIComponent(message)
-                        );
-
-                        window.open(
-                            whatsappUrl,
-                            "_blank",
-                            "noopener,noreferrer"
-                        );
-                    }
-                );
-            }
-        );
-    }
-);
-</script>
 
 {% endblock %}

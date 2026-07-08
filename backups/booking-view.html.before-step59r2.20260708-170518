@@ -3,7 +3,8 @@
 {% block title %}Booking Details{% endblock %}
 
 {% block content %}
-<section class="content-header">
+<div class="content-wrapper">
+    <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -17,22 +18,6 @@
                 </div>
 
                 <div class="col-sm-6 text-sm-right mt-2 mt-sm-0">
-                    {% if booking.mobile %}
-                    <a
-                        href="#"
-                        id="viewWhatsAppButton"
-                        class="btn btn-success"
-                        data-mobile="{{ booking.mobile }}"
-                        data-guest="{{ booking.guest_name }}"
-                        data-booking-no="{{ booking.booking_no }}"
-                        data-check-in="{{ booking.check_in_at.strftime('%d %b %Y, %I:%M %p') }}"
-                        data-check-out="{{ booking.check_out_at.strftime('%d %b %Y, %I:%M %p') }}"
-                    >
-                        <i class="fab fa-whatsapp mr-1"></i>
-                        Send Message
-                    </a>
-                    {% endif %}
-
                     <a
                         href="/booking/{{ booking.id }}/edit"
                         class="btn btn-warning"
@@ -145,27 +130,12 @@
                                 {% for link in booking.booking_rooms %}
                                     {% if link.room %}
                                         <span
-                                            class="badge
-                                                   {% if link.status == 'ACTIVE' %}
-                                                   badge-success
-                                                   {% else %}
-                                                   badge-secondary
-                                                   {% endif %}
+                                            class="badge badge-success
                                                    p-2 mr-2 mb-2"
-                                            title="{{
-                                                link.status
-                                            }}"
                                         >
                                             <i class="fas fa-bed mr-1"></i>
                                             Room
                                             {{ link.room.room_number }}
-
-                                            {% if link.status == "CANCELLED" %}
-                                                <i
-                                                    class="fas fa-ban ml-1"
-                                                ></i>
-                                                Cancelled
-                                            {% endif %}
                                         </span>
                                     {% endif %}
                                 {% endfor %}
@@ -176,6 +146,91 @@
                             {% endif %}
                         </div>
                     </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card card-success card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-receipt mr-2"></i>
+                                Booking Summary
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-6">
+                                    Booking No
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    {{ booking.booking_no }}
+                                </dd>
+
+                                <dt class="col-6">
+                                    Status
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    <span class="badge badge-primary">
+                                        {{ booking.status }}
+                                    </span>
+                                </dd>
+
+                                <dt class="col-6">
+                                    Room Rate
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    ₹{{ booking.room_rate }}
+                                </dd>
+
+                                <dt class="col-6">
+                                    Total Amount
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    <strong>
+                                        ₹{{ booking.total_amount }}
+                                    </strong>
+                                </dd>
+
+                                <dt class="col-6">
+                                    Advance
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    ₹{{ booking.advance_amount }}
+                                </dd>
+
+                                <dt class="col-6">
+                                    Payment Mode
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    {{
+                                        booking.payment_mode
+                                        or "-"
+                                    }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card card-secondary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-sticky-note mr-2"></i>
+                                Notes
+                            </h3>
+                        </div>
+
+                        <div class="card-body">
+                            {{
+                                booking.notes
+                                or "No notes"
+                            }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
 {% if booking.status != "CANCELLED" %}
 
@@ -555,158 +610,5 @@ document.addEventListener(
 </script>
 
 {% endif %}
-                </div>
-
-                <div class="col-lg-5">
-                    <div class="card card-success card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-receipt mr-2"></i>
-                                Booking Summary
-                            </h3>
-                        </div>
-
-                        <div class="card-body">
-                            <dl class="row mb-0">
-                                <dt class="col-6">
-                                    Booking No
-                                </dt>
-                                <dd class="col-6 text-right">
-                                    {{ booking.booking_no }}
-                                </dd>
-
-                                <dt class="col-6">
-                                    Status
-                                </dt>
-                                <dd class="col-6 text-right">
-                                    <span class="badge badge-primary">
-                                        {{ booking.status }}
-                                    </span>
-                                </dd>
-
-                                <dt class="col-6">
-                                    Room Rate
-                                </dt>
-                                <dd class="col-6 text-right">
-                                    ₹{{ booking.room_rate }}
-                                </dd>
-
-                                <dt class="col-6">
-                                    Total Amount
-                                </dt>
-                                <dd class="col-6 text-right">
-                                    <strong>
-                                        ₹{{ booking.total_amount }}
-                                    </strong>
-                                </dd>
-
-                                <dt class="col-6">
-                                    Advance
-                                </dt>
-                                <dd class="col-6 text-right">
-                                    ₹{{ booking.advance_amount }}
-                                </dd>
-
-                                <dt class="col-6">
-                                    Payment Mode
-                                </dt>
-                                <dd class="col-6 text-right">
-                                    {{
-                                        booking.payment_mode
-                                        or "-"
-                                    }}
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <div class="card card-secondary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-sticky-note mr-2"></i>
-                                Notes
-                            </h3>
-                        </div>
-
-                        <div class="card-body">
-                            {{
-                                booking.notes
-                                or "No notes"
-                            }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-<script>
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-        const button =
-            document.getElementById(
-                "viewWhatsAppButton"
-            );
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener(
-            "click",
-            function (event) {
-                event.preventDefault();
-
-                let mobile = String(
-                    button.dataset.mobile || ""
-                ).replace(/\D/g, "");
-
-                if (
-                    mobile.length === 10
-                ) {
-                    mobile = "91" + mobile;
-                }
-
-                if (!mobile) {
-                    alert(
-                        "Mobile number is not available "
-                        + "for this booking."
-                    );
-                    return;
-                }
-
-                const message = (
-                    "Hello "
-                    + (button.dataset.guest || "Guest")
-                    + ", your booking "
-                    + (button.dataset.bookingNo || "")
-                    + " is confirmed."
-                    + " Check-in: "
-                    + (button.dataset.checkIn || "")
-                    + ". Check-out: "
-                    + (button.dataset.checkOut || "")
-                    + ". Thank you - Akshat Royal Stay."
-                );
-
-                const url =
-                    "https://wa.me/"
-                    + mobile
-                    + "?text="
-                    + encodeURIComponent(
-                        message
-                    );
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        );
-    }
-);
-</script>
 
 {% endblock %}

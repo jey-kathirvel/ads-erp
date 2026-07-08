@@ -151,10 +151,7 @@ async def booking_dashboard(
             ),
             Booking.check_out_at > now,
         )
-        .order_by(
-            Booking.created_at.desc(),
-            Booking.id.desc(),
-        )
+        .order_by(Booking.check_in_at.asc())
         .limit(10)
         .all()
     )
@@ -642,8 +639,8 @@ async def same_day_bookings(
             Booking.check_out_at > day_start,
         )
         .order_by(
-            Booking.created_at.desc(),
-            Booking.id.desc(),
+            Booking.check_in_at.asc(),
+            Booking.id.asc(),
         )
         .all()
     )
@@ -955,69 +952,21 @@ async def update_booking(
             notes.strip() or None
         )
 
-        active_assignments = (
+        (
             db.query(BookingRoom)
             .filter(
-                BookingRoom.booking_id == booking.id,
-                BookingRoom.status == "ACTIVE",
+                BookingRoom.booking_id == booking.id
             )
-            .all()
-        )
-
-        active_assignment_by_room_id = {
-            assignment.room_id: assignment
-            for assignment in active_assignments
-        }
-
-        selected_room_ids = {
-            room.id
-            for room in selected_room_objects
-        }
-
-        current_active_room_ids = set(
-            active_assignment_by_room_id
-        )
-
-        removed_active_room_ids = (
-            current_active_room_ids
-            - selected_room_ids
-        )
-
-        if removed_active_room_ids:
-            removed_room_numbers = [
-                str(assignment.room.room_number)
-                for assignment in active_assignments
-                if assignment.room_id
-                in removed_active_room_ids
-            ]
-
-            raise HTTPException(
-                status_code=409,
-                detail=(
-                    "Room removal is not allowed in Edit Booking. "
-                    "Use Cancel Selected Rooms for: "
-                    + ", ".join(
-                        sorted(
-                            removed_room_numbers
-                        )
-                    )
-                ),
+            .delete(
+                synchronize_session=False
             )
-
-        new_room_ids = (
-            selected_room_ids
-            - current_active_room_ids
         )
 
         for room in selected_room_objects:
-            if room.id not in new_room_ids:
-                continue
-
             db.add(
                 BookingRoom(
                     booking_id=booking.id,
                     room_id=room.id,
-                    status="ACTIVE",
                 )
             )
 
@@ -1069,10 +1018,7 @@ async def edit_booking_form(
     selected_room_numbers = [
         link.room.room_number
         for link in booking.booking_rooms
-        if (
-            link.room is not None
-            and link.status == "ACTIVE"
-        )
+        if link.room is not None
     ]
 
     return templates.TemplateResponse(
@@ -1086,172 +1032,6 @@ async def edit_booking_form(
                 selected_room_numbers
             ),
         },
-    )
-
-
-@router.post(
-    "/booking/{booking_id}/cancel-rooms",
-    name="cancel_booking_rooms",
-)
-async def cancel_booking_rooms(
-    booking_id: int,
-    assignment_ids: list[int] = Form(...),
-    cancellation_reason: str = Form(...),
-    user=Depends(login_required),
-    db: Session = Depends(get_db),
-):
-    booking = (
-        db.query(Booking)
-        .filter(
-            Booking.id == booking_id
-        )
-        .first()
-    )
-
-    if booking is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Booking not found",
-        )
-
-    if booking.status == "CANCELLED":
-        raise HTTPException(
-            status_code=409,
-            detail=(
-                "Cancelled booking cannot have "
-                "partial room cancellation"
-            ),
-        )
-
-    normalized_assignment_ids = sorted(
-        set(
-            int(value)
-            for value in assignment_ids
-        )
-    )
-
-    if not normalized_assignment_ids:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                "Select at least one room "
-                "to cancel"
-            ),
-        )
-
-    reason = cancellation_reason.strip()
-
-    if not reason:
-        raise HTTPException(
-            status_code=400,
-            detail="Cancellation reason is required",
-        )
-
-    active_assignments = (
-        db.query(BookingRoom)
-        .filter(
-            BookingRoom.booking_id == booking.id,
-            BookingRoom.status == "ACTIVE",
-        )
-        .order_by(
-            BookingRoom.id.asc()
-        )
-        .all()
-    )
-
-    if not active_assignments:
-        raise HTTPException(
-            status_code=409,
-            detail=(
-                "Booking has no active room "
-                "assignments"
-            ),
-        )
-
-    active_assignment_map = {
-        assignment.id: assignment
-        for assignment in active_assignments
-    }
-
-    invalid_assignment_ids = [
-        assignment_id
-        for assignment_id
-        in normalized_assignment_ids
-        if assignment_id
-        not in active_assignment_map
-    ]
-
-    if invalid_assignment_ids:
-        raise HTTPException(
-            status_code=409,
-            detail=(
-                "Selected room assignment(s) "
-                "are invalid, already cancelled, "
-                "or do not belong to this booking: "
-                + ", ".join(
-                    str(value)
-                    for value
-                    in invalid_assignment_ids
-                )
-            ),
-        )
-
-    if len(normalized_assignment_ids) >= len(
-        active_assignments
-    ):
-        raise HTTPException(
-            status_code=409,
-            detail=(
-                "Partial cancellation cannot cancel "
-                "all active rooms. Use whole booking "
-                "cancellation instead."
-            ),
-        )
-
-    assignments_to_cancel = [
-        active_assignment_map[
-            assignment_id
-        ]
-        for assignment_id
-        in normalized_assignment_ids
-    ]
-
-    cancellation_time = india_now()
-
-    try:
-        for assignment in assignments_to_cancel:
-            assignment.status = "CANCELLED"
-            assignment.cancelled_at = (
-                cancellation_time
-            )
-            assignment.cancellation_reason = (
-                reason
-            )
-
-        remaining_active_count = (
-            len(active_assignments)
-            - len(assignments_to_cancel)
-        )
-
-        booking.number_of_rooms = (
-            remaining_active_count
-        )
-
-        booking.total_amount = (
-            booking.room_rate
-            * remaining_active_count
-            * booking.number_of_days
-        )
-
-        db.commit()
-
-    except Exception:
-        db.rollback()
-        raise
-
-    return RedirectResponse(
-        url=f"/booking/{booking.id}/view",
-        status_code=303,
     )
 
 

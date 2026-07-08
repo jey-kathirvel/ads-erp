@@ -351,7 +351,7 @@
                                     type="button"
                                     class="btn btn-success btn-sm js-whatsapp-booking"
                                     title="Send Message"
-                                    data-mobile="{{ booking.mobile }}"
+                                    data-mobile="{{ booking.mobile_number }}"
                                     data-booking-no="{{ booking.booking_no }}"
                                     data-guest-name="{{ booking.guest_name }}"
                                     data-check-in="{{ booking.check_in_at.strftime('%d %b %Y, %I:%M %p') }}"
@@ -492,8 +492,6 @@ document.addEventListener(
                         );
 
                         const message = [
-                            "*Akshat Royal Stay*",
-                            "",
                             "Dear " + guestName + ",",
                             "",
                             "Your booking details:",
@@ -501,8 +499,7 @@ document.addEventListener(
                             "Check-in: " + checkIn,
                             "Check-out: " + checkOut,
                             "",
-                            "Thank you for choosing "
-                            + "Akshat Royal Stay."
+                            "Thank you."
                         ].join("\n");
 
                         const whatsappUrl = (
