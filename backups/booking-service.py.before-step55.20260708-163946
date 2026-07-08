@@ -51,7 +51,6 @@ class BookingService:
                 Booking.status.in_(
                     ACTIVE_BOOKING_STATUSES
                 ),
-                BookingRoom.status == "ACTIVE",
                 Booking.check_in_at < check_out_at,
                 Booking.check_out_at > check_in_at,
             )

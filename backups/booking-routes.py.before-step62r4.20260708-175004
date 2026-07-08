@@ -151,10 +151,7 @@ async def booking_dashboard(
             ),
             Booking.check_out_at > now,
         )
-        .order_by(
-            Booking.created_at.desc(),
-            Booking.id.desc(),
-        )
+        .order_by(Booking.check_in_at.asc())
         .limit(10)
         .all()
     )
