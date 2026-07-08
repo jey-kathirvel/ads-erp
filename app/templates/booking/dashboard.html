@@ -1,0 +1,428 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h3 mb-1">
+                <i class="fas fa-hotel mr-2"></i>
+                Hotel Booking
+            </h1>
+            <p class="text-muted mb-0">
+                Live room availability and booking overview
+            </p>
+        </div>
+
+        <div class="mt-2 mt-md-0">
+            <span class="badge badge-light border px-3 py-2">
+                <i class="far fa-clock mr-1"></i>
+                24-Hour Stay Rule
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-6 col-lg-3">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ total_rooms }}</h3>
+                    <p>Total Rooms</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-door-open"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ available_now }}</h3>
+                    <p>Available Now</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ occupied_now }}</h3>
+                    <p>Occupied Now</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ active_bookings|length }}</h3>
+                    <p>Upcoming / Active</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+    <div class="card card-outline card-primary">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">
+                <i class="fas fa-layer-group mr-2"></i>
+                Availability by Room Type
+            </h3>
+
+            <small class="current-india-time text-muted font-weight-normal ml-auto">
+                <i class="far fa-clock mr-1"></i>
+                Current Time: {{ now.strftime("%d %b %Y, %I:%M:%S %p") }} IST
+            </small>
+        </div>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Room Type</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Available</th>
+                            <th class="text-center">Occupied</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in room_type_summary %}
+
+                        <tr>
+                            <td>
+                                <strong>{{ item.name }}</strong>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge badge-secondary px-3 py-2">
+                                    {{ item.total }}
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge badge-success px-3 py-2">
+                                    {{ item.available }}
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge badge-danger px-3 py-2">
+                                    {{ item.occupied }}
+                                </span>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card card-outline card-secondary">
+
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-list mr-2"></i>
+                Active & Upcoming Bookings
+            </h3>
+        </div>
+
+<div
+        class="card card-outline card-warning"
+        id="checkoutAlertsPanel"
+    >
+        <div
+            class="card-header d-flex
+                   justify-content-between
+                   align-items-center"
+        >
+            <h3 class="card-title mb-0">
+                <i class="fas fa-bell mr-2"></i>
+                Checkout Alerts
+            </h3>
+
+            <span
+                class="badge badge-warning
+                       checkout-alert-count"
+            >
+                {{ checkout_alerts|length }}
+            </span>
+        </div>
+
+        <div class="card-body">
+            {% if checkout_alerts %}
+
+                <div class="row">
+                    {% for alert in checkout_alerts %}
+
+                        <div class="col-12 col-xl-6 mb-3">
+                            <div
+                                class="alert
+                                       alert-{{ alert.severity }}
+                                       checkout-alert-item
+                                       mb-0"
+                            >
+                                <div
+                                    class="d-flex
+                                           justify-content-between
+                                           align-items-start
+                                           flex-wrap"
+                                >
+                                    <div class="pr-3">
+                                        <div
+                                            class="font-weight-bold
+                                                   mb-1"
+                                        >
+                                            <i
+                                                class="fas
+                                                       fa-exclamation-circle
+                                                       mr-1"
+                                            ></i>
+
+                                            {{ alert.severity_label }}
+                                            —
+                                            Checkout in
+                                            {{ alert.remaining_text }}
+                                        </div>
+
+                                        <div>
+                                            <strong>Room:</strong>
+                                            {% if alert.room_numbers %}
+                                                {{
+                                                    alert.room_numbers
+                                                    | join(", ")
+                                                }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </div>
+
+                                        <div>
+                                            <strong>Guest:</strong>
+                                            {{ alert.guest_name }}
+                                        </div>
+
+                                        <div>
+                                            <strong>Booking:</strong>
+                                            {{ alert.booking_no }}
+                                        </div>
+
+                                        <div>
+                                            <strong>Checkout:</strong>
+                                            {{
+                                                alert.check_out_at.strftime(
+                                                    "%d %b %Y, %I:%M %p"
+                                                )
+                                            }}
+                                            IST
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2 mt-md-0">
+                                        <a
+                                            href="/booking/{{ alert.booking_id }}/view"
+                                            class="btn btn-light btn-sm"
+                                            title="View Booking"
+                                        >
+                                            <i class="fas fa-eye mr-1"></i>
+                                            View
+                                        </a>
+
+                                        <a
+                                            href="/booking/{{ alert.booking_id }}/edit"
+                                            class="btn btn-dark btn-sm"
+                                            title="Edit Booking"
+                                        >
+                                            <i class="fas fa-edit mr-1"></i>
+                                            Edit
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+            {% else %}
+
+                <div
+                    class="text-center text-muted py-3"
+                    id="checkoutAlertsEmptyState"
+                >
+                    <i
+                        class="far fa-clock
+                               fa-2x
+                               mb-2
+                               d-block"
+                    ></i>
+
+                    No checkout alerts in the next 2 hours.
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-striped table-hover mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Booking No</th>
+                            <th>Guest</th>
+                            <th>Room Type</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for booking in active_bookings %}
+
+                        <tr>
+                            <td>
+                                <strong>{{ booking.booking_no }}</strong>
+                            </td>
+
+                            <td>{{ booking.guest_name }}</td>
+
+                            <td>
+                                {{ booking.room_type.name }}
+                            </td>
+
+                            <td>
+                                {{ booking.check_in_at.strftime("%d-%b-%Y %I:%M %p") }}
+                            </td>
+
+                            <td>
+                                {{ booking.check_out_at.strftime("%d-%b-%Y %I:%M %p") }}
+                            </td>
+
+                            <td>
+                                <span class="badge badge-primary">
+                                    {{ booking.status }}
+                                </span>
+                            </td>
+                            <td class="text-nowrap">
+                                <a
+                                    href="/booking/{{ booking.id }}/view"
+                                    class="btn btn-info btn-sm"
+                                    title="View"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </a>
+
+                                <a
+                                    href="/booking/{{ booking.id }}/edit"
+                                    class="btn btn-warning btn-sm"
+                                    title="Edit"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <form
+                                    method="post"
+                                    action="/booking/{{ booking.id }}/cancel"
+                                    class="d-inline"
+                                    onsubmit="return confirm(
+                                        'Cancel this booking? '
+                                        + 'Reserved room(s) will become '
+                                        + 'available immediately.'
+                                    );"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger btn-sm"
+                                        title="Cancel Booking"
+                                    >
+                                        <i class="fas fa-ban"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">
+                                <i class="fas fa-calendar-times fa-2x mb-2 d-block"></i>
+                                No active or upcoming bookings
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+@media (max-width: 768px) {
+
+    .small-box {
+        min-height: 110px;
+        margin-bottom: 15px;
+    }
+
+    .small-box .inner h3 {
+        font-size: 30px;
+    }
+
+    .small-box .inner p {
+        font-size: 13px;
+    }
+
+    .small-box .icon {
+        display: none;
+    }
+
+    .table {
+        font-size: 12px;
+    }
+}
+</style>
+
+{% endblock %}

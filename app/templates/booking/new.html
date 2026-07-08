@@ -1,0 +1,1294 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h3 mb-1">
+                <i class="fas fa-calendar-plus mr-2"></i>
+                New Hotel Booking
+            </h1>
+            <p class="text-muted mb-0">
+                Exact 24-hour stay from guest check-in time
+            </p>
+        </div>
+
+        <a href="/booking" class="btn btn-outline-secondary mt-2 mt-md-0">
+            <i class="fas fa-arrow-left mr-1"></i>
+            Booking Dashboard
+        </a>
+    </div>
+
+    <form
+        id="bookingForm"
+        method="post"
+        action="/booking"
+        autocomplete="off"
+    >
+        <input
+            type="hidden"
+            id="selected_room_ids"
+            name="selected_room_ids"
+            value=""
+        >
+
+        <div class="row">
+
+            <div class="col-lg-7">
+
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-user mr-2"></i>
+                            Guest & Stay Details
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="guest_name">
+                                        Guest Name
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="guest_name"
+                                        name="guest_name"
+                                        class="form-control"
+                                        placeholder="Enter guest name"
+                                        required
+                                        minlength="2"
+                                        maxlength="150"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="mobile">
+                                        Mobile Number
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        id="mobile"
+                                        name="mobile"
+                                        class="form-control"
+                                        placeholder="Enter 10-digit mobile number"
+                                        required
+                                        inputmode="numeric"
+                                        pattern="[0-9]{10}"
+                                        minlength="10"
+                                        maxlength="10"
+                                    >
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="room_type_id">
+                                Room Type
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                id="room_type_id"
+                                name="room_type_id"
+                                class="form-control"
+                                required
+                            >
+                                <option value="">
+                                    Select room type
+                                </option>
+
+                                {% for room_type in room_types %}
+                                <option value="{{ room_type.id }}">
+                                    {{ room_type.name }}
+                                    — {{ room_type.total_rooms }} rooms
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="check_in_date">
+                                        Check-in Date
+                                        <span class="text-danger">*</span>
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        id="check_in_date"
+                                        name="check_in_date"
+                                        class="form-control"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="check_in_time">
+                                        Check-in Time
+                                        <span class="text-danger">*</span>
+                                    </label>
+
+                                    <div class="form-row">
+                                        <div class="col-4">
+                                            <select
+                                                id="check_in_hour"
+                                                class="form-control"
+                                                required
+                                                aria-label="Check-in hour"
+                                            >
+                                                <option value="">HH</option>
+                                                {% for hour in range(1, 13) %}
+                                                <option value="{{ hour }}">
+                                                    {{ "%02d"|format(hour) }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <select
+                                                id="check_in_minute"
+                                                class="form-control"
+                                                required
+                                                aria-label="Check-in minute"
+                                            >
+                                                <option value="00">00</option>
+                                                <option value="15">15</option>
+                                                <option value="30">30</option>
+                                                <option value="45">45</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <select
+                                                id="check_in_ampm"
+                                                class="form-control"
+                                                required
+                                                aria-label="AM or PM"
+                                            >
+                                                <option value="AM">AM</option>
+                                                <option value="PM">PM</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <input
+                                        type="hidden"
+                                        id="check_in_time"
+                                        name="check_in_time"
+                                        value=""
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="number_of_days">
+                                        Days
+                                        <span class="text-danger">*</span>
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="number_of_days"
+                                        name="number_of_days"
+                                        class="form-control"
+                                        value="1"
+                                        min="1"
+                                        max="365"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="check_out_at">
+                                Manual Check-out
+                                <span class="text-muted">
+                                    (Optional)
+                                </span>
+                            </label>
+
+                            <input
+                                type="datetime-local"
+                                id="check_out_at"
+                                name="check_out_at"
+                                class="form-control"
+                            >
+
+                            <small class="form-text text-muted">
+                                Leave blank to use automatic check-out
+                                based on the number of days.
+                            </small>
+                        </div>
+
+                        <div class="checkout-panel">
+                            <div class="checkout-label">
+                                <i class="far fa-clock mr-1"></i>
+                                Auto Checkout
+                            </div>
+
+                            <div
+                                id="checkoutDisplay"
+                                class="checkout-value"
+                            >
+                                Select check-in date and time
+                            </div>
+
+                            <small class="text-muted">
+                                Checkout is calculated in exact 24-hour blocks.
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-wallet mr-2"></i>
+                            Payment & Notes
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="advance_amount">
+                                        Advance Amount
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="advance_amount"
+                                        name="advance_amount"
+                                        class="form-control"
+                                        value="0"
+                                        min="0"
+                                        step="0.01"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="payment_mode">
+                                        Payment Mode
+                                    </label>
+
+                                    <select
+                                        id="payment_mode"
+                                        name="payment_mode"
+                                        class="form-control"
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="CASH">Cash</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="CARD">Card</option>
+                                        <option value="BANK_TRANSFER">
+                                            Bank Transfer
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label for="notes">
+                                Notes
+                            </label>
+
+                            <textarea
+                                id="notes"
+                                name="notes"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Optional booking notes"
+                            ></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5">
+
+                <div class="card card-outline card-success sticky-summary">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-door-open mr-2"></i>
+                            Live Availability
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div
+                            id="availabilityState"
+                            class="availability-state availability-idle"
+                        >
+                            <i class="fas fa-calendar-alt fa-2x mb-2"></i>
+                            <div>
+                                Select room type, date and time
+                            </div>
+                        </div>
+
+                        <div
+                            id="availabilityResult"
+                            class="d-none"
+                        >
+                            <div class="availability-count-box">
+                                <div
+                                    id="availableCount"
+                                    class="availability-count"
+                                >
+                                    0
+                                </div>
+                                <div class="availability-count-label">
+                                    Rooms Available
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-3">
+                                <label for="number_of_rooms">
+                                    Number of Rooms
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="number_of_rooms"
+                                    name="number_of_rooms"
+                                    class="form-control"
+                                    value="1"
+                                    min="1"
+                                >
+                            </div>
+
+                            <div class="mt-3">
+                                <div class="font-weight-bold mb-2">
+                                    Available Room Numbers
+                                </div>
+
+                                <div id="availableRooms">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div
+                    class="card card-outline card-info mt-3"
+                    id="sameDayBookingsCard"
+                >
+                    <div
+                        class="card-header d-flex align-items-center justify-content-between"
+                    >
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-bed mr-2"></i>
+                            Same-Day Booked Rooms
+                        </h3>
+
+                        <span
+                            id="sameDayBookingCount"
+                            class="badge badge-info"
+                        >
+                            0
+                        </span>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div
+                            id="sameDayBookings"
+                            class="same-day-bookings"
+                        >
+                            <div
+                                class="text-center text-muted py-4 px-3"
+                            >
+                                <i
+                                    class="far fa-calendar-alt fa-2x mb-2 d-block"
+                                ></i>
+                                Select booking date to view booked rooms.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    id="saveBookingButton"
+                    class="btn btn-primary btn-lg btn-block"
+                    disabled
+                >
+                    <i class="fas fa-save mr-2"></i>
+                    Save Booking
+                </button>
+
+                <small
+                    id="saveBookingHelp"
+                    class="text-muted d-block text-center mt-2"
+                >
+                    Select stay details and confirm room availability.
+                </small>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<style>
+.checkout-panel {
+    background: #f4f6f9;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+    padding: 14px 16px;
+}
+
+.checkout-label {
+    color: #6c757d;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.checkout-value {
+    color: #212529;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 4px 0;
+}
+
+.availability-state {
+    border: 2px dashed #ced4da;
+    border-radius: 8px;
+    padding: 34px 15px;
+    text-align: center;
+}
+
+.availability-idle {
+    color: #6c757d;
+}
+
+.availability-loading {
+    color: #007bff;
+}
+
+.availability-error {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.availability-count-box {
+    background: #eaf8ee;
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+}
+
+.availability-count {
+    color: #28a745;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.availability-count-label {
+    color: #495057;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.same-day-bookings {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.same-day-booking-item {
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 14px;
+}
+
+.same-day-booking-item:last-child {
+    border-bottom: 0;
+}
+
+.same-day-booking-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.same-day-booking-no {
+    color: #343a40;
+    font-size: 13px;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.same-day-guest {
+    color: #212529;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+.same-day-mobile {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.same-day-room-badge {
+    display: inline-block;
+    margin: 4px 4px 0 0;
+}
+
+.same-day-time {
+    color: #6c757d;
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+.same-day-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.same-day-actions .btn {
+    min-width: 36px;
+}
+
+.room-chip {
+    display: inline-block;
+    background: #f4f6f9;
+    border: 1px solid #ced4da;
+    border-radius: 20px;
+    font-weight: 700;
+    margin: 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease-in-out;
+}
+
+.room-chip:hover {
+    transform: translateY(-1px);
+}
+
+.room-chip.room-selected {
+    background: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
+}
+
+@media (min-width: 992px) {
+    .sticky-summary {
+        position: sticky;
+        top: 72px;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-value {
+        font-size: 17px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const roomType = document.getElementById("room_type_id");
+    const checkInDate = document.getElementById("check_in_date");
+    const checkInTime = document.getElementById("check_in_time");
+    const checkInHour = document.getElementById("check_in_hour");
+    const checkInMinute = document.getElementById("check_in_minute");
+    const checkInAmPm = document.getElementById("check_in_ampm");
+    const numberOfDays = document.getElementById("number_of_days");
+    const checkOutAt = document.getElementById("check_out_at");
+
+    const checkoutDisplay = document.getElementById("checkoutDisplay");
+    const availabilityState = document.getElementById("availabilityState");
+    const availabilityResult = document.getElementById("availabilityResult");
+    const availableCount = document.getElementById("availableCount");
+    const availableRooms = document.getElementById("availableRooms");
+    const numberOfRooms = document.getElementById("number_of_rooms");
+    const selectedRoomIds = document.getElementById("selected_room_ids");
+    const saveBookingButton = document.getElementById("saveBookingButton");
+    const saveBookingHelp = document.getElementById("saveBookingHelp");
+    const sameDayBookings = document.getElementById(
+        "sameDayBookings"
+    );
+    const sameDayBookingCount = document.getElementById(
+        "sameDayBookingCount"
+    );
+
+    function escapeSameDayHtml(value) {
+        return String(
+            value === null || value === undefined
+                ? ""
+                : value
+        )
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function formatSameDayDateTime(value) {
+        if (!value) {
+            return "";
+        }
+
+        const parsed = new Date(value);
+
+        if (Number.isNaN(parsed.getTime())) {
+            return escapeSameDayHtml(value);
+        }
+
+        return parsed.toLocaleString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            }
+        );
+    }
+
+    async function loadSameDayBookings() {
+        const bookingDate = checkInDate.value;
+
+        if (!bookingDate) {
+            sameDayBookingCount.textContent = "0";
+
+            sameDayBookings.innerHTML =
+                '<div class="text-center text-muted py-4 px-3">'
+                + '<i class="far fa-calendar-alt fa-2x mb-2 d-block"></i>'
+                + "Select booking date to view booked rooms."
+                + "</div>";
+
+            return;
+        }
+
+        sameDayBookings.innerHTML =
+            '<div class="text-center text-muted py-4 px-3">'
+            + '<i class="fas fa-spinner fa-spin fa-2x mb-2 d-block"></i>'
+            + "Loading same-day bookings..."
+            + "</div>";
+
+        try {
+            const response = await fetch(
+                "/booking/api/same-day?booking_date="
+                + encodeURIComponent(bookingDate),
+                {
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to load same-day bookings"
+                );
+            }
+
+            const data = await response.json();
+            const bookings = data.bookings || [];
+
+            sameDayBookingCount.textContent =
+                data.count !== undefined
+                    ? data.count
+                    : bookings.length;
+
+            if (bookings.length === 0) {
+                sameDayBookings.innerHTML =
+                    '<div class="text-center text-muted py-4 px-3">'
+                    + '<i class="fas fa-calendar-check fa-2x mb-2 d-block"></i>'
+                    + "No booked rooms for this date."
+                    + "</div>";
+
+                return;
+            }
+
+            sameDayBookings.innerHTML =
+                bookings.map(function (booking) {
+                    const roomNumbers =
+                        booking.room_numbers
+                        || booking.rooms
+                        || [];
+
+                    const rooms = roomNumbers
+                        .map(function (roomNo) {
+                            return (
+                                '<span class="badge badge-danger same-day-room-badge">'
+                                + '<i class="fas fa-bed mr-1"></i>'
+                                + "Room "
+                                + escapeSameDayHtml(roomNo)
+                                + "</span>"
+                            );
+                        })
+                        .join("");
+
+                    const bookingId =
+                        booking.id
+                        || booking.booking_id;
+
+                    const viewUrl =
+                        booking.view_url
+                        || (
+                            "/booking/"
+                            + bookingId
+                            + "/view"
+                        );
+
+                    const editUrl =
+                        booking.edit_url
+                        || (
+                            "/booking/"
+                            + bookingId
+                            + "/edit"
+                        );
+
+                    const cancelUrl =
+                        booking.cancel_url
+                        || (
+                            "/booking/"
+                            + bookingId
+                            + "/cancel"
+                        );
+
+                    return (
+                        '<div class="same-day-booking-item">'
+                        + '<div class="same-day-booking-top">'
+                        + "<div>"
+                        + '<div class="same-day-booking-no">'
+                        + escapeSameDayHtml(
+                            booking.booking_no || "-"
+                        )
+                        + "</div>"
+                        + '<div class="same-day-guest">'
+                        + escapeSameDayHtml(
+                            booking.guest_name || "-"
+                        )
+                        + "</div>"
+                        + '<div class="same-day-mobile">'
+                        + '<i class="fas fa-phone-alt mr-1"></i>'
+                        + escapeSameDayHtml(
+                            booking.mobile || "-"
+                        )
+                        + "</div>"
+                        + "</div>"
+                        + '<span class="badge badge-primary">'
+                        + escapeSameDayHtml(
+                            booking.status || "-"
+                        )
+                        + "</span>"
+                        + "</div>"
+                        + '<div class="mt-1">'
+                        + rooms
+                        + "</div>"
+                        + '<div class="same-day-time">'
+                        + '<i class="far fa-clock mr-1"></i>'
+                        + formatSameDayDateTime(
+                            booking.check_in_at
+                        )
+                        + " → "
+                        + formatSameDayDateTime(
+                            booking.check_out_at
+                        )
+                        + "</div>"
+                        + '<div class="same-day-actions">'
+                        + '<a class="btn btn-info btn-sm" '
+                        + 'title="View" href="'
+                        + escapeSameDayHtml(viewUrl)
+                        + '">'
+                        + '<i class="fas fa-eye"></i>'
+                        + "</a>"
+                        + '<a class="btn btn-warning btn-sm" '
+                        + 'title="Edit" href="'
+                        + escapeSameDayHtml(editUrl)
+                        + '">'
+                        + '<i class="fas fa-edit"></i>'
+                        + "</a>"
+                        + '<form method="post" class="d-inline" '
+                        + 'action="'
+                        + escapeSameDayHtml(cancelUrl)
+                        + '" onsubmit="return confirm('
+                        + "'Cancel this booking? "
+                        + "Reserved room(s) will become available immediately.'"
+                        + ');">'
+                        + '<button type="submit" '
+                        + 'class="btn btn-danger btn-sm" '
+                        + 'title="Cancel Booking">'
+                        + '<i class="fas fa-ban"></i>'
+                        + "</button>"
+                        + "</form>"
+                        + "</div>"
+                        + "</div>"
+                    );
+                })
+                .join("");
+
+        } catch (error) {
+            sameDayBookingCount.textContent = "0";
+
+            sameDayBookings.innerHTML =
+                '<div class="text-center text-danger py-4 px-3">'
+                + '<i class="fas fa-exclamation-triangle fa-2x mb-2 d-block"></i>'
+                + "Could not load same-day bookings."
+                + "</div>";
+        }
+    }
+
+    function setSaveState(enabled, message) {
+        saveBookingButton.disabled = !enabled;
+        saveBookingHelp.textContent = message;
+    }
+
+    function getSelectedRoomChips() {
+        return Array.from(
+            availableRooms.querySelectorAll(
+                ".room-chip.room-selected"
+            )
+        );
+    }
+
+    function syncSelectedRooms() {
+        const selected = getSelectedRoomChips();
+
+        selectedRoomIds.value = selected
+            .map(function (chip) {
+                return chip.dataset.roomId;
+            })
+            .join(",");
+
+        numberOfRooms.value = selected.length;
+
+        const requestedRooms = selected.length;
+
+        availableRooms.querySelectorAll(
+            ".room-chip"
+        ).forEach(function (chip) {
+            const isSelected =
+                chip.classList.contains("room-selected");
+
+            const roomNo = chip.dataset.roomNumber;
+
+            chip.innerHTML = isSelected
+                ? '<i class="fas fa-check-circle mr-1"></i>'
+                    + "Room "
+                    + roomNo
+                : "Room " + roomNo;
+        });
+
+        setSaveState(
+            requestedRooms > 0,
+            requestedRooms > 0
+                ? requestedRooms
+                    + " room(s) selected. Booking can be saved."
+                : "Select at least one available room."
+        );
+    }
+
+    function autoSelectRooms(requestedRooms) {
+        const chips = Array.from(
+            availableRooms.querySelectorAll(
+                ".room-chip"
+            )
+        );
+
+        chips.forEach(function (chip, index) {
+            chip.classList.toggle(
+                "room-selected",
+                index < requestedRooms
+            );
+        });
+
+        syncSelectedRooms();
+    }
+
+    function toggleRoomSelection(chip) {
+        const selectedCount =
+            getSelectedRoomChips().length;
+
+        if (
+            chip.classList.contains("room-selected")
+            && selectedCount === 1
+        ) {
+            return;
+        }
+
+        chip.classList.toggle("room-selected");
+        syncSelectedRooms();
+    }
+
+    function syncCheckInTime() {
+        if (
+            !checkInHour.value
+            || !checkInMinute.value
+            || !checkInAmPm.value
+        ) {
+            checkInTime.value = "";
+            return null;
+        }
+
+        let hour = parseInt(
+            checkInHour.value,
+            10
+        );
+
+        if (
+            checkInAmPm.value === "AM"
+            && hour === 12
+        ) {
+            hour = 0;
+        }
+
+        if (
+            checkInAmPm.value === "PM"
+            && hour !== 12
+        ) {
+            hour += 12;
+        }
+
+        checkInTime.value =
+            String(hour).padStart(2, "0")
+            + ":"
+            + checkInMinute.value;
+
+        return checkInTime.value;
+    }
+
+    function getCheckInDateTime() {
+        const timeValue = syncCheckInTime();
+
+        if (!checkInDate.value || !timeValue) {
+            return null;
+        }
+
+        const value = (
+            checkInDate.value
+            + "T"
+            + timeValue
+            + ":00"
+        );
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return null;
+        }
+
+        return date;
+    }
+
+    function updateCheckout() {
+        const checkIn = getCheckInDateTime();
+        const days = parseInt(numberOfDays.value, 10);
+
+        if (!checkIn || !days || days < 1) {
+            checkoutDisplay.textContent =
+                "Select check-in date and time";
+            return;
+        }
+
+        const checkout = new Date(
+            checkIn.getTime()
+            + (days * 24 * 60 * 60 * 1000)
+        );
+
+        checkoutDisplay.textContent =
+            checkout.toLocaleString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true
+                }
+            );
+    }
+
+    function resetAvailability(message) {
+        availabilityState.className =
+            "availability-state availability-idle";
+
+        availabilityState.innerHTML =
+            '<i class="fas fa-calendar-alt fa-2x mb-2"></i>'
+            + '<div>'
+            + message
+            + '</div>';
+
+        availabilityState.classList.remove("d-none");
+        availabilityResult.classList.add("d-none");
+        numberOfRooms.disabled = true;
+
+        setSaveState(
+            false,
+            "Select stay details and confirm room availability."
+        );
+    }
+
+    async function loadAvailability() {
+        updateCheckout();
+
+        const checkIn = getCheckInDateTime();
+        const days = parseInt(numberOfDays.value, 10);
+
+        if (
+            !roomType.value
+            || !checkIn
+            || !days
+            || days < 1
+        ) {
+            resetAvailability(
+                "Select room type, date and time"
+            );
+            return;
+        }
+
+        availabilityState.className =
+            "availability-state availability-loading";
+
+        availabilityState.innerHTML =
+            '<i class="fas fa-spinner fa-spin fa-2x mb-2"></i>'
+            + '<div>Checking availability...</div>';
+
+        availabilityState.classList.remove("d-none");
+        availabilityResult.classList.add("d-none");
+
+        const checkInValue =
+            checkInDate.value
+            + "T"
+            + checkInTime.value
+            + ":00";
+
+        const params = new URLSearchParams({
+            room_type_id: roomType.value,
+            check_in_at: checkInValue,
+            number_of_days: String(days)
+        });
+
+        if (
+            checkOutAt
+            && checkOutAt.value
+        ) {
+            params.set(
+                "check_out_at",
+                checkOutAt.value
+            );
+        }
+
+        try {
+            const response = await fetch(
+                "/booking/api/availability?"
+                + params.toString()
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    "Availability request failed"
+                );
+            }
+
+            const data = await response.json();
+
+            availableCount.textContent =
+                data.available_count;
+
+            availableRooms.innerHTML = "";
+
+            data.available_rooms.forEach(function (roomNo) {
+                const chip = document.createElement("span");
+                chip.className = "room-chip";
+                chip.dataset.roomId = roomNo;
+                chip.dataset.roomNumber = roomNo;
+                chip.textContent = "Room " + roomNo;
+
+                chip.addEventListener(
+                    "click",
+                    function () {
+                        toggleRoomSelection(chip);
+                    }
+                );
+
+                availableRooms.appendChild(chip);
+            });
+
+            numberOfRooms.max = data.available_count;
+            numberOfRooms.disabled =
+                data.available_count === 0;
+
+            let requestedRoomCount = parseInt(
+                numberOfRooms.value || "0",
+                10
+            );
+
+            if (
+                !Number.isInteger(requestedRoomCount)
+                || requestedRoomCount < 1
+            ) {
+                requestedRoomCount =
+                    data.available_count > 0 ? 1 : 0;
+            }
+
+            requestedRoomCount = Math.min(
+                requestedRoomCount,
+                data.available_count
+            );
+
+            numberOfRooms.value =
+                requestedRoomCount;
+
+            autoSelectRooms(
+                requestedRoomCount
+            );
+
+            if (data.available_count > 0) {
+                setSaveState(
+                    true,
+                    "Availability confirmed. Booking can be saved."
+                );
+            } else {
+                setSaveState(
+                    false,
+                    "No rooms are available for the selected stay."
+                );
+            }
+
+            availabilityState.classList.add("d-none");
+            availabilityResult.classList.remove("d-none");
+
+        } catch (error) {
+            availabilityState.className =
+                "availability-state availability-error";
+
+            availabilityState.innerHTML =
+                '<i class="fas fa-exclamation-circle fa-2x mb-2"></i>'
+                + '<div>Unable to check availability</div>';
+
+            availabilityState.classList.remove("d-none");
+            availabilityResult.classList.add("d-none");
+            numberOfRooms.disabled = true;
+
+            setSaveState(
+                false,
+                "Availability check failed. Booking cannot be saved."
+            );
+        }
+    }
+
+    roomType.addEventListener(
+        "change",
+        loadAvailability
+    );
+
+    checkInDate.addEventListener(
+        "change",
+        loadAvailability
+    );
+
+    checkInDate.addEventListener(
+        "change",
+        loadSameDayBookings
+    );
+
+    [
+        checkInHour,
+        checkInMinute,
+        checkInAmPm
+    ].forEach(function (element) {
+        element.addEventListener(
+            "change",
+            function () {
+                syncCheckInTime();
+                loadAvailability();
+            }
+        );
+    });
+
+    numberOfDays.addEventListener(
+        "input",
+        loadAvailability
+    );
+
+    if (checkOutAt) {
+        checkOutAt.addEventListener(
+            "change",
+            loadAvailability
+        );
+    }
+
+    numberOfRooms.addEventListener(
+        "input",
+        function () {
+            const available = parseInt(
+                numberOfRooms.max || "0",
+                10
+            );
+
+            let requested = parseInt(
+                numberOfRooms.value || "0",
+                10
+            );
+
+            if (!Number.isInteger(requested)) {
+                requested = 0;
+            }
+
+            requested = Math.max(
+                0,
+                Math.min(
+                    requested,
+                    available
+                )
+            );
+
+            autoSelectRooms(
+                requested
+            );
+        }
+    );
+
+    loadSameDayBookings();
+    updateCheckout();
+});
+</script>
+
+{% endblock %}

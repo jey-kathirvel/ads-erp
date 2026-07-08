@@ -1,0 +1,844 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Edit Booking{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1>
+                        <i class="fas fa-edit mr-2"></i>
+                        Edit Booking
+                    </h1>
+                    <small class="text-muted">
+                        {{ booking.booking_no }}
+                    </small>
+                </div>
+
+                <div class="col-sm-6 text-sm-right mt-2 mt-sm-0">
+                    <a
+                        href="/booking/{{ booking.id }}/view"
+                        class="btn btn-info"
+                    >
+                        <i class="fas fa-eye mr-1"></i>
+                        View
+                    </a>
+
+                    <a
+                        href="/booking"
+                        class="btn btn-outline-secondary"
+                    >
+                        <i class="fas fa-arrow-left mr-1"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <form
+                id="editBookingForm"
+                method="post"
+                action="/booking/{{ booking.id }}/edit"
+            >
+                <div class="row">
+
+                    <div class="col-lg-7">
+                        <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-user-edit mr-2"></i>
+                                    Guest & Stay Details
+                                </h3>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="guest_name">
+                                                Guest Name
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                id="guest_name"
+                                                name="guest_name"
+                                                type="text"
+                                                class="form-control"
+                                                value="{{ booking.guest_name }}"
+                                                required
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="mobile">
+                                                Mobile Number
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                id="mobile"
+                                                name="mobile"
+                                                type="text"
+                                                class="form-control"
+                                                value="{{ booking.mobile }}"
+                                                required
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="room_type_id">
+                                        Room Type
+                                        <span class="text-danger">*</span>
+                                    </label>
+
+                                    <select
+                                        id="room_type_id"
+                                        name="room_type_id"
+                                        class="form-control"
+                                        required
+                                    >
+                                        {% for room_type in room_types %}
+                                            <option
+                                                value="{{ room_type.id }}"
+                                                {% if room_type.id == booking.room_type_id %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ room_type.name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="check_in_date">
+                                                Check-in Date
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                id="check_in_date"
+                                                name="check_in_date"
+                                                type="date"
+                                                class="form-control"
+                                                value="{{ booking.check_in_at.strftime('%Y-%m-%d') }}"
+                                                required
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="check_in_time">
+                                                Check-in Time
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                id="check_in_time"
+                                                name="check_in_time"
+                                                type="time"
+                                                class="form-control"
+                                                value="{{ booking.check_in_at.strftime('%H:%M') }}"
+                                                required
+                                            >
+
+                                            <small class="form-text text-muted">
+                                                Past time on the selected date is allowed.
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="number_of_days">
+                                                Days
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <input
+                                                id="number_of_days"
+                                                name="number_of_days"
+                                                type="number"
+                                                min="1"
+                                                max="365"
+                                                class="form-control"
+                                                value="{{ booking.number_of_days }}"
+                                                required
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checkout-preview">
+                                    <div class="text-muted small text-uppercase">
+                                        <i class="far fa-clock mr-1"></i>
+                                        Auto Checkout
+                                    </div>
+
+                                    <div
+                                        id="checkoutPreview"
+                                        class="font-weight-bold mt-1"
+                                    >
+                                        -
+                                    </div>
+
+                                    <small class="text-muted">
+                                        Exact 24-hour blocks from check-in time.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-outline card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-wallet mr-2"></i>
+                                    Payment & Notes
+                                </h3>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="advance_amount">
+                                                Advance Amount
+                                            </label>
+
+                                            <input
+                                                id="advance_amount"
+                                                name="advance_amount"
+                                                type="number"
+                                                min="0"
+                                                step="0.01"
+                                                class="form-control"
+                                                value="{{ booking.advance_amount or 0 }}"
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="payment_mode">
+                                                Payment Mode
+                                            </label>
+
+                                            <select
+                                                id="payment_mode"
+                                                name="payment_mode"
+                                                class="form-control"
+                                            >
+                                                <option value="">
+                                                    Select
+                                                </option>
+
+                                                {% for mode in [
+                                                    "CASH",
+                                                    "CARD",
+                                                    "UPI",
+                                                    "BANK TRANSFER"
+                                                ] %}
+                                                    <option
+                                                        value="{{ mode }}"
+                                                        {% if booking.payment_mode == mode %}
+                                                            selected
+                                                        {% endif %}
+                                                    >
+                                                        {{ mode }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-0">
+                                    <label for="notes">
+                                        Notes
+                                    </label>
+
+                                    <textarea
+                                        id="notes"
+                                        name="notes"
+                                        class="form-control"
+                                        rows="4"
+                                        placeholder="Optional booking notes"
+                                    >{{ booking.notes or "" }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="card card-outline card-success">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-door-open mr-2"></i>
+                                    Live Room Availability
+                                </h3>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div
+                                    id="availabilitySummary"
+                                    class="availability-summary"
+                                >
+                                    <div
+                                        id="availableCount"
+                                        class="availability-count"
+                                    >
+                                        -
+                                    </div>
+
+                                    <div class="availability-label">
+                                        Rooms Available
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="number_of_rooms">
+                                        Number of Rooms
+                                        <span class="text-danger">*</span>
+                                    </label>
+
+                                    <input
+                                        id="number_of_rooms"
+                                        name="number_of_rooms"
+                                        type="number"
+                                        min="1"
+                                        class="form-control"
+                                        value="{{ booking.number_of_rooms }}"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        Available Room Numbers
+                                    </label>
+
+                                    <div
+                                        id="availableRooms"
+                                        class="available-room-list"
+                                    >
+                                        <div class="text-muted">
+                                            Loading availability...
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    id="selectionHelp"
+                                    class="small text-muted"
+                                >
+                                    Select exactly
+                                    {{ booking.number_of_rooms }}
+                                    room(s).
+                                </div>
+
+                                <div
+                                    id="availabilityError"
+                                    class="alert alert-danger mt-3 d-none"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <button
+                            id="saveChangesButton"
+                            type="submit"
+                            class="btn btn-primary btn-lg btn-block"
+                        >
+                            <i class="fas fa-save mr-2"></i>
+                            Save Changes
+                        </button>
+
+                        <div
+                            id="saveHelp"
+                            class="text-center text-muted small mt-2"
+                        >
+                            Availability will be revalidated before update.
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </section>
+</div>
+
+<style>
+.checkout-preview {
+    background: #f5f9ff;
+    border-left: 4px solid #1677ff;
+    border-radius: 6px;
+    padding: 14px 16px;
+}
+
+.availability-summary {
+    background: #eaf8ef;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.availability-count {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #16a34a;
+    line-height: 1;
+}
+
+.availability-label {
+    margin-top: 6px;
+    color: #334155;
+}
+
+.available-room-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 42px;
+}
+
+.room-choice {
+    position: relative;
+    margin: 0;
+}
+
+.room-choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.room-choice span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #1e293b;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.15s ease;
+}
+
+.room-choice span:hover {
+    border-color: #1677ff;
+    background: #f5f9ff;
+}
+
+.room-choice input:checked + span {
+    background: #16a34a;
+    border-color: #16a34a;
+    color: #ffffff;
+}
+
+.room-choice input:disabled + span {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.card {
+    box-shadow: 0 8px 24px rgba(8, 42, 99, 0.08);
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const bookingId = {{ booking.id | tojson }};
+    const initialSelectedRooms =
+        {{ selected_room_numbers | map('string') | list | tojson }};
+
+    const form =
+        document.getElementById("editBookingForm");
+
+    const roomType =
+        document.getElementById("room_type_id");
+
+    const checkInDate =
+        document.getElementById("check_in_date");
+
+    const checkInTime =
+        document.getElementById("check_in_time");
+
+    const numberOfDays =
+        document.getElementById("number_of_days");
+
+    const numberOfRooms =
+        document.getElementById("number_of_rooms");
+
+    const availableCount =
+        document.getElementById("availableCount");
+
+    const availableRooms =
+        document.getElementById("availableRooms");
+
+    const selectionHelp =
+        document.getElementById("selectionHelp");
+
+    const availabilityError =
+        document.getElementById("availabilityError");
+
+    const checkoutPreview =
+        document.getElementById("checkoutPreview");
+
+    const saveButton =
+        document.getElementById("saveChangesButton");
+
+    const saveHelp =
+        document.getElementById("saveHelp");
+
+    let firstAvailabilityLoad = true;
+
+
+    function getSelectedRooms() {
+        return Array.from(
+            document.querySelectorAll(
+                'input[name="selected_rooms"]:checked'
+            )
+        ).map(function (input) {
+            return input.value;
+        });
+    }
+
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    function updateCheckoutPreview() {
+        const dateValue = checkInDate.value;
+        const timeValue = checkInTime.value;
+        const daysValue = parseInt(
+            numberOfDays.value || "0",
+            10
+        );
+
+        if (
+            !dateValue
+            || !timeValue
+            || !daysValue
+            || daysValue < 1
+        ) {
+            checkoutPreview.textContent = "-";
+            return;
+        }
+
+        const checkIn = new Date(
+            dateValue + "T" + timeValue + ":00"
+        );
+
+        if (Number.isNaN(checkIn.getTime())) {
+            checkoutPreview.textContent = "-";
+            return;
+        }
+
+        const checkOut = new Date(
+            checkIn.getTime()
+            + daysValue * 24 * 60 * 60 * 1000
+        );
+
+        checkoutPreview.textContent =
+            checkOut.toLocaleString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                }
+            );
+    }
+
+
+    function updateSelectionState() {
+        const requiredCount = parseInt(
+            numberOfRooms.value || "0",
+            10
+        );
+
+        const selected = getSelectedRooms();
+
+        selectionHelp.textContent =
+            "Selected "
+            + selected.length
+            + " of "
+            + requiredCount
+            + " room(s).";
+
+        document.querySelectorAll(
+            'input[name="selected_rooms"]'
+        ).forEach(function (input) {
+            input.disabled =
+                !input.checked
+                && selected.length >= requiredCount;
+        });
+
+        const valid =
+            requiredCount >= 1
+            && selected.length === requiredCount;
+
+        saveButton.disabled = !valid;
+
+        saveHelp.textContent = valid
+            ? "Ready to save. Availability will be revalidated."
+            : "Select exactly "
+                + requiredCount
+                + " room(s).";
+    }
+
+
+    async function loadAvailability() {
+        availabilityError.classList.add("d-none");
+        availabilityError.textContent = "";
+
+        const roomTypeId = roomType.value;
+        const dateValue = checkInDate.value;
+        const timeValue = checkInTime.value;
+        const daysValue = parseInt(
+            numberOfDays.value || "0",
+            10
+        );
+
+        if (
+            !roomTypeId
+            || !dateValue
+            || !timeValue
+            || !daysValue
+            || daysValue < 1
+        ) {
+            availableCount.textContent = "0";
+
+            availableRooms.innerHTML =
+                '<div class="text-muted">'
+                + "Complete room type, check-in and days."
+                + "</div>";
+
+            saveButton.disabled = true;
+            return;
+        }
+
+        const previouslySelected =
+            firstAvailabilityLoad
+                ? initialSelectedRooms.map(String)
+                : getSelectedRooms();
+
+        availableRooms.innerHTML =
+            '<div class="text-muted">'
+            + '<i class="fas fa-spinner fa-spin mr-1"></i>'
+            + "Checking availability..."
+            + "</div>";
+
+        saveButton.disabled = true;
+
+        const params = new URLSearchParams({
+            room_type_id: roomTypeId,
+            check_in_at:
+                dateValue
+                + "T"
+                + timeValue
+                + ":00",
+            number_of_days: String(daysValue),
+            exclude_booking_id: String(bookingId),
+        });
+
+        try {
+            const response = await fetch(
+                "/booking/api/availability?"
+                + params.toString(),
+                {
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    "Availability request failed"
+                );
+            }
+
+            const data = await response.json();
+
+            const rooms = (
+                data.available_rooms || []
+            ).map(String);
+
+            availableCount.textContent =
+                String(data.available_count || 0);
+
+            if (rooms.length === 0) {
+                availableRooms.innerHTML =
+                    '<div class="text-danger">'
+                    + "No rooms available for this stay."
+                    + "</div>";
+
+                firstAvailabilityLoad = false;
+                updateSelectionState();
+                return;
+            }
+
+            availableRooms.innerHTML =
+                rooms.map(function (roomNumber) {
+                    const checked =
+                        previouslySelected.includes(
+                            roomNumber
+                        );
+
+                    return (
+                        '<label class="room-choice">'
+                        + '<input type="checkbox" '
+                        + 'name="selected_rooms" '
+                        + 'value="'
+                        + escapeHtml(roomNumber)
+                        + '"'
+                        + (checked ? " checked" : "")
+                        + ">"
+                        + "<span>"
+                        + '<i class="fas fa-bed"></i>'
+                        + "Room "
+                        + escapeHtml(roomNumber)
+                        + "</span>"
+                        + "</label>"
+                    );
+                }).join("");
+
+            document.querySelectorAll(
+                'input[name="selected_rooms"]'
+            ).forEach(function (input) {
+                input.addEventListener(
+                    "change",
+                    updateSelectionState
+                );
+            });
+
+            firstAvailabilityLoad = false;
+            updateSelectionState();
+
+        } catch (error) {
+            availableCount.textContent = "0";
+
+            availableRooms.innerHTML =
+                '<div class="text-danger">'
+                + "Could not load room availability."
+                + "</div>";
+
+            availabilityError.textContent =
+                "Live availability check failed. "
+                + "Please retry before saving.";
+
+            availabilityError.classList.remove(
+                "d-none"
+            );
+
+            saveButton.disabled = true;
+        }
+    }
+
+
+    roomType.addEventListener(
+        "change",
+        loadAvailability
+    );
+
+    checkInDate.addEventListener(
+        "change",
+        function () {
+            updateCheckoutPreview();
+            loadAvailability();
+        }
+    );
+
+    checkInTime.addEventListener(
+        "change",
+        function () {
+            updateCheckoutPreview();
+            loadAvailability();
+        }
+    );
+
+    numberOfDays.addEventListener(
+        "change",
+        function () {
+            updateCheckoutPreview();
+            loadAvailability();
+        }
+    );
+
+    numberOfRooms.addEventListener(
+        "input",
+        updateSelectionState
+    );
+
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+            const requiredCount = parseInt(
+                numberOfRooms.value || "0",
+                10
+            );
+
+            const selected =
+                getSelectedRooms();
+
+            if (
+                requiredCount < 1
+                || selected.length !== requiredCount
+            ) {
+                event.preventDefault();
+
+                alert(
+                    "Please select exactly "
+                    + requiredCount
+                    + " room(s)."
+                );
+
+                return false;
+            }
+
+            saveButton.disabled = true;
+
+            saveButton.innerHTML =
+                '<i class="fas fa-spinner fa-spin mr-2"></i>'
+                + "Saving Changes...";
+
+            return true;
+        }
+    );
+
+
+    updateCheckoutPreview();
+    loadAvailability();
+});
+</script>
+{% endblock %}
