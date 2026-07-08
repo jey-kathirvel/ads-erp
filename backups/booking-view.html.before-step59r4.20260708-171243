@@ -3,7 +3,8 @@
 {% block title %}Booking Details{% endblock %}
 
 {% block content %}
-<section class="content-header">
+<div class="content-wrapper">
+    <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -17,22 +18,6 @@
                 </div>
 
                 <div class="col-sm-6 text-sm-right mt-2 mt-sm-0">
-                    {% if booking.mobile %}
-                    <a
-                        href="#"
-                        id="viewWhatsAppButton"
-                        class="btn btn-success"
-                        data-mobile="{{ booking.mobile }}"
-                        data-guest="{{ booking.guest_name }}"
-                        data-booking-no="{{ booking.booking_no }}"
-                        data-check-in="{{ booking.check_in_at.strftime('%d %b %Y, %I:%M %p') }}"
-                        data-check-out="{{ booking.check_out_at.strftime('%d %b %Y, %I:%M %p') }}"
-                    >
-                        <i class="fab fa-whatsapp mr-1"></i>
-                        Send Message
-                    </a>
-                    {% endif %}
-
                     <a
                         href="/booking/{{ booking.id }}/edit"
                         class="btn btn-warning"
@@ -639,74 +624,8 @@ document.addEventListener(
             </div>
         </div>
     </section>
+</div>
 
 
-<script>
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-        const button =
-            document.getElementById(
-                "viewWhatsAppButton"
-            );
-
-        if (!button) {
-            return;
-        }
-
-        button.addEventListener(
-            "click",
-            function (event) {
-                event.preventDefault();
-
-                let mobile = String(
-                    button.dataset.mobile || ""
-                ).replace(/\D/g, "");
-
-                if (
-                    mobile.length === 10
-                ) {
-                    mobile = "91" + mobile;
-                }
-
-                if (!mobile) {
-                    alert(
-                        "Mobile number is not available "
-                        + "for this booking."
-                    );
-                    return;
-                }
-
-                const message = (
-                    "Hello "
-                    + (button.dataset.guest || "Guest")
-                    + ", your booking "
-                    + (button.dataset.bookingNo || "")
-                    + " is confirmed."
-                    + " Check-in: "
-                    + (button.dataset.checkIn || "")
-                    + ". Check-out: "
-                    + (button.dataset.checkOut || "")
-                    + ". Thank you - Akshat Royal Stay."
-                );
-
-                const url =
-                    "https://wa.me/"
-                    + mobile
-                    + "?text="
-                    + encodeURIComponent(
-                        message
-                    );
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
-                );
-            }
-        );
-    }
-);
-</script>
 
 {% endblock %}

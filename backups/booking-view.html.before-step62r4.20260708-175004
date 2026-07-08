@@ -687,7 +687,7 @@ document.addEventListener(
                     + (button.dataset.checkIn || "")
                     + ". Check-out: "
                     + (button.dataset.checkOut || "")
-                    + ". Thank you - Akshat Royal Stay."
+                    + ". Thank you - ADS ERP."
                 );
 
                 const url =

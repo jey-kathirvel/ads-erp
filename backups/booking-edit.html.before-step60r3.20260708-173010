@@ -3,7 +3,8 @@
 {% block title %}Edit Booking{% endblock %}
 
 {% block content %}
-<section class="content-header">
+<div class="content-wrapper">
+    <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
@@ -403,6 +404,7 @@
 
         </div>
     </section>
+</div>
 
 <style>
 .checkout-preview {
