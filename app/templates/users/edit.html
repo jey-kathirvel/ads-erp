@@ -1,4 +1,3 @@
-```html
 {% extends "layouts/base.html" %}
 
 {% block content %}
@@ -183,6 +182,28 @@
 
                 </div>
 
+                <div class="card-body pt-0">
+                    <div class="form-group mb-0">
+                        <label for="blocked_urls">
+                            <i class="fas fa-ban mr-1"></i>
+                            Blocked URLs
+                        </label>
+
+                        <textarea
+                            id="blocked_urls"
+                            name="blocked_urls"
+                            class="form-control"
+                            rows="6"
+                            placeholder="/billing&#10;https://erp.ads-ai.in/inventory/*">{{ blocked_urls or "" }}</textarea>
+
+                        <small class="form-text text-muted">
+                            Enter one URL pattern per line.
+                            Exact URL blocks only that page.
+                            Use /* to block the page and all child URLs.
+                        </small>
+                    </div>
+                </div>
+
                 <div class="card-footer text-right">
 
                     <a
@@ -242,4 +263,3 @@ document.querySelector("form").addEventListener(
 </script>
 
 {% endblock %}
-```

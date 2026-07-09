@@ -7,12 +7,17 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.routes.router import api_router
+from app.access_control.middleware import UserUrlAccessMiddleware
 
 app = FastAPI(title="ADS ERP", version="0.5.1")
 
 # ----------------------------------------------------
 # Session Middleware
 # ----------------------------------------------------
+
+app.add_middleware(
+    UserUrlAccessMiddleware
+)
 
 app.add_middleware(
     SessionMiddleware,

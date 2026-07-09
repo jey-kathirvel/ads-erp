@@ -1,229 +1,26 @@
-<style>
-    .main-sidebar {
+<!-- STEP 68C2: sidebar inline legacy styles removed; shell controlled by ads-modern-saas.css -->
+<!-- STEP 69R2A-R2: permission-aware sidebar -->
+<!-- STEP 69R2C-R1: corrected section guards -->
+{% set _user = request.session.get("user", {}) %}
+{% set _role_code = _user.get("role_code", "") %}
+{% set _allowed = request.session.get("allowed_modules", []) %}
+{% set _is_admin = (_role_code == "ADMIN") %}
+
+{% set can_dashboard = _is_admin or ("dashboard" in _allowed) %}
+{% set can_customers = _is_admin or ("customers" in _allowed) %}
+{% set can_suppliers = _is_admin or ("suppliers" in _allowed) %}
+{% set can_products = _is_admin or ("products" in _allowed) %}
+{% set can_categories = _is_admin or ("categories" in _allowed) %}
+{% set can_billing = _is_admin or ("billing" in _allowed) %}
+{% set can_booking = _is_admin or ("booking" in _allowed) %}
+{% set can_inventory = _is_admin or ("inventory" in _allowed) %}
+{% set can_purchase = _is_admin or ("purchase" in _allowed) %}
+{% set can_reports = _is_admin or ("reports" in _allowed) %}
+{% set can_accounts = _is_admin or ("accounts" in _allowed) %}
+{% set can_company = _is_admin or ("company" in _allowed) %}
+{% set can_users = _is_admin or ("users" in _allowed) %}
+{% set can_roles = _is_admin or ("roles" in _allowed) %}
 
-        background: #ffffff !important;
-
-        border-right: 1px solid #e5e7eb;
-
-        box-shadow: 2px 0 15px rgba(0, 0, 0, .05);
-
-    }
-
-    .brand-link {
-
-        background: #ffffff !important;
-
-        border-bottom: 1px solid #e5e7eb;
-
-        padding: 10px;
-
-        height: 100px;
-
-        overflow: hidden;
-
-    }
-
-    .brand-link img {
-
-
-        display: block;
-
-        margin: auto;
-
-        max-height: 70px;
-
-        max-width: 210px;
-
-        width: auto;
-
-    }
-
-    .sidebar {
-
-        padding-top: 20px;
-
-    }
-
-    .nav-sidebar {
-
-        margin-top: 10px;
-
-    }
-
-    .main-sidebar .brand-link {
-
-        display: flex;
-
-        justify-content: center;
-
-        align-items: center;
-
-    }
-
-    .nav-header {
-
-        color: #6b7280 !important;
-
-        font-size: 11px;
-
-        font-weight: 700;
-
-        text-transform: uppercase;
-
-        letter-spacing: 1px;
-
-        margin-top: 15px;
-
-        padding-left: 15px;
-
-    }
-
-    .nav-sidebar .nav-item {
-
-        margin: 2px 8px;
-
-    }
-
-    .nav-sidebar .nav-link {
-
-        color: #111827 !important;
-
-        border-radius: 10px;
-
-        transition:
-
-            background .25s ease,
-
-            color .25s ease,
-
-            transform .25s ease,
-
-            box-shadow .25s ease;
-
-        padding: 10px 12px;
-
-        font-size: 15px;
-
-        font-weight: 500;
-
-    }
-
-    .nav-sidebar .nav-link i {
-
-        color: #4b5563 !important;
-
-        width: 22px;
-
-    }
-
-    .nav-sidebar .nav-link:hover {
-
-        background: linear-gradient(90deg,
-
-                #dbeafe,
-
-                #eff6ff) !important;
-
-        color: #0284c7 !important;
-
-        font-weight: 700 !important;
-
-        transform: translateX(4px);
-
-        box-shadow:
-
-            0 3px 10px rgba(59, 130, 246, .15);
-
-    }
-
-    .nav-sidebar .nav-link:hover p {
-
-        font-weight: 700 !important;
-
-    }
-
-    .nav-sidebar .nav-link:hover i {
-
-        color: #0284c7 !important;
-
-    }
-
-    .nav-sidebar .nav-link:hover i {
-
-        color: #0284c7 !important;
-
-    }
-
-    .nav-sidebar .nav-link.active {
-
-        background: linear-gradient(90deg, #2563eb, #3b82f6) !important;
-
-        color: #ffffff !important;
-
-        box-shadow: 0 4px 10px rgba(37, 99, 235, .25);
-
-    }
-
-    .nav-sidebar .nav-link.active {
-
-        background: linear-gradient(90deg,
-
-                #2563eb,
-
-                #3b82f6) !important;
-
-        color: white !important;
-
-        font-weight: 700 !important;
-
-        border-radius: 10px;
-
-        box-shadow:
-
-            0 4px 10px rgba(37, 99, 235, .25);
-
-    }
-
-    .nav-sidebar .nav-link.active p {
-
-        font-weight: 700 !important;
-
-    }
-
-    .nav-sidebar .nav-link.active i {
-
-        color: white !important;
-
-    }
-
-    /* Mobile Sidebar */
-
-    @media (max-width:768px) {
-
-        .main-sidebar {
-
-            box-shadow:
-
-                0 0 25px rgba(0, 0, 0, .15);
-
-        }
-
-        .nav-sidebar .nav-link {
-
-            padding: 12px 14px;
-
-            font-size: 16px;
-
-        }
-
-        .nav-header {
-
-            font-size: 12px;
-
-        }
-
-    }
-</style>
 
 <aside class="main-sidebar elevation-2">
 
@@ -251,7 +48,8 @@
 
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                <li class="nav-item">
+                {% if can_dashboard %}
+<li class="nav-item">
 
                     <a href="/dashboard" class="nav-link">
 
@@ -262,14 +60,17 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-header">
+                {% if can_customers or can_suppliers or can_products or can_categories %}
+<li class="nav-header">
 
                     MASTERS
 
                 </li>
 
-                <li class="nav-item">
+                {% if can_customers %}
+<li class="nav-item">
 
                     <a href="/customers" class="nav-link">
 
@@ -280,8 +81,10 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-item">
+                {% if can_suppliers %}
+<li class="nav-item">
 
                     <a href="/suppliers" class="nav-link">
 
@@ -292,8 +95,10 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-item">
+                {% if can_suppliers %}
+<li class="nav-item">
 
                     <a href="/suppliers/outstanding" class="nav-link">
 
@@ -304,8 +109,10 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-item">
+                {% if can_products %}
+<li class="nav-item">
 
                     <a href="/products" class="nav-link">
 
@@ -316,8 +123,10 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-item">
+                {% if can_categories %}
+<li class="nav-item">
 
                     <a href="/categories" class="nav-link">
 
@@ -328,8 +137,11 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-header">
+                
+{% if can_billing %}
+<li class="nav-header">
 
                     SALES
 
@@ -367,7 +179,11 @@
 
                 </li>
 
-                <li class="nav-header">
+                
+
+{% endif %}
+{% if can_booking %}
+<li class="nav-header">
 
                     BOOKING
 
@@ -437,12 +253,29 @@
                             </a>
 
                         </li>
+						
+						
+                <li class="nav-item">
+
+                    <a href="/reports/booking" class="nav-link">
+
+                        <i class="nav-icon fas fa-calendar-check"></i>
+
+                        <p>Booking Report</p>
+
+                    </a>
+
+                </li>
 
                     </ul>
 
                 </li>
 
-                <li class="nav-header">
+                
+
+{% endif %}
+{% if can_inventory %}
+<li class="nav-header">
 
                     INVENTORY
 
@@ -496,7 +329,11 @@
 
                 </li>
 
-                <li class="nav-header">
+                
+
+{% endif %}
+{% if can_purchase %}
+<li class="nav-header">
 
                     PURCHASE
 
@@ -538,7 +375,11 @@
 
                 </li>
 
-                <li class="nav-header">
+                
+
+{% endif %}
+{% if can_reports %}
+<li class="nav-header">
 
                     REPORTS
 
@@ -580,7 +421,12 @@
 
                 </li>
 
-                <li class="nav-header">
+
+                
+
+{% endif %}
+{% if can_accounts %}
+<li class="nav-header">
 
                     ACCOUNTS
 
@@ -598,7 +444,11 @@
 
                 </li>
 
-                <li class="nav-header">
+                
+
+{% endif %}
+{% if can_company %}
+<li class="nav-header">
 
                     SETTINGS
 
@@ -616,13 +466,18 @@
 
                 </li>
 
-                <li class="nav-header">
+                
+
+{% endif %}
+{% if can_users or can_roles %}
+<li class="nav-header">
 
                     ADMINISTRATION
 
                 </li>
 
-                <li class="nav-item">
+                {% if can_users %}
+<li class="nav-item">
 
                     <a href="/users" class="nav-link">
 
@@ -633,8 +488,10 @@
                     </a>
 
                 </li>
+{% endif %}
 
-                <li class="nav-item">
+ <!--               {% if can_roles %}
+<li class="nav-item">
 
                     <a href="/roles" class="nav-link">
 
@@ -645,8 +502,10 @@
                     </a>
 
                 </li>
+{% endif %} 
 
-                <li class="nav-item">
+                {% if can_roles %}
+<li class="nav-item">
 
                     <a href="/permissions" class="nav-link">
 
@@ -657,6 +516,7 @@
                     </a>
 
                 </li>
+{% endif %} -->
 
                 {% if request.session.get("user", {}).get("role_code") == "ADMIN" %}
 
@@ -669,7 +529,11 @@
 
                 {% endif %}
 
-                <li class="nav-header">
+                
+{% endif %}
+
+{% endif %}
+<li class="nav-header">
 
                     USER
 

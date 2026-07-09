@@ -45,8 +45,6 @@ api_router.include_router(supplier_router, tags=["Suppliers"])
 # Purchase
 api_router.include_router(purchase_router, tags=["Purchase"])
 
-# Reports
-api_router.include_router(reports_router, tags=["Reports"])
 
 # Accounts
 api_router.include_router(accounts_router, tags=["Accounts"])
@@ -74,3 +72,6 @@ api_router.include_router(permission_router, tags=["Permissions"])
 
 # Booking
 api_router.include_router(booking_router, tags=["Booking"])
+
+# Reports
+api_router.include_router(reports_router, tags=["Reports"])

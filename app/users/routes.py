@@ -12,6 +12,8 @@ from app.users.schemas import UserCreate
 from app.users.schemas import UserUpdate
 from app.users.service import UserService
 from app.auth.service import AuthService
+from app.access_control.models import UserUrlBlock
+from app.access_control.service import UrlAccessService
 
 from fastapi import Depends
 
@@ -26,6 +28,94 @@ templates = Jinja2Templates(directory="app/templates")
 # ----------------------------------------------------
 # User List
 # ----------------------------------------------------
+
+
+
+def _parse_blocked_urls(
+    value: str,
+) -> list[str]:
+    patterns = []
+    seen = set()
+
+    raw_items = (
+        (value or "")
+        .replace("\r\n", "\n")
+        .replace("\r", "\n")
+        .split("\n")
+    )
+
+    for raw_item in raw_items:
+        raw_item = raw_item.strip()
+
+        if not raw_item:
+            continue
+
+        normalized = (
+            UrlAccessService.normalize_pattern(
+                raw_item
+            )
+        )
+
+        if normalized in seen:
+            continue
+
+        seen.add(normalized)
+        patterns.append(normalized)
+
+    return patterns
+
+
+def _replace_user_url_blocks(
+    db: Session,
+    user_id: int,
+    blocked_urls: str,
+) -> list[str]:
+    patterns = _parse_blocked_urls(
+        blocked_urls
+    )
+
+    (
+        db.query(UserUrlBlock)
+        .filter(
+            UserUrlBlock.user_id == user_id
+        )
+        .delete(
+            synchronize_session=False
+        )
+    )
+
+    for pattern in patterns:
+        db.add(
+            UserUrlBlock(
+                user_id=user_id,
+                url_pattern=pattern,
+                is_active=True,
+            )
+        )
+
+    return patterns
+
+
+def _blocked_urls_text(
+    db: Session,
+    user_id: int,
+) -> str:
+    rows = (
+        db.query(UserUrlBlock)
+        .filter(
+            UserUrlBlock.user_id == user_id,
+            UserUrlBlock.is_active == True,
+        )
+        .order_by(
+            UserUrlBlock.id.asc()
+        )
+        .all()
+    )
+
+    return "\n".join(
+        row.url_pattern
+        for row in rows
+    )
 
 
 @router.get("/users", response_class=HTMLResponse)
@@ -65,6 +155,7 @@ async def create_user(
     password: str = Form(...),
     role_id: int = Form(...),
     is_active: str = Form("true"),
+    blocked_urls: str = Form(""),
     db: Session = Depends(get_db),
 ):
 
@@ -76,7 +167,23 @@ async def create_user(
         is_active=(is_active == "true"),
     )
 
-    UserService.create(db, user)
+    created_user = UserService.create(
+        db,
+        user,
+    )
+
+    if created_user is None:
+        raise RuntimeError(
+            "UserService.create returned None"
+        )
+
+    _replace_user_url_blocks(
+        db=db,
+        user_id=created_user.id,
+        blocked_urls=blocked_urls,
+    )
+
+    db.commit()
 
     return RedirectResponse(url="/users", status_code=303)
 
@@ -93,8 +200,19 @@ async def edit_user_page(user_id: int, request: Request, db: Session = Depends(g
 
     roles = AuthService.get_all_roles(db)
 
+    blocked_urls = _blocked_urls_text(
+        db=db,
+        user_id=user_id,
+    )
+
     return templates.TemplateResponse(
-        request=request, name="users/edit.html", context={"user": user, "roles": roles}
+        request=request,
+        name="users/edit.html",
+        context={
+            "user": user,
+            "roles": roles,
+            "blocked_urls": blocked_urls,
+        }
     )
 
 
@@ -111,6 +229,7 @@ async def update_user(
     role_id: int = Form(...),
     is_active: str = Form("true"),
     password: str = Form(""),
+    blocked_urls: str = Form(""),
     db: Session = Depends(get_db),
 ):
 
@@ -124,7 +243,19 @@ async def update_user(
     # Optional password update
     data.password = password
 
-    UserService.update(db, user_id, data)
+    UserService.update(
+        db,
+        user_id,
+        data,
+    )
+
+    _replace_user_url_blocks(
+        db=db,
+        user_id=user_id,
+        blocked_urls=blocked_urls,
+    )
+
+    db.commit()
 
     return RedirectResponse(url="/users", status_code=303)
 
