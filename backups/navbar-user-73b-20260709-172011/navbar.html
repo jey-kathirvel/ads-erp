@@ -56,14 +56,7 @@
 
                 <span class="dropdown-item dropdown-header">
 
-                    {% set dropdown_user = request.session.get("user", {}) %}
-                    <strong>
-                        {{ dropdown_user.get("name", request.session.get("name", "User")) }}
-                    </strong>
-                    <br>
-                    <small>
-                        {{ dropdown_user.get("email", "") }}
-                    </small>
+                    {{ request.session.get("user","") }}
 
                 </span>
                 <div class="dropdown-divider"></div>
