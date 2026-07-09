@@ -1,0 +1,1004 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Booking Report{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div
+        class="d-flex flex-wrap justify-content-between align-items-center mb-3"
+    >
+        <div>
+            <h1 class="h3 mb-1">
+                <i class="fas fa-chart-line mr-2"></i>
+                Booking Report
+            </h1>
+
+            <p class="text-muted mb-0">
+                Booking, revenue and cancellation overview
+            </p>
+        </div>
+    </div>
+
+    <div class="card card-outline card-primary mb-4">
+
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-filter mr-2"></i>
+                Filters
+            </h3>
+        </div>
+
+        <div class="card-body">
+
+            <form
+                method="get"
+                action="/reports/booking"
+            >
+
+                <div class="row">
+
+                    <div class="col-md-3 mb-3">
+                        <label for="from_date">
+                            From Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="from_date"
+                            name="from_date"
+                            value="{{ from_date }}"
+                            class="form-control"
+                        >
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="to_date">
+                            To Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="to_date"
+                            name="to_date"
+                            value="{{ to_date }}"
+                            class="form-control"
+                        >
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="status">
+                            Booking Status
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                            class="form-control"
+                        >
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            <option
+                                value="CONFIRMED"
+                                {% if status == "CONFIRMED" %}
+                                selected
+                                {% endif %}
+                            >
+                                Confirmed
+                            </option>
+
+                            <option
+                                value="CANCELLED"
+                                {% if status == "CANCELLED" %}
+                                selected
+                                {% endif %}
+                            >
+                                Cancelled
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="payment_mode">
+                            Payment Mode
+                        </label>
+
+                        <select
+                            id="payment_mode"
+                            name="payment_mode"
+                            class="form-control"
+                        >
+                            <option value="">
+                                All Payment Modes
+                            </option>
+
+                            {% for mode in payment_modes %}
+                            <option
+                                value="{{ mode }}"
+                                {% if payment_mode == mode %}
+                                selected
+                                {% endif %}
+                            >
+                                {{ mode }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="d-flex flex-wrap">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary mr-2 mb-2"
+                    >
+                        <i class="fas fa-search mr-1"></i>
+                        Apply Filters
+                    </button>
+
+                    <a
+                        href="/reports/booking"
+                        class="btn btn-secondary mb-2"
+                    >
+                        <i class="fas fa-undo mr-1"></i>
+                        Reset
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-4 col-md-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ total_bookings }}</h3>
+                    <p>Total Bookings</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ confirmed_bookings }}</h3>
+                    <p>Confirmed Bookings</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ cancelled_bookings }}</h3>
+                    <p>Cancelled Bookings</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="small-box bg-primary">
+                <div class="inner">
+                    <h3>
+                        ₹{{ "{:,.2f}".format(gross_booking_value) }}
+                    </h3>
+                    <p>Gross Booking Value</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>
+                        ₹{{ "{:,.2f}".format(advance_collected) }}
+                    </h3>
+                    <p>Advance Collected</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="small-box bg-secondary">
+                <div class="inner">
+                    <h3>
+                        ₹{{ "{:,.2f}".format(balance_pending) }}
+                    </h3>
+                    <p>Balance Pending</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-outline card-secondary">
+
+        <div
+            class="card-header d-flex
+                   flex-wrap align-items-center"
+        >
+            <h3 class="card-title mb-0">
+                <i class="fas fa-table mr-2"></i>
+                Booking Details
+            </h3>
+
+            <div
+                id="bookingReportExportToolbar"
+                class="ml-auto d-flex flex-wrap"
+            >
+                <button
+                    type="button"
+                    id="exportBookingCsvButton"
+                    class="btn btn-success btn-sm
+                           mr-2 mb-1"
+                >
+                    <i class="fas fa-file-csv mr-1"></i>
+                    Export CSV
+                </button>
+
+                <button
+                    type="button"
+                    id="printBookingReportButton"
+                    class="btn btn-secondary btn-sm
+                           mb-1"
+                >
+                    <i class="fas fa-print mr-1"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table
+                    id="bookingReportTable"
+                    class="table table-hover table-striped mb-0"
+                >
+
+                    <thead>
+                        <tr>
+                            <th>Booking No</th>
+                            <th>Guest</th>
+                            <th>Mobile</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Rooms</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th class="text-right">Total</th>
+                            <th class="text-right">Advance</th>
+                            <th class="text-right">Balance</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for row in rows %}
+
+                        {% set booking = row.booking %}
+
+                        <tr>
+
+                            <td class="text-nowrap">
+                                {{ booking.booking_no }}
+                            </td>
+
+                            <td>
+                                {{ booking.guest_name }}
+                            </td>
+
+                            <td class="text-nowrap">
+                                {{ booking.mobile or "-" }}
+                            </td>
+
+                            <td class="text-nowrap">
+                                {{ booking.check_in_at.strftime(
+                                    "%d %b %Y, %I:%M %p"
+                                ) }}
+                            </td>
+
+                            <td class="text-nowrap">
+                                {{ booking.check_out_at.strftime(
+                                    "%d %b %Y, %I:%M %p"
+                                ) }}
+                            </td>
+
+                            <td>
+                                {% if row.active_rooms %}
+                                    <div class="mb-1 text-nowrap">
+                                        <span class="badge badge-success mr-1">
+                                            Active
+                                        </span>
+                                        <span>
+                                            {{ row.active_rooms | join(", ") }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+
+                                {% if row.cancelled_rooms %}
+                                    <div class="text-nowrap">
+                                        <span class="badge badge-danger mr-1">
+                                            Cancelled
+                                        </span>
+                                        <span>
+                                            {{ row.cancelled_rooms | join(", ") }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+
+                                {% if not row.active_rooms
+                                      and not row.cancelled_rooms %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if booking.status == "CONFIRMED" %}
+                                    <span class="badge badge-success">
+                                        CONFIRMED
+                                    </span>
+                                {% elif booking.status == "CANCELLED" %}
+                                    <span class="badge badge-danger">
+                                        CANCELLED
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-secondary">
+                                        {{ booking.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ booking.payment_mode or "-" }}
+                            </td>
+
+                            <td class="text-right text-nowrap">
+                                ₹{{ "{:,.2f}".format(
+                                    booking.total_amount | float
+                                ) }}
+                            </td>
+
+                            <td class="text-right text-nowrap">
+                                ₹{{ "{:,.2f}".format(
+                                    booking.advance_amount | float
+                                ) }}
+                            </td>
+
+                            <td class="text-right text-nowrap">
+                                {% if booking.status == "CANCELLED" %}
+                                    ₹0.00
+                                {% else %}
+                                    ₹{{ "{:,.2f}".format(
+                                        [
+                                            (
+                                                booking.total_amount | float
+                                            )
+                                            -
+                                            (
+                                                booking.advance_amount | float
+                                            ),
+                                            0
+                                        ] | max
+                                    ) }}
+                                {% endif %}
+                            </td>
+
+                            <td class="text-nowrap">
+                                <a
+                                    href="/booking/{{ booking.id }}/view"
+                                    class="btn btn-info btn-sm"
+                                    title="View Booking"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+                            <td
+                                colspan="12"
+                                class="text-center text-muted py-5"
+                            >
+                                <i
+                                    class="fas fa-search fa-2x mb-2 d-block"
+                                ></i>
+                                No bookings found for the selected filters.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- STEP_66_BOOKING_REPORT_EXPORT_FOUNDATION -->
+<style>
+    #bookingReportExportToolbar {
+        gap: 0.25rem;
+    }
+
+    #bookingReportExportToolbar .btn {
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th,
+    #bookingReportTable td {
+        vertical-align: middle;
+    }
+
+    #bookingReportTable th:nth-child(1),
+    #bookingReportTable td:nth-child(1) {
+        min-width: 190px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(3),
+    #bookingReportTable td:nth-child(3) {
+        min-width: 115px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(4),
+    #bookingReportTable td:nth-child(4),
+    #bookingReportTable th:nth-child(5),
+    #bookingReportTable td:nth-child(5) {
+        min-width: 160px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(6),
+    #bookingReportTable td:nth-child(6) {
+        min-width: 150px;
+    }
+
+    #bookingReportTable th:nth-child(7),
+    #bookingReportTable td:nth-child(7) {
+        min-width: 110px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(8),
+    #bookingReportTable td:nth-child(8) {
+        min-width: 95px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(9),
+    #bookingReportTable td:nth-child(9),
+    #bookingReportTable th:nth-child(10),
+    #bookingReportTable td:nth-child(10),
+    #bookingReportTable th:nth-child(11),
+    #bookingReportTable td:nth-child(11) {
+        min-width: 110px;
+        white-space: nowrap;
+        text-align: right;
+    }
+
+    #bookingReportTable th:nth-child(12),
+    #bookingReportTable td:nth-child(12) {
+        min-width: 80px;
+        text-align: center;
+    }
+
+    @media print {
+        .main-header,
+        .main-sidebar,
+        .main-footer,
+        #bookingReportExportToolbar,
+        form,
+        .btn {
+            display: none !important;
+        }
+
+        .content-wrapper {
+            margin-left: 0 !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+        }
+
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+        #bookingReportTable {
+            font-size: 9px;
+        }
+
+        body {
+            background: #ffffff !important;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+        const table = document.getElementById(
+            "bookingReportTable"
+        );
+
+        const csvButton = document.getElementById(
+            "exportBookingCsvButton"
+        );
+
+        const printButton = document.getElementById(
+            "printBookingReportButton"
+        );
+
+        function normalizeCellText(cell) {
+            return cell.innerText
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
+        function csvEscape(value) {
+            const normalized = String(
+                value ?? ""
+            );
+
+            return (
+                '"'
+                + normalized.replace(
+                    /"/g,
+                    '""'
+                )
+                + '"'
+            );
+        }
+
+        function buildReportCsv() {
+            if (!table) {
+                throw new Error(
+                    "Booking report table not found"
+                );
+            }
+
+            const lines = [];
+
+            lines.push(
+                csvEscape(
+                    "Akshat Royal Stay"
+                )
+            );
+
+            lines.push(
+                csvEscape(
+                    "Booking Report"
+                )
+            );
+
+            lines.push("");
+
+            const summaryCards =
+                document.querySelectorAll(
+                    ".small-box"
+                );
+
+            summaryCards.forEach(
+                function (card) {
+                    const valueElement =
+                        card.querySelector("h3");
+
+                    const labelElement =
+                        card.querySelector("p");
+
+                    if (
+                        valueElement
+                        && labelElement
+                    ) {
+                        lines.push(
+                            [
+                                csvEscape(
+                                    normalizeCellText(
+                                        labelElement
+                                    )
+                                ),
+                                csvEscape(
+                                    normalizeCellText(
+                                        valueElement
+                                    )
+                                ),
+                            ].join(",")
+                        );
+                    }
+                }
+            );
+
+            lines.push("");
+
+            const rows =
+                table.querySelectorAll(
+                    "tr"
+                );
+
+            rows.forEach(
+                function (row) {
+                    const cells =
+                        row.querySelectorAll(
+                            "th, td"
+                        );
+
+                    if (!cells.length) {
+                        return;
+                    }
+
+                    const values = [];
+
+                    cells.forEach(
+                        function (
+                            cell,
+                            index
+                        ) {
+                            const isLastColumn =
+                                index
+                                === cells.length - 1;
+
+                            const isActionsColumn =
+                                isLastColumn
+                                && (
+                                    cell.tagName
+                                    === "TH"
+                                    || cell.querySelector(
+                                        ".btn"
+                                    )
+                                );
+
+                            if (
+                                isActionsColumn
+                            ) {
+                                return;
+                            }
+
+                            values.push(
+                                csvEscape(
+                                    normalizeCellText(
+                                        cell
+                                    )
+                                )
+                            );
+                        }
+                    );
+
+                    lines.push(
+                        values.join(",")
+                    );
+                }
+            );
+
+            return lines.join("\r\n");
+        }
+
+        if (csvButton) {
+            csvButton.addEventListener(
+                "click",
+                function () {
+                    try {
+                        const csv =
+                            buildReportCsv();
+
+                        const bom = "\uFEFF";
+
+                        const blob = new Blob(
+                            [
+                                bom + csv
+                            ],
+                            {
+                                type:
+                                    "text/csv;charset=utf-8;"
+                            }
+                        );
+
+                        const url =
+                            URL.createObjectURL(
+                                blob
+                            );
+
+                        const link =
+                            document.createElement(
+                                "a"
+                            );
+
+                        const now =
+                            new Date();
+
+                        const stamp = [
+                            now.getFullYear(),
+                            String(
+                                now.getMonth() + 1
+                            ).padStart(2, "0"),
+                            String(
+                                now.getDate()
+                            ).padStart(2, "0"),
+                        ].join("-");
+
+                        link.href = url;
+
+                        link.download =
+                            "akshat-royal-stay-booking-report-"
+                            + stamp
+                            + ".csv";
+
+                        document.body.appendChild(
+                            link
+                        );
+
+                        link.click();
+
+                        link.remove();
+
+                        URL.revokeObjectURL(
+                            url
+                        );
+
+                    } catch (error) {
+                        console.error(error);
+
+                        alert(
+                            "Unable to export booking report."
+                        );
+                    }
+                }
+            );
+        }
+
+        if (printButton) {
+            printButton.addEventListener(
+                "click",
+                function () {
+                    window.print();
+                }
+            );
+        }
+    }
+);
+</script>
+
+
+<style id="bookingReportTableUxPolish">
+    /*
+     * STEP 67
+     * Booking Report table UX polish.
+     * Template-only. No financial logic changes.
+     */
+
+    #bookingReportTable {
+        width: 100%;
+        min-width: 1180px;
+        table-layout: auto;
+    }
+
+    #bookingReportTable th,
+    #bookingReportTable td {
+        padding: 0.58rem 0.48rem;
+        vertical-align: middle;
+        font-size: 0.88rem;
+    }
+
+    #bookingReportTable thead th {
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #dbeafe;
+    }
+
+    #bookingReportTable th:nth-child(1),
+    #bookingReportTable td:nth-child(1) {
+        min-width: 190px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(2),
+    #bookingReportTable td:nth-child(2) {
+        min-width: 90px;
+    }
+
+    #bookingReportTable th:nth-child(3),
+    #bookingReportTable td:nth-child(3) {
+        min-width: 105px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(4),
+    #bookingReportTable td:nth-child(4),
+    #bookingReportTable th:nth-child(5),
+    #bookingReportTable td:nth-child(5) {
+        min-width: 145px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(6),
+    #bookingReportTable td:nth-child(6) {
+        min-width: 125px;
+    }
+
+    #bookingReportTable th:nth-child(7),
+    #bookingReportTable td:nth-child(7) {
+        min-width: 100px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(8),
+    #bookingReportTable td:nth-child(8) {
+        min-width: 90px;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable th:nth-child(9),
+    #bookingReportTable td:nth-child(9),
+    #bookingReportTable th:nth-child(10),
+    #bookingReportTable td:nth-child(10),
+    #bookingReportTable th:nth-child(11),
+    #bookingReportTable td:nth-child(11) {
+        min-width: 105px;
+        white-space: nowrap;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    #bookingReportTable th:nth-child(12),
+    #bookingReportTable td:nth-child(12) {
+        min-width: 82px;
+        white-space: nowrap;
+        text-align: center;
+        position: sticky;
+        right: 0;
+        z-index: 1;
+    }
+
+    #bookingReportTable thead th:nth-child(12) {
+        z-index: 4;
+        background: #dbeafe;
+    }
+
+    #bookingReportTable tbody td:nth-child(12) {
+        background: #ffffff;
+        box-shadow: -8px 0 12px -12px rgba(0, 0, 0, 0.55);
+    }
+
+    #bookingReportTable tbody tr:nth-of-type(odd)
+    td:nth-child(12) {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    #bookingReportTable tbody tr:hover
+    td:nth-child(12) {
+        background: #eef6ff;
+    }
+
+    #bookingReportTable td:nth-child(6) .badge {
+        display: inline-block;
+        margin-right: 0.22rem;
+        margin-bottom: 0.18rem;
+        white-space: nowrap;
+    }
+
+    #bookingReportTable td:nth-child(12) .btn {
+        margin: 0.08rem;
+    }
+
+    #bookingReportTable tbody tr {
+        transition: background-color 0.15s ease;
+    }
+
+    #bookingReportTable tbody tr:hover {
+        background-color: #eef6ff;
+    }
+
+    #bookingReportExportToolbar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.45rem;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 1199.98px) {
+        #bookingReportTable {
+            min-width: 1100px;
+        }
+
+        #bookingReportTable th,
+        #bookingReportTable td {
+            padding: 0.5rem 0.4rem;
+            font-size: 0.84rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        #bookingReportExportToolbar {
+            width: 100%;
+            margin-top: 0.55rem;
+            justify-content: flex-start;
+        }
+
+        #bookingReportExportToolbar .btn {
+            flex: 1 1 auto;
+        }
+
+        #bookingReportTable {
+            min-width: 1040px;
+        }
+    }
+
+    @media print {
+        #bookingReportTable {
+            min-width: 0 !important;
+            width: 100% !important;
+            table-layout: fixed !important;
+        }
+
+        #bookingReportTable th,
+        #bookingReportTable td {
+            position: static !important;
+            min-width: 0 !important;
+            padding: 3px 4px !important;
+            font-size: 8px !important;
+            white-space: normal !important;
+            overflow-wrap: anywhere;
+            box-shadow: none !important;
+        }
+
+        #bookingReportTable th:nth-child(9),
+        #bookingReportTable td:nth-child(9),
+        #bookingReportTable th:nth-child(10),
+        #bookingReportTable td:nth-child(10),
+        #bookingReportTable th:nth-child(11),
+        #bookingReportTable td:nth-child(11) {
+            text-align: right !important;
+        }
+
+        #bookingReportTable th:nth-child(12),
+        #bookingReportTable td:nth-child(12) {
+            display: none !important;
+        }
+    }
+</style>
+
+{% endblock %}

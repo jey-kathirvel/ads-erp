@@ -1,0 +1,243 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card card-warning">
+
+            <div class="card-header">
+
+                <h3 class="card-title">
+
+                    <i class="fas fa-user-edit"></i>
+
+                    Edit User
+
+                </h3>
+
+            </div>
+
+            <form
+                action="/users/{{ user.id }}/edit"
+                method="post">
+
+                <div class="card-body">
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Full Name
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="full_name"
+                            class="form-control"
+                            value="{{ user.full_name }}"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ user.email }}"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Role
+
+                        </label>
+
+                        <select
+                            name="role_id"
+                            class="form-control"
+                            required>
+
+                            {% for role in roles %}
+
+                            <option
+                                value="{{ role.id }}"
+                                {% if role.id == user.role_id %}
+                                selected
+                                {% endif %}>
+
+                                {{ role.role_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="is_active"
+                            class="form-control">
+
+                            <option
+                                value="true"
+                                {% if user.is_active %}
+                                selected
+                                {% endif %}>
+
+                                Active
+
+                            </option>
+
+                            <option
+                                value="false"
+                                {% if not user.is_active %}
+                                selected
+                                {% endif %}>
+
+                                Inactive
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <hr>
+
+                    <h5>
+
+                        Reset Password (Optional)
+
+                    </h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    New Password
+
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-control"
+                                    placeholder="Leave blank to keep existing password">
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Confirm Password
+
+                                </label>
+
+                                <input
+                                    type="password"
+                                    id="confirm_password"
+                                    class="form-control"
+                                    placeholder="Confirm New Password">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer text-right">
+
+                    <a
+                        href="/users"
+                        class="btn btn-secondary">
+
+                        <i class="fas fa-arrow-left"></i>
+
+                        Back
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        <i class="fas fa-save"></i>
+
+                        Update User
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.querySelector("form").addEventListener(
+
+    "submit",
+
+    function(e){
+
+        let password=document.getElementById("password").value;
+
+        let confirm=document.getElementById("confirm_password").value;
+
+        if(password!=="" && password!==confirm){
+
+            alert("Password and Confirm Password do not match.");
+
+            e.preventDefault();
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

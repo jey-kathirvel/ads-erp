@@ -1,0 +1,907 @@
+/*
+ * ADS ERP Modern SaaS Design System
+ * STEP 68R1
+ *
+ * Purpose:
+ * - Modernize shared AdminLTE presentation safely
+ * - Preserve routes, forms, tables, JS hooks and business logic
+ * - Provide a central override layer
+ */
+
+:root {
+    --ads-saas-bg:
+        #f6f8fc;
+
+    --ads-saas-surface:
+        #ffffff;
+
+    --ads-saas-surface-soft:
+        #f9fbff;
+
+    --ads-saas-surface-muted:
+        #f2f5fa;
+
+    --ads-saas-text:
+        #111827;
+
+    --ads-saas-text-soft:
+        #334155;
+
+    --ads-saas-muted:
+        #64748b;
+
+    --ads-saas-border:
+        #e2e8f0;
+
+    --ads-saas-border-strong:
+        #cbd5e1;
+
+    --ads-saas-primary:
+        #2563eb;
+
+    --ads-saas-primary-hover:
+        #1d4ed8;
+
+    --ads-saas-primary-soft:
+        #eff6ff;
+
+    --ads-saas-success:
+        #16a34a;
+
+    --ads-saas-danger:
+        #dc2626;
+
+    --ads-saas-warning:
+        #d97706;
+
+    --ads-saas-info:
+        #0284c7;
+
+    --ads-saas-radius-sm:
+        8px;
+
+    --ads-saas-radius-md:
+        12px;
+
+    --ads-saas-radius-lg:
+        16px;
+
+    --ads-saas-radius-xl:
+        20px;
+
+    --ads-saas-shadow-xs:
+        0 1px 2px
+        rgba(15, 23, 42, 0.04);
+
+    --ads-saas-shadow-sm:
+        0 4px 14px
+        rgba(15, 23, 42, 0.06);
+
+    --ads-saas-shadow-md:
+        0 12px 32px
+        rgba(15, 23, 42, 0.08);
+
+    --ads-saas-transition:
+        160ms ease;
+}
+
+
+/* =========================================================
+   1. GLOBAL APP CANVAS
+   ========================================================= */
+
+html,
+body {
+    background:
+        var(--ads-saas-bg);
+}
+
+body {
+    color:
+        var(--ads-saas-text);
+
+    -webkit-font-smoothing:
+        antialiased;
+
+    text-rendering:
+        optimizeLegibility;
+}
+
+.wrapper,
+.content-wrapper {
+    background:
+        var(--ads-saas-bg) !important;
+}
+
+.content-wrapper {
+    min-height:
+        calc(100vh - 57px);
+}
+
+.content-wrapper > .content {
+    padding-top:
+        18px;
+}
+
+.content-wrapper .container-fluid {
+    padding-left:
+        20px;
+
+    padding-right:
+        20px;
+}
+
+
+/* =========================================================
+   2. TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color:
+        var(--ads-saas-text);
+
+    letter-spacing:
+        -0.02em;
+}
+
+.content-header h1,
+.content-header h2,
+.content-header h3 {
+    font-weight:
+        750;
+}
+
+.text-muted {
+    color:
+        var(--ads-saas-muted) !important;
+}
+
+
+/* =========================================================
+   3. MODERN CARD SYSTEM
+   ========================================================= */
+
+.card {
+    background:
+        var(--ads-saas-surface);
+
+    border:
+        1px solid
+        var(--ads-saas-border) !important;
+
+    border-radius:
+        var(--ads-saas-radius-lg) !important;
+
+    box-shadow:
+        var(--ads-saas-shadow-sm) !important;
+
+    overflow:
+        hidden;
+
+    transition:
+        transform
+        var(--ads-saas-transition),
+        box-shadow
+        var(--ads-saas-transition),
+        border-color
+        var(--ads-saas-transition);
+}
+
+.card:hover {
+    border-color:
+        var(--ads-saas-border-strong) !important;
+
+    box-shadow:
+        var(--ads-saas-shadow-md) !important;
+}
+
+.card.card-outline {
+    border-top:
+        1px solid
+        var(--ads-saas-border) !important;
+}
+
+.card-header {
+    min-height:
+        56px;
+
+    padding:
+        14px 18px;
+
+    background:
+        var(--ads-saas-surface) !important;
+
+    border-bottom:
+        1px solid
+        var(--ads-saas-border) !important;
+}
+
+.card-title {
+    color:
+        var(--ads-saas-text);
+
+    font-size:
+        0.98rem;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -0.01em;
+}
+
+.card-body {
+    padding:
+        18px;
+}
+
+.card-footer {
+    padding:
+        14px 18px;
+
+    background:
+        var(--ads-saas-surface-soft);
+
+    border-top:
+        1px solid
+        var(--ads-saas-border);
+}
+
+
+/* =========================================================
+   4. KPI / SMALL BOX SYSTEM
+   ========================================================= */
+
+.small-box {
+    position:
+        relative;
+
+    min-height:
+        126px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.22);
+
+    border-radius:
+        var(--ads-saas-radius-lg) !important;
+
+    box-shadow:
+        var(--ads-saas-shadow-sm) !important;
+
+    overflow:
+        hidden;
+
+    transition:
+        transform
+        var(--ads-saas-transition),
+        box-shadow
+        var(--ads-saas-transition);
+}
+
+.small-box:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(--ads-saas-shadow-md) !important;
+}
+
+.small-box > .inner {
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    padding:
+        18px 18px 16px;
+}
+
+.small-box .inner h3 {
+    margin-bottom:
+        8px;
+
+    font-size:
+        1.85rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.035em;
+}
+
+.small-box .inner p {
+    margin-bottom:
+        0;
+
+    font-size:
+        0.88rem;
+
+    font-weight:
+        600;
+
+    opacity:
+        0.96;
+}
+
+.small-box .icon {
+    top:
+        18px;
+
+    right:
+        16px;
+
+    opacity:
+        0.16;
+
+    transition:
+        transform
+        var(--ads-saas-transition),
+        opacity
+        var(--ads-saas-transition);
+}
+
+.small-box:hover .icon {
+    transform:
+        scale(1.04);
+
+    opacity:
+        0.21;
+}
+
+.small-box .icon > i {
+    font-size:
+        58px;
+}
+
+
+/* =========================================================
+   5. BUTTON SYSTEM
+   ========================================================= */
+
+.btn {
+    min-height:
+        38px;
+
+    padding:
+        8px 14px;
+
+    border-radius:
+        var(--ads-saas-radius-sm) !important;
+
+    font-weight:
+        650;
+
+    letter-spacing:
+        -0.005em;
+
+    box-shadow:
+        none !important;
+
+    transition:
+        transform
+        var(--ads-saas-transition),
+        box-shadow
+        var(--ads-saas-transition),
+        background-color
+        var(--ads-saas-transition),
+        border-color
+        var(--ads-saas-transition);
+}
+
+.btn:hover {
+    transform:
+        translateY(-1px);
+}
+
+.btn:active {
+    transform:
+        translateY(0);
+}
+
+.btn-sm {
+    min-height:
+        32px;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        7px !important;
+}
+
+.btn-primary {
+    background:
+        var(--ads-saas-primary) !important;
+
+    border-color:
+        var(--ads-saas-primary) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background:
+        var(--ads-saas-primary-hover) !important;
+
+    border-color:
+        var(--ads-saas-primary-hover) !important;
+
+    box-shadow:
+        0 6px 16px
+        rgba(37, 99, 235, 0.22) !important;
+}
+
+.btn-secondary {
+    background:
+        #64748b !important;
+
+    border-color:
+        #64748b !important;
+}
+
+.btn-success {
+    background:
+        var(--ads-saas-success) !important;
+
+    border-color:
+        var(--ads-saas-success) !important;
+}
+
+.btn-danger {
+    background:
+        var(--ads-saas-danger) !important;
+
+    border-color:
+        var(--ads-saas-danger) !important;
+}
+
+.btn-warning {
+    background:
+        #f59e0b !important;
+
+    border-color:
+        #f59e0b !important;
+
+    color:
+        #111827 !important;
+}
+
+.btn-info {
+    background:
+        var(--ads-saas-info) !important;
+
+    border-color:
+        var(--ads-saas-info) !important;
+}
+
+
+/* =========================================================
+   6. FORM CONTROL SYSTEM
+   ========================================================= */
+
+.form-control,
+.custom-select,
+.select2-container--default
+.select2-selection--single {
+    min-height:
+        42px;
+
+    background:
+        var(--ads-saas-surface);
+
+    border:
+        1px solid
+        var(--ads-saas-border-strong) !important;
+
+    border-radius:
+        var(--ads-saas-radius-sm) !important;
+
+    color:
+        var(--ads-saas-text);
+
+    box-shadow:
+        var(--ads-saas-shadow-xs);
+
+    transition:
+        border-color
+        var(--ads-saas-transition),
+        box-shadow
+        var(--ads-saas-transition),
+        background-color
+        var(--ads-saas-transition);
+}
+
+.form-control:hover,
+.custom-select:hover {
+    border-color:
+        #94a3b8 !important;
+}
+
+.form-control:focus,
+.custom-select:focus {
+    background:
+        #ffffff;
+
+    border-color:
+        var(--ads-saas-primary) !important;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.12) !important;
+}
+
+.form-control::placeholder {
+    color:
+        #94a3b8;
+}
+
+label {
+    color:
+        var(--ads-saas-text-soft);
+
+    font-size:
+        0.86rem;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   7. TABLE SYSTEM
+   ========================================================= */
+
+.table-responsive {
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        #cbd5e1
+        transparent;
+}
+
+.table {
+    margin-bottom:
+        0;
+
+    color:
+        var(--ads-saas-text-soft);
+}
+
+.table thead th {
+    padding:
+        12px 14px;
+
+    background:
+        #f1f5f9;
+
+    border-top:
+        0 !important;
+
+    border-bottom:
+        1px solid
+        var(--ads-saas-border) !important;
+
+    color:
+        #334155;
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        0.01em;
+
+    vertical-align:
+        middle;
+}
+
+.table tbody td {
+    padding:
+        12px 14px;
+
+    border-top:
+        1px solid
+        #edf1f6;
+
+    vertical-align:
+        middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background:
+        #fbfcfe;
+}
+
+.table-hover tbody tr {
+    transition:
+        background-color
+        var(--ads-saas-transition);
+}
+
+.table-hover tbody tr:hover {
+    background:
+        var(--ads-saas-primary-soft);
+}
+
+.table-bordered {
+    border:
+        1px solid
+        var(--ads-saas-border);
+}
+
+.table-bordered th,
+.table-bordered td {
+    border-color:
+        var(--ads-saas-border);
+}
+
+
+/* =========================================================
+   8. BADGE / STATUS SYSTEM
+   ========================================================= */
+
+.badge {
+    padding:
+        0.38em 0.62em;
+
+    border-radius:
+        999px !important;
+
+    font-size:
+        0.72rem;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        0.01em;
+}
+
+.badge-success {
+    background:
+        #dcfce7 !important;
+
+    color:
+        #15803d !important;
+}
+
+.badge-danger {
+    background:
+        #fee2e2 !important;
+
+    color:
+        #b91c1c !important;
+}
+
+.badge-warning {
+    background:
+        #fef3c7 !important;
+
+    color:
+        #a16207 !important;
+}
+
+.badge-info {
+    background:
+        #e0f2fe !important;
+
+    color:
+        #0369a1 !important;
+}
+
+.badge-primary {
+    background:
+        #dbeafe !important;
+
+    color:
+        #1d4ed8 !important;
+}
+
+.badge-secondary {
+    background:
+        #e2e8f0 !important;
+
+    color:
+        #475569 !important;
+}
+
+
+/* =========================================================
+   9. ALERT / INFO BOX POLISH
+   ========================================================= */
+
+.alert {
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        var(--ads-saas-radius-md) !important;
+
+    box-shadow:
+        var(--ads-saas-shadow-xs);
+}
+
+.info-box {
+    border:
+        1px solid
+        var(--ads-saas-border);
+
+    border-radius:
+        var(--ads-saas-radius-lg);
+
+    box-shadow:
+        var(--ads-saas-shadow-sm);
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   10. NAVBAR POLISH
+   ========================================================= */
+
+.main-header.navbar {
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.10);
+
+    box-shadow:
+        0 4px 18px
+        rgba(15, 23, 42, 0.10);
+}
+
+.main-header .nav-link {
+    transition:
+        opacity
+        var(--ads-saas-transition),
+        background-color
+        var(--ads-saas-transition);
+}
+
+
+/* =========================================================
+   11. FOOTER POLISH
+   ========================================================= */
+
+.main-footer {
+    background:
+        var(--ads-saas-surface) !important;
+
+    border-top:
+        1px solid
+        var(--ads-saas-border) !important;
+
+    color:
+        var(--ads-saas-muted);
+}
+
+
+/* =========================================================
+   12. RESPONSIVE FOUNDATION
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+    .content-wrapper .container-fluid {
+        padding-left:
+            14px;
+
+        padding-right:
+            14px;
+    }
+
+    .card-header {
+        padding:
+            12px 14px;
+    }
+
+    .card-body {
+        padding:
+            14px;
+    }
+
+    .small-box {
+        min-height:
+            116px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .content-wrapper > .content {
+        padding-top:
+            12px;
+    }
+
+    .content-wrapper .container-fluid {
+        padding-left:
+            10px;
+
+        padding-right:
+            10px;
+    }
+
+    .card {
+        border-radius:
+            var(--ads-saas-radius-md) !important;
+    }
+
+    .small-box {
+        border-radius:
+            var(--ads-saas-radius-md) !important;
+    }
+
+    .small-box > .inner {
+        padding:
+            14px;
+    }
+
+    .small-box .inner h3 {
+        font-size:
+            1.45rem;
+    }
+
+    .small-box .icon {
+        right:
+            10px;
+    }
+
+    .small-box .icon > i {
+        font-size:
+            46px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding:
+            10px 11px;
+    }
+}
+
+
+/* =========================================================
+   13. ACCESSIBILITY / MOTION SAFETY
+   ========================================================= */
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.custom-select:focus-visible,
+.nav-link:focus-visible {
+    outline:
+        3px solid
+        rgba(37, 99, 235, 0.22);
+
+    outline-offset:
+        2px;
+}
+
+@media (
+    prefers-reduced-motion:
+    reduce
+) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior:
+            auto !important;
+
+        transition-duration:
+            0.01ms !important;
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+    }
+}

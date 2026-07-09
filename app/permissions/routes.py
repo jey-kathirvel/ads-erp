@@ -25,6 +25,7 @@ MODULES = [
     "inventory",
     "purchase",
     "reports",
+    "booking",
     "accounts",
     "company",
     "users",

@@ -1521,3 +1521,245 @@ async def inventory_report_excel(
             "attachment; filename=inventory_report.xlsx"
         }
     )
+
+# ----------------------------------------------------
+# Booking Report
+# ----------------------------------------------------
+
+
+@router.get(
+    "/reports/booking",
+    name="booking_report",
+)
+async def booking_report(
+    request: Request,
+    from_date: str = "",
+    to_date: str = "",
+    status: str = "",
+    payment_mode: str = "",
+    user=Depends(login_required),
+    db: Session = Depends(get_db),
+):
+    from datetime import datetime as dt
+
+    from app.booking.models import Booking
+    from app.booking.models import BookingRoom
+    from app.booking.models import Room
+    from app.booking.models import RoomType
+
+    query = (
+        db.query(Booking)
+        .order_by(
+            Booking.check_in_at.desc(),
+            Booking.id.desc(),
+        )
+    )
+
+    normalized_from_date = from_date.strip()
+    normalized_to_date = to_date.strip()
+    normalized_status = status.strip().upper()
+    normalized_payment_mode = payment_mode.strip().upper()
+
+    if normalized_from_date:
+        try:
+            parsed_from_date = dt.strptime(
+                normalized_from_date,
+                "%Y-%m-%d",
+            )
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid from_date",
+            )
+
+        query = query.filter(
+            Booking.check_in_at >= parsed_from_date
+        )
+
+    if normalized_to_date:
+        try:
+            parsed_to_date = dt.strptime(
+                normalized_to_date,
+                "%Y-%m-%d",
+            )
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid to_date",
+            )
+
+        parsed_to_date = parsed_to_date.replace(
+            hour=23,
+            minute=59,
+            second=59,
+            microsecond=999999,
+        )
+
+        query = query.filter(
+            Booking.check_in_at <= parsed_to_date
+        )
+
+    if normalized_status:
+        query = query.filter(
+            Booking.status == normalized_status
+        )
+
+    if normalized_payment_mode:
+        query = query.filter(
+            Booking.payment_mode
+            == normalized_payment_mode
+        )
+
+    bookings = query.all()
+
+    booking_ids = [
+        booking.id
+        for booking in bookings
+    ]
+
+    assignment_rows = []
+
+    if booking_ids:
+        assignment_rows = (
+            db.query(
+                BookingRoom,
+                Room,
+                RoomType,
+            )
+            .join(
+                Room,
+                Room.id == BookingRoom.room_id,
+            )
+            .join(
+                RoomType,
+                RoomType.id == Room.room_type_id,
+            )
+            .filter(
+                BookingRoom.booking_id.in_(booking_ids)
+            )
+            .order_by(
+                BookingRoom.booking_id,
+                Room.room_number,
+            )
+            .all()
+        )
+
+    assignments_by_booking = {}
+
+    for assignment, room, room_type in assignment_rows:
+        assignments_by_booking.setdefault(
+            assignment.booking_id,
+            [],
+        ).append(
+            {
+                "room_number": room.room_number,
+                "room_type": room_type.name,
+                "status": assignment.status,
+                "cancelled_at": assignment.cancelled_at,
+                "cancellation_reason": (
+                    assignment.cancellation_reason
+                ),
+            }
+        )
+
+    rows = []
+
+    for booking in bookings:
+        assignments = assignments_by_booking.get(
+            booking.id,
+            [],
+        )
+
+        active_rooms = [
+            item["room_number"]
+            for item in assignments
+            if item["status"] == "ACTIVE"
+        ]
+
+        cancelled_rooms = [
+            item["room_number"]
+            for item in assignments
+            if item["status"] == "CANCELLED"
+        ]
+
+        rows.append(
+            {
+                "booking": booking,
+                "active_rooms": active_rooms,
+                "cancelled_rooms": cancelled_rooms,
+                "assignments": assignments,
+            }
+        )
+
+    total_bookings = len(bookings)
+
+    confirmed_bookings = sum(
+        1
+        for booking in bookings
+        if booking.status == "CONFIRMED"
+    )
+
+    cancelled_bookings = sum(
+        1
+        for booking in bookings
+        if booking.status == "CANCELLED"
+    )
+
+    financial_bookings = [
+        booking
+        for booking in bookings
+        if booking.status != "CANCELLED"
+    ]
+
+    gross_booking_value = sum(
+        float(booking.total_amount or 0)
+        for booking in financial_bookings
+    )
+
+    advance_collected = sum(
+        float(booking.advance_amount or 0)
+        for booking in financial_bookings
+    )
+
+    balance_pending = sum(
+        max(
+            float(booking.total_amount or 0)
+            - float(booking.advance_amount or 0),
+            0,
+        )
+        for booking in financial_bookings
+    )
+
+    payment_modes = sorted(
+        {
+            str(booking.payment_mode).strip().upper()
+            for booking in (
+                db.query(Booking)
+                .filter(
+                    Booking.payment_mode.isnot(None)
+                )
+                .all()
+            )
+            if str(booking.payment_mode).strip()
+        }
+    )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="reports/booking.html",
+        context={
+            "user": user,
+            "rows": rows,
+            "total_bookings": total_bookings,
+            "confirmed_bookings": confirmed_bookings,
+            "cancelled_bookings": cancelled_bookings,
+            "gross_booking_value": gross_booking_value,
+            "advance_collected": advance_collected,
+            "balance_pending": balance_pending,
+            "from_date": normalized_from_date,
+            "to_date": normalized_to_date,
+            "status": normalized_status,
+            "payment_mode": normalized_payment_mode,
+            "payment_modes": payment_modes,
+        },
+    )
