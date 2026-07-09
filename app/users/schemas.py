@@ -25,6 +25,8 @@ class UserUpdate(BaseModel):
 
     is_active: bool = True
 
+    password: str | None = None
+
 
 class PasswordReset(BaseModel):
 

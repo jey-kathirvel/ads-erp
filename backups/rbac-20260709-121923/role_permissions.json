@@ -1,0 +1,443 @@
+[
+  {
+    "id": 1,
+    "role_id": 1,
+    "module_name": "Dashboard",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 2,
+    "role_id": 1,
+    "module_name": "Customers",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 3,
+    "role_id": 1,
+    "module_name": "Suppliers",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 4,
+    "role_id": 1,
+    "module_name": "Products",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 5,
+    "role_id": 1,
+    "module_name": "Categories",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 6,
+    "role_id": 1,
+    "module_name": "Billing",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 7,
+    "role_id": 1,
+    "module_name": "Inventory",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 8,
+    "role_id": 1,
+    "module_name": "Purchase",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 9,
+    "role_id": 1,
+    "module_name": "Reports",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 10,
+    "role_id": 1,
+    "module_name": "Accounts",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 11,
+    "role_id": 1,
+    "module_name": "Company",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 12,
+    "role_id": 1,
+    "module_name": "Users",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 13,
+    "role_id": 1,
+    "module_name": "Roles",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 14,
+    "role_id": 2,
+    "module_name": "Dashboard",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 15,
+    "role_id": 2,
+    "module_name": "Customers",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 16,
+    "role_id": 2,
+    "module_name": "Suppliers",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 17,
+    "role_id": 2,
+    "module_name": "Products",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 18,
+    "role_id": 2,
+    "module_name": "Categories",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 19,
+    "role_id": 2,
+    "module_name": "Billing",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 20,
+    "role_id": 2,
+    "module_name": "Inventory",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 21,
+    "role_id": 2,
+    "module_name": "Purchase",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 22,
+    "role_id": 2,
+    "module_name": "Reports",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 37,
+    "role_id": 2,
+    "module_name": "dashboard",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 38,
+    "role_id": 2,
+    "module_name": "customers",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 39,
+    "role_id": 2,
+    "module_name": "suppliers",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 40,
+    "role_id": 2,
+    "module_name": "products",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 41,
+    "role_id": 2,
+    "module_name": "categories",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 42,
+    "role_id": 2,
+    "module_name": "billing",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 43,
+    "role_id": 2,
+    "module_name": "inventory",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 44,
+    "role_id": 2,
+    "module_name": "purchase",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 45,
+    "role_id": 2,
+    "module_name": "reports",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": true
+  },
+  {
+    "id": 46,
+    "role_id": 2,
+    "module_name": "accounts",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 47,
+    "role_id": 2,
+    "module_name": "company",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 48,
+    "role_id": 2,
+    "module_name": "users",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 49,
+    "role_id": 2,
+    "module_name": "roles",
+    "can_view": false,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 23,
+    "role_id": 3,
+    "module_name": "Dashboard",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 24,
+    "role_id": 3,
+    "module_name": "Billing",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 25,
+    "role_id": 3,
+    "module_name": "Customers",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 26,
+    "role_id": 3,
+    "module_name": "Reports",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 27,
+    "role_id": 4,
+    "module_name": "Dashboard",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 28,
+    "role_id": 4,
+    "module_name": "Suppliers",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 29,
+    "role_id": 4,
+    "module_name": "Purchase",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 30,
+    "role_id": 4,
+    "module_name": "Inventory",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 31,
+    "role_id": 5,
+    "module_name": "Dashboard",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 32,
+    "role_id": 5,
+    "module_name": "Inventory",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 33,
+    "role_id": 5,
+    "module_name": "Products",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 34,
+    "role_id": 6,
+    "module_name": "Dashboard",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  },
+  {
+    "id": 35,
+    "role_id": 6,
+    "module_name": "Accounts",
+    "can_view": true,
+    "can_add": true,
+    "can_edit": true,
+    "can_delete": false
+  },
+  {
+    "id": 36,
+    "role_id": 6,
+    "module_name": "Reports",
+    "can_view": true,
+    "can_add": false,
+    "can_edit": false,
+    "can_delete": false
+  }
+]
