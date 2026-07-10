@@ -1268,10 +1268,10 @@ html body .main-sidebar
         auto !important;
 
     max-width:
-        220px !important;
+        170px !important;
 
     max-height:
-        64px !important;
+        48px !important;
 
     margin:
         0 auto !important;
@@ -2622,19 +2622,3 @@ html body .booking-kpi-balance {
 }
 
 /* ===== END STEP 75A ===== */
-
-/* STEP 75B-R3: visible sidebar logo enlargement */
-html body .main-sidebar .brand-link {
-    min-height: 92px !important;
-    padding: 8px 10px !important;
-}
-
-html body .main-sidebar .brand-link img {
-    width: 76px !important;
-    height: 76px !important;
-    max-width: none !important;
-    max-height: none !important;
-    object-fit: contain !important;
-    padding: 0 !important;
-    margin: 0 auto !important;
-}
