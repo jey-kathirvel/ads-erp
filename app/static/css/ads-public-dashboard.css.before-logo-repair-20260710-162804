@@ -1,0 +1,742 @@
+/* =========================================================
+   ADS ERP PUBLIC PRODUCT DASHBOARD
+   Logged-out shell only
+========================================================= */
+
+:root {
+    --ads-public-bg: #080b12;
+    --ads-public-nav: rgba(8, 12, 20, 0.96);
+    --ads-public-border: rgba(89, 119, 168, 0.18);
+
+    --ads-public-primary: #2563eb;
+    --ads-public-primary-soft: #3b82f6;
+    --ads-public-text: #f4f7fb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--ads-public-bg);
+}
+
+body.ads-public-body {
+    margin: 0;
+    min-height: 100vh;
+
+    color: var(--ads-public-text);
+
+    background:
+        radial-gradient(
+            circle at 8% 0%,
+            rgba(37, 99, 235, 0.08),
+            transparent 28%
+        ),
+        linear-gradient(
+            145deg,
+            #080b12 0%,
+            #0b1019 52%,
+            #090d15 100%
+        );
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+/* =========================================================
+   PUBLIC TOP BAR
+========================================================= */
+
+.ads-public-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    min-height: 64px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(15, 23, 36, 0.98),
+            rgba(8, 12, 20, 0.98)
+        );
+
+    border-bottom:
+        1px solid var(--ads-public-border);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.24);
+
+    backdrop-filter:
+        blur(14px);
+}
+
+.ads-public-navbar-inner {
+    width: 100%;
+    min-height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding:
+        8px 24px;
+}
+
+.ads-public-brand {
+    display: inline-flex;
+    align-items: center;
+
+    text-decoration: none;
+}
+
+.ads-public-brand img {
+    display: block;
+
+    width: auto;
+    height: 42px;
+
+    object-fit: contain;
+}
+
+.ads-public-login {
+    min-height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding:
+        9px 17px;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--ads-public-primary),
+            #1d4ed8
+        );
+
+    border:
+        1px solid rgba(96, 165, 250, 0.26);
+
+    border-radius:
+        10px;
+
+    box-shadow:
+        0 8px 22px rgba(37, 99, 235, 0.20);
+
+    font-size: 14px;
+    font-weight: 750;
+
+    text-decoration: none;
+
+    transition:
+        transform .18s ease,
+        filter .18s ease,
+        box-shadow .18s ease;
+}
+
+.ads-public-login:hover {
+    color: #ffffff;
+
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.08);
+
+    box-shadow:
+        0 12px 28px rgba(37, 99, 235, 0.26);
+
+    text-decoration: none;
+}
+
+/* =========================================================
+   PUBLIC CONTENT
+========================================================= */
+
+.ads-public-main {
+    width: 100%;
+
+    padding:
+        18px 20px 32px;
+}
+
+/*
+   Dashboard CSS was originally rendered inside AdminLTE.
+   Public shell provides equivalent full-width workspace.
+*/
+
+.ads-public-main .ads-capability-dashboard {
+    width: 100%;
+    max-width: none;
+
+    margin: 0;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767.98px) {
+    .ads-public-navbar-inner {
+        padding:
+            8px 12px;
+    }
+
+    .ads-public-brand img {
+        height:
+            38px;
+    }
+
+    .ads-public-login {
+        min-height:
+            38px;
+
+        padding:
+            8px 14px;
+    }
+
+    .ads-public-main {
+        padding:
+            12px 10px 24px;
+    }
+}
+
+
+/* =========================================================
+   STEP 5C
+   VISIBLE LOGO ENLARGEMENT
+========================================================= */
+
+.ads-public-navbar {
+    min-height: 66px;
+}
+
+.ads-public-navbar-inner {
+    min-height: 66px;
+
+    padding:
+        8px 22px;
+}
+
+/*
+   Navbar footprint matches Login button height.
+   PNG is visually enlarged inside clipped frame because
+   source logo contains internal transparent spacing.
+*/
+
+.ads-public-brand {
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: visible;
+}
+
+.ads-public-logo-frame {
+    position: relative;
+
+    width: 88px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+}
+
+.ads-public-logo-frame img {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 118px !important;
+    height: auto !important;
+    max-width: none !important;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1.35);
+
+    transform-origin:
+        center center;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 6px 14px rgba(37, 99, 235, 0.20)
+        );
+}
+
+.ads-public-login {
+    min-height: 42px;
+    height: 42px;
+
+    padding:
+        9px 18px;
+}
+
+
+/* =========================================================
+   COLORFUL PRODUCT FOOTER
+========================================================= */
+
+.ads-public-footer {
+    position: relative;
+
+    overflow: hidden;
+
+    margin-top: 8px;
+
+    border-top:
+        1px solid rgba(96, 165, 250, 0.20);
+
+    background:
+        radial-gradient(
+            circle at 8% 20%,
+            rgba(37, 99, 235, 0.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 92% 15%,
+            rgba(124, 58, 237, 0.16),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 55% 100%,
+            rgba(6, 182, 212, 0.10),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            #0b1220 0%,
+            #080d17 48%,
+            #0c1020 100%
+        );
+
+    box-shadow:
+        0 -18px 50px rgba(0, 0, 0, 0.22);
+}
+
+.ads-footer-inner {
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+
+    padding:
+        34px 34px 18px;
+}
+
+.ads-footer-glow {
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+
+    filter:
+        blur(70px);
+
+    opacity: 0.22;
+
+    pointer-events: none;
+}
+
+.ads-footer-glow-one {
+    left: -100px;
+    top: -120px;
+
+    background:
+        #2563eb;
+}
+
+.ads-footer-glow-two {
+    right: -100px;
+    bottom: -150px;
+
+    background:
+        #7c3aed;
+}
+
+
+/* Footer brand */
+
+.ads-footer-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 26px;
+}
+
+.ads-footer-logo-wrap {
+    position: relative;
+
+    width: 82px;
+    height: 48px;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(96, 165, 250, 0.22);
+
+    border-radius:
+        12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(37, 99, 235, 0.14),
+            rgba(124, 58, 237, 0.10)
+        );
+}
+
+.ads-footer-logo-wrap img {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 120px;
+    max-width: none;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1.30);
+
+    filter:
+        drop-shadow(
+            0 8px 18px rgba(37, 99, 235, 0.22)
+        );
+}
+
+.ads-footer-brand-copy {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.ads-footer-brand-copy strong {
+    color: #ffffff;
+
+    font-size: 20px;
+    font-weight: 800;
+
+    letter-spacing:
+        -0.02em;
+}
+
+.ads-footer-brand-copy span {
+    color: #93a4bf;
+
+    font-size: 13px;
+}
+
+
+/* Product grid */
+
+.ads-footer-products {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.ads-footer-product {
+    position: relative;
+
+    min-height: 82px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        14px 13px;
+
+    color: #dce7f7;
+
+    border:
+        1px solid rgba(89, 119, 168, 0.20);
+
+    border-radius:
+        14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18, 27, 43, 0.92),
+            rgba(10, 16, 27, 0.94)
+        );
+
+    text-decoration: none;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.ads-footer-product:hover {
+    color: #ffffff;
+
+    transform:
+        translateY(-3px);
+
+    text-decoration: none;
+
+    box-shadow:
+        0 18px 34px rgba(0, 0, 0, 0.24);
+}
+
+.ads-footer-product-icon {
+    width: 38px;
+    height: 38px;
+
+    flex:
+        0 0 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius:
+        11px;
+
+    font-size:
+        15px;
+}
+
+.ads-footer-product > span:last-child {
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+
+    line-height:
+        1.35;
+}
+
+
+/* Product colors */
+
+.ads-footer-product.product-blue {
+    border-color:
+        rgba(59, 130, 246, 0.28);
+}
+
+.product-blue .ads-footer-product-icon {
+    color: #93c5fd;
+
+    background:
+        rgba(37, 99, 235, 0.18);
+
+    border:
+        1px solid rgba(59, 130, 246, 0.30);
+}
+
+.ads-footer-product.product-green {
+    border-color:
+        rgba(34, 197, 94, 0.25);
+}
+
+.product-green .ads-footer-product-icon {
+    color: #86efac;
+
+    background:
+        rgba(34, 197, 94, 0.15);
+
+    border:
+        1px solid rgba(34, 197, 94, 0.26);
+}
+
+.ads-footer-product.product-violet {
+    border-color:
+        rgba(139, 92, 246, 0.27);
+}
+
+.product-violet .ads-footer-product-icon {
+    color: #c4b5fd;
+
+    background:
+        rgba(124, 58, 237, 0.16);
+
+    border:
+        1px solid rgba(139, 92, 246, 0.28);
+}
+
+.ads-footer-product.product-orange {
+    border-color:
+        rgba(249, 115, 22, 0.27);
+}
+
+.product-orange .ads-footer-product-icon {
+    color: #fdba74;
+
+    background:
+        rgba(249, 115, 22, 0.15);
+
+    border:
+        1px solid rgba(249, 115, 22, 0.27);
+}
+
+.ads-footer-product.product-cyan {
+    border-color:
+        rgba(6, 182, 212, 0.27);
+}
+
+.product-cyan .ads-footer-product-icon {
+    color: #67e8f9;
+
+    background:
+        rgba(6, 182, 212, 0.14);
+
+    border:
+        1px solid rgba(6, 182, 212, 0.27);
+}
+
+.ads-footer-product.product-emerald {
+    border-color:
+        rgba(16, 185, 129, 0.27);
+}
+
+.product-emerald .ads-footer-product-icon {
+    color: #6ee7b7;
+
+    background:
+        rgba(16, 185, 129, 0.14);
+
+    border:
+        1px solid rgba(16, 185, 129, 0.27);
+}
+
+
+/* Footer bottom */
+
+.ads-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-top: 24px;
+
+    padding-top: 17px;
+
+    color: #7f8da5;
+
+    border-top:
+        1px solid rgba(89, 119, 168, 0.16);
+
+    font-size:
+        12px;
+}
+
+.ads-footer-platform {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #93c5fd;
+}
+
+
+/* =========================================================
+   FOOTER RESPONSIVE
+========================================================= */
+
+@media (max-width: 1199.98px) {
+    .ads-footer-products {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ads-public-navbar-inner {
+        padding:
+            8px 12px;
+    }
+
+    .ads-public-logo-frame {
+        width:
+            78px;
+
+        height:
+            40px;
+    }
+
+    .ads-public-logo-frame img {
+        width:
+            108px !important;
+    }
+
+    .ads-public-login {
+        height:
+            40px;
+
+        min-height:
+            40px;
+    }
+
+    .ads-footer-inner {
+        padding:
+            28px 16px 16px;
+    }
+
+    .ads-footer-products {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .ads-footer-bottom {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+}
+
+@media (max-width: 479.98px) {
+    .ads-footer-products {
+        grid-template-columns:
+            1fr;
+    }
+
+    .ads-footer-brand {
+        align-items:
+            flex-start;
+    }
+}
