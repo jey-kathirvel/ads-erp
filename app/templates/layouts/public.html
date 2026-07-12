@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>ADS ERP</title>
+
+    <link rel="icon"
+          type="image/png"
+          href="/static/uploads/logo/logo.png">
+
+    <link rel="stylesheet"
+          href="/static/adminlte/plugins/fontawesome-free/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="/static/css/ads-public-dashboard.css?v=5c3">
+
+</head>
+
+<body class="ads-public-body">
+
+    <header class="ads-public-navbar">
+
+        <div class="ads-public-navbar-inner">
+
+            <a href="/"
+               class="ads-public-brand"
+               aria-label="ADS ERP Home">
+
+                <span class="ads-public-logo-frame">
+                    <img
+                        src="/static/uploads/logo/logo.png"
+                        alt="ADS ERP">
+                </span>
+
+            </a>
+
+            <a href="/login"
+               class="ads-public-login">
+
+                <i class="fas fa-sign-in-alt"></i>
+
+                <span>Login</span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+    <main class="ads-public-main">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <footer class="ads-public-footer">
+
+        <div class="ads-footer-glow ads-footer-glow-one"></div>
+        <div class="ads-footer-glow ads-footer-glow-two"></div>
+
+        <div class="ads-footer-inner">
+
+            <div class="ads-footer-brand">
+
+                <div class="ads-footer-logo-wrap">
+
+                    <img
+                        src="/static/uploads/logo/logo.png"
+                        alt="ADS ERP">
+
+                </div>
+
+                <div class="ads-footer-brand-copy">
+
+                    <strong>
+                        ADS ERP
+                    </strong>
+
+                    <span>
+                        One connected platform for modern business operations
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="ads-footer-products">
+
+                <a href="/login"
+                   class="ads-footer-product product-blue">
+
+                    <span class="ads-footer-product-icon">
+                        <i class="fas fa-box-open"></i>
+                    </span>
+
+                    <span>
+                        Product & Inventory
+                    </span>
+
+                </a>
+
+                <a href="/login"
+                   class="ads-footer-product product-green">
+
+                    <span class="ads-footer-product-icon">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </span>
+
+                    <span>
+                        GST Billing
+                    </span>
+
+                </a>
+
+                <a href="/login"
+                   class="ads-footer-product product-violet">
+
+                    <span class="ads-footer-product-icon">
+                        <i class="fas fa-barcode"></i>
+                    </span>
+
+                    <span>
+                        Barcode Billing
+                    </span>
+
+                </a>
+
+                <a href="/login"
+                   class="ads-footer-product product-orange">
+
+                    <span class="ads-footer-product-icon">
+                        <i class="fas fa-hotel"></i>
+                    </span>
+
+                    <span>
+                        Hotel Booking
+                    </span>
+
+                </a>
+
+                <a href="/login"
+                   class="ads-footer-product product-cyan">
+
+                    <span class="ads-footer-product-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </span>
+
+                    <span>
+                        Role-Based Access
+                    </span>
+
+                </a>
+
+                <a href="/login"
+                   class="ads-footer-product product-emerald">
+
+                    <span class="ads-footer-product-icon">
+                        <i class="fas fa-database"></i>
+                    </span>
+
+                    <span>
+                        Backup & Recovery
+                    </span>
+
+                </a>
+
+            </div>
+
+            <div class="ads-footer-bottom">
+
+                <span>
+                    © ADS Digital Solutions
+                </span>
+
+                <span class="ads-footer-platform">
+                    <i class="fas fa-layer-group"></i>
+                    Unified ERP Platform
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

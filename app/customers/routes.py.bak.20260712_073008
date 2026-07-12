@@ -6,43 +6,44 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 
 from app.config.database import get_db
 from app.customers.schemas import CustomerCreate
 from app.customers.service import CustomerService
 from app.auth.dependencies import login_required
 
+from fastapi import Depends
+
+from app.auth.dependencies import login_required
+
 router = APIRouter(dependencies=[Depends(login_required)])
 
+
 templates = Jinja2Templates(directory="app/templates")
-
-
-class BulkUpdateRequest(BaseModel):
-    ids: list[int]
-    fields: dict
 
 
 # -------------------------------
 # Customer List
 # -------------------------------
 
+
 @router.get("/customers", response_class=HTMLResponse)
 async def customer_list(
-    request: Request,
-    user=Depends(login_required),
-    db: Session = Depends(get_db),
+    request: Request, user=Depends(login_required), db: Session = Depends(get_db)
 ):
 
+    # --------------------------------
+    # Login Validation
+    # --------------------------------
+
     if isinstance(user, RedirectResponse):
+
         return user
 
     customers = CustomerService.get_all(db)
 
     return templates.TemplateResponse(
-        request=request,
-        name="customers/list.html",
-        context={"customers": customers},
+        request=request, name="customers/list.html", context={"customers": customers}
     )
 
 
@@ -50,18 +51,17 @@ async def customer_list(
 # Create Customer Page
 # -------------------------------
 
+
 @router.get("/customers/create", response_class=HTMLResponse)
 async def customer_create_page(request: Request):
 
-    return templates.TemplateResponse(
-        request=request,
-        name="customers/create.html",
-    )
+    return templates.TemplateResponse(request=request, name="customers/create.html")
 
 
 # -------------------------------
 # Save Customer
 # -------------------------------
+
 
 @router.post("/customers/create")
 async def customer_create(
@@ -104,19 +104,16 @@ async def customer_create(
 # View Customer
 # -------------------------------
 
+
 @router.get("/customers/{customer_id}", response_class=HTMLResponse)
 async def view_customer(
-    customer_id: int,
-    request: Request,
-    db: Session = Depends(get_db),
+    customer_id: int, request: Request, db: Session = Depends(get_db)
 ):
 
     customer = CustomerService.get_by_id(db, customer_id)
 
     return templates.TemplateResponse(
-        request=request,
-        name="customers/view.html",
-        context={"customer": customer},
+        request=request, name="customers/view.html", context={"customer": customer}
     )
 
 
@@ -124,25 +121,23 @@ async def view_customer(
 # Edit Customer Page
 # -------------------------------
 
+
 @router.get("/customers/{customer_id}/edit", response_class=HTMLResponse)
 async def edit_customer_page(
-    customer_id: int,
-    request: Request,
-    db: Session = Depends(get_db),
+    customer_id: int, request: Request, db: Session = Depends(get_db)
 ):
 
     customer = CustomerService.get_by_id(db, customer_id)
 
     return templates.TemplateResponse(
-        request=request,
-        name="customers/edit.html",
-        context={"customer": customer},
+        request=request, name="customers/edit.html", context={"customer": customer}
     )
 
 
 # -------------------------------
 # Update Customer
 # -------------------------------
+
 
 @router.post("/customers/{customer_id}/edit")
 async def update_customer(
@@ -193,11 +188,11 @@ async def delete_customer(
     db: Session = Depends(get_db),
 ):
 
-    result = CustomerService.delete(db, customer_id)
+    try:
 
-    customers = CustomerService.get_all(db)
+        CustomerService.delete(db, customer_id)
 
-    if result == "deleted":
+        customers = CustomerService.get_all(db)
 
         return templates.TemplateResponse(
             request=request,
@@ -208,7 +203,9 @@ async def delete_customer(
             },
         )
 
-    if result == "in_use":
+    except Exception:
+
+        customers = CustomerService.get_all(db)
 
         return templates.TemplateResponse(
             request=request,
@@ -221,55 +218,3 @@ async def delete_customer(
                 ),
             },
         )
-
-    if result == "not_found":
-
-        return templates.TemplateResponse(
-            request=request,
-            name="customers/list.html",
-            context={
-                "customers": customers,
-                "error_message": "Customer not found.",
-            },
-        )
-
-    return templates.TemplateResponse(
-        request=request,
-        name="customers/list.html",
-        context={
-            "customers": customers,
-            "error_message": "Unable to delete customer.",
-        },
-    )
-
-
-# -------------------------------
-# Bulk Update Customers
-# -------------------------------
-
-@router.post("/customers/bulk-update")
-async def bulk_update_customers(
-    payload: BulkUpdateRequest,
-    db: Session = Depends(get_db),
-):
-
-    return CustomerService.bulk_update(
-        db=db,
-        ids=payload.ids,
-        fields=payload.fields,
-    )
-
-class BulkDeleteRequest(BaseModel):
-    ids: list[int]
-
-
-@router.post("/customers/bulk-delete")
-async def bulk_delete_customers(
-    payload: BulkDeleteRequest,
-    db: Session = Depends(get_db),
-):
-
-    return CustomerService.bulk_delete(
-        db=db,
-        ids=payload.ids,
-    )

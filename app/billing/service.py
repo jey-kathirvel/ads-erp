@@ -53,7 +53,9 @@ class BillingService:
 
                 try:
 
-                    current_no = int(inv.invoice_no.replace("INV", ""))
+                    current_no = int(
+                        inv.invoice_no.replace("INV", "")
+                    )
 
                     if current_no > max_no:
 
@@ -66,19 +68,33 @@ class BillingService:
             next_no = max_no + 1
 
         invoice = Invoice(
+
             invoice_no=f"INV{next_no:06}",
+
             customer_id=data.customer_id,
+
             subtotal=data.subtotal,
+
             discount=data.discount,
+
             taxable_amount=data.taxable_amount,
+
             cgst=data.cgst,
+
             sgst=data.sgst,
+
             igst=data.igst,
+
             grand_total=data.grand_total,
+
             payment_mode=data.payment_mode,
+
             payment_status=data.payment_status,
+
             remarks=data.remarks,
+
             status="Completed",
+
         )
 
         db.add(invoice)
@@ -101,92 +117,141 @@ class BillingService:
         total: list[float],
     ):
 
-        invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+        invoice = (
+            db.query(Invoice)
+            .filter(Invoice.id == invoice_id)
+            .first()
+        )
 
         if invoice is None:
 
             return None
 
-        # -----------------------------
-        # Update Invoice Header
-        # -----------------------------
-
         invoice.customer_id = data.customer_id
-
         invoice.subtotal = data.subtotal
-
         invoice.discount = data.discount
-
         invoice.taxable_amount = data.taxable_amount
-
         invoice.cgst = data.cgst
-
         invoice.sgst = data.sgst
-
         invoice.igst = data.igst
-
         invoice.grand_total = data.grand_total
-
         invoice.payment_mode = data.payment_mode
-
         invoice.payment_status = data.payment_status
-
         invoice.remarks = data.remarks
 
         db.commit()
 
-        # -----------------------------
-        # Delete Existing Items
-        # -----------------------------
-
-        db.query(InvoiceItem).filter(InvoiceItem.invoice_id == invoice_id).delete()
+        (
+            db.query(InvoiceItem)
+            .filter(InvoiceItem.invoice_id == invoice_id)
+            .delete()
+        )
 
         db.commit()
 
-        # -----------------------------
-        # Insert Updated Items
-        # -----------------------------
-
         for i in range(len(product_id)):
 
-            item = InvoiceItem(
-                invoice_id=invoice_id,
-                product_id=product_id[i],
-                qty=qty[i],
-                rate=rate[i],
-                gst_percentage=gst[i],
-                total=total[i],
+            db.add(
+                InvoiceItem(
+                    invoice_id=invoice_id,
+                    product_id=product_id[i],
+                    qty=qty[i],
+                    rate=rate[i],
+                    gst_percentage=gst[i],
+                    total=total[i],
+                )
             )
-
-            db.add(item)
 
         db.commit()
 
         db.refresh(invoice)
 
         return invoice
-
+    
     @staticmethod
     def delete(db: Session, invoice_id: int):
 
-        invoice = db.query(Invoice).filter(Invoice.id == invoice_id).first()
+        invoice = (
+            db.query(Invoice)
+            .filter(Invoice.id == invoice_id)
+            .first()
+        )
 
-        if invoice:
+        if not invoice:
 
-            (
-                db.query(InvoiceItem)
-                .filter(InvoiceItem.invoice_id == invoice_id)
-                .delete()
-            )
+            return False
 
-            db.delete(invoice)
+        (
+            db.query(InvoiceItem)
+            .filter(InvoiceItem.invoice_id == invoice_id)
+            .delete(synchronize_session=False)
+        )
 
-            db.commit()
+        db.delete(invoice)
 
-            return True
+        db.commit()
 
-        return False
+        return True
 
+    @staticmethod
+    def bulk_delete(db: Session, ids: list[int]):
+
+        deleted = 0
+        skipped = 0
+        errors = []
+
+        for invoice_id in ids:
+
+            try:
+
+                invoice = (
+                    db.query(Invoice)
+                    .filter(Invoice.id == invoice_id)
+                    .first()
+                )
+
+                if invoice is None:
+
+                    skipped += 1
+
+                    continue
+
+                (
+                    db.query(InvoiceItem)
+                    .filter(
+                        InvoiceItem.invoice_id == invoice_id
+                    )
+                    .delete(synchronize_session=False)
+                )
+
+                db.delete(invoice)
+
+                db.commit()
+
+                deleted += 1
+
+            except Exception as ex:
+
+                db.rollback()
+
+                skipped += 1
+
+                errors.append(str(ex))
+
+        db.expire_all()
+
+        return {
+
+            "success": True,
+
+            "deleted": deleted,
+
+            "skipped": skipped,
+
+            "errors": errors,
+
+        }
+    
     @staticmethod
     def search_invoices(
         db: Session,
@@ -195,18 +260,38 @@ class BillingService:
         payment_status: str = "",
         payment_mode: str = "",
     ):
-        query = db.query(Invoice).options(joinedload(Invoice.customer))
+
+        query = (
+            db.query(Invoice)
+            .options(joinedload(Invoice.customer))
+        )
 
         if from_date:
-            query = query.filter(Invoice.invoice_date >= from_date)
+
+            query = query.filter(
+                Invoice.invoice_date >= from_date
+            )
 
         if to_date:
-            query = query.filter(Invoice.invoice_date <= to_date)
+
+            query = query.filter(
+                Invoice.invoice_date <= to_date
+            )
 
         if payment_status:
-            query = query.filter(Invoice.payment_status == payment_status)
+
+            query = query.filter(
+                Invoice.payment_status == payment_status
+            )
 
         if payment_mode:
-            query = query.filter(Invoice.payment_mode == payment_mode)
 
-        return query.order_by(Invoice.id.desc()).all()
+            query = query.filter(
+                Invoice.payment_mode == payment_mode
+            )
+
+        return (
+            query
+            .order_by(Invoice.id.desc())
+            .all()
+        )

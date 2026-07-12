@@ -1,0 +1,199 @@
+<!-- ==========================================================================
+ ADS ERP
+ Enterprise Bulk Edit Modal
+ File : app/templates/components/bulk_edit_modal.html
+========================================================================== -->
+
+<div
+    class="modal fade"
+    id="bulkEditModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary">
+
+                <h5 class="modal-title">
+
+                    <i class="fas fa-edit mr-2"></i>
+
+                    Bulk Edit
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="close"
+                    onclick="bulkEdit.closeModal()">
+
+                    <span>&times;</span>
+
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form
+                    id="bulkEditForm">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    City
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="city"
+                                    class="form-control">
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    State
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="state"
+                                    class="form-control">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Credit Limit
+
+                                </label>
+
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    name="credit_limit"
+                                    class="form-control">
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Opening Balance
+
+                                </label>
+
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    name="opening_balance"
+                                    class="form-control">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+
+                                <label>
+
+                                    Status
+
+                                </label>
+
+                                <select
+                                    name="is_active"
+                                    class="form-control">
+
+                                    <option value="">
+                                        -- No Change --
+                                    </option>
+
+                                    <option value="true">
+                                        Active
+                                    </option>
+
+                                    <option value="false">
+                                        Inactive
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="bulkEdit.closeModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="bulkEdit.submit('/customers/bulk-update')">
+
+                    <i class="fas fa-save mr-1"></i>
+
+                    Update Selected
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

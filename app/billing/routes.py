@@ -28,13 +28,16 @@ from app.company.service import CompanyService
 from fastapi import Depends
 
 from app.auth.dependencies import login_required
+from pydantic import BaseModel
 
 router = APIRouter(dependencies=[Depends(login_required)])
 
 
 templates = Jinja2Templates(directory="app/templates")
 
-
+class BulkDeleteRequest(BaseModel):
+    ids: list[int]
+    
 # ----------------------------------------------------
 # New Billing Screen
 # ----------------------------------------------------
@@ -378,7 +381,20 @@ async def delete_invoice(invoice_id: int, db: Session = Depends(get_db)):
 
     return RedirectResponse(url="/billing/list", status_code=303)
 
+# ----------------------------------------------------
+# Bulk Delete Invoice
+# ----------------------------------------------------
 
+@router.post("/billing/bulk-delete")
+async def bulk_delete_invoices(
+    payload: BulkDeleteRequest,
+    db: Session = Depends(get_db),
+):
+
+    return BillingService.bulk_delete(
+        db=db,
+        ids=payload.ids,
+    )
 # ----------------------------------------------------
 # Print Invoice
 # ----------------------------------------------------
