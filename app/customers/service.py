@@ -153,31 +153,31 @@ class CustomerService:
 
         return customer
 
-@staticmethod
-def delete(db: Session, customer_id: int):
+    @staticmethod
+    def delete(db: Session, customer_id: int):
 
-    customer = (
-        db.query(Customer)
-        .filter(Customer.id == customer_id)
-        .first()
-    )
+        customer = (
+            db.query(Customer)
+            .filter(Customer.id == customer_id)
+            .first()
+        )
 
-    if not customer:
-        return "not_found"
+        if not customer:
+            return "not_found"
 
-    try:
-
-        db.delete(customer)
-
-        db.commit()
-
-        return "deleted"
-
-    except IntegrityError:
-
-        db.rollback()
-
-        return "in_use"
+        try:
+            db.delete(customer)
+            db.commit()
+            db.expire_all()
+            return "deleted"
+        except IntegrityError as e:
+            db.rollback()
+            print("=" * 80)
+            print("CUSTOMER DELETE INTEGRITY ERROR")
+            print(e)
+            print(getattr(e, "orig", None))
+            print("=" * 80)
+            return "in_use"
 
     @staticmethod
     def search(db: Session, keyword: str):
@@ -193,3 +193,115 @@ def delete(db: Session, customer_id: int):
     def get_count(db: Session):
 
         return db.query(Customer).count()
+
+    @staticmethod
+    def bulk_delete(db: Session, ids: list[int]):
+
+        deleted = 0
+        skipped = 0
+        errors = []
+
+        for customer_id in ids:
+
+            result = CustomerService.delete(db, customer_id)
+
+            if result == "deleted":
+
+                deleted += 1
+
+            else:
+
+                skipped += 1
+
+                customer = CustomerService.get_by_id(db, customer_id)
+
+                if customer:
+
+                    errors.append(customer.customer_name)
+
+        db.expire_all()
+
+        return {
+            "success": True,
+            "deleted": deleted,
+            "skipped": skipped,
+            "errors": errors,
+        }
+
+    @staticmethod
+    def bulk_update(db: Session, ids: list[int], fields: dict):
+
+        updated = 0
+        skipped = 0
+        errors = []
+
+        allowed_fields = {
+            "city",
+            "state",
+            "credit_limit",
+            "opening_balance",
+            "is_active",
+        }
+
+        for customer_id in ids:
+
+            customer = (
+                db.query(Customer)
+                .filter(Customer.id == customer_id)
+                .first()
+            )
+
+            if not customer:
+
+                skipped += 1
+                errors.append(f"Customer ID {customer_id} not found.")
+                continue
+
+            try:
+
+                for key, value in fields.items():
+
+                    if key not in allowed_fields:
+                        continue
+
+                    if value in ("", None):
+                        continue
+
+                    if key == "credit_limit":
+                        value = float(value)
+
+                    elif key == "opening_balance":
+                        value = float(value)
+
+                    elif key == "is_active":
+
+                        if isinstance(value, str):
+
+                            value = value.lower() == "true"
+
+                    setattr(customer, key, value)
+
+                updated += 1
+
+            except Exception as ex:
+
+                skipped += 1
+                errors.append(
+                    f"{customer.customer_name} - {str(ex)}"
+                )
+
+        db.commit()
+
+        db.expire_all()
+
+        return {
+
+            "success": True,
+
+            "updated": updated,
+
+            "skipped": skipped,
+
+            "errors": errors,
+
+        }
