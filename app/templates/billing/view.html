@@ -1,4 +1,7 @@
 {% extends "layouts/base.html" %}
+
+{% block content %}
+
 <style>
     .card-header img {
 
@@ -8,15 +11,84 @@
 
     @media print {
 
+        html,
+        body {
+
+            background: #ffffff !important;
+            color: #000000 !important;
+
+        }
+
+        * {
+
+            color: #000000 !important;
+            text-shadow: none !important;
+
+        }
+
+        .main-sidebar,
+        .main-header,
+        .main-footer,
+        .card-footer,
+        .btn {
+
+            display: none !important;
+
+        }
+
+        .content-wrapper,
+        .content,
+        .card,
+        .card-header,
+        .card-body {
+
+            background: #ffffff !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+            border: none !important;
+
+        }
+
+        table,
+        table th,
+        table td {
+
+            color: #000000 !important;
+            border: 1px solid #000 !important;
+
+        }
+
+        .badge {
+
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #000 !important;
+
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        strong,
+        span,
+        div,
+        p {
+
+            color: #000000 !important;
+
+        }
+
         .card-header {
 
-            padding: 20px;
+            padding: 20px !important;
 
         }
 
     }
 </style>
-{% block content %}
 
 <div class="card card-primary card-outline">
 
@@ -168,16 +240,42 @@
 
                 <br>
 
+                {% if invoice.customer.address1 %}
+                {{ invoice.customer.address1 }}
+                {% endif %}
+
+                {% if invoice.customer.address2 %}
+                , {{ invoice.customer.address2 }}
+                {% endif %}
+
+                {% if invoice.customer.city %}
+                , {{ invoice.customer.city }}
+                {% endif %}
+
+                {% if invoice.customer.state %}
+                , {{ invoice.customer.state }}
+                {% endif %}
+
+                {% if invoice.customer.pincode %}
+                - {{ invoice.customer.pincode }}
+                {% endif %}
+
+                <br>
+
+                <strong>Mobile :</strong>
                 {{ invoice.customer.mobile }}
 
+                {% if invoice.customer.email %}
                 <br>
-
+                <strong>Email :</strong>
                 {{ invoice.customer.email }}
+                {% endif %}
 
+                {% if invoice.customer.gstin %}
                 <br>
-
-                {{ invoice.customer.city }}
-
+                <strong>GSTIN :</strong>
+                {{ invoice.customer.gstin }}
+                {% endif %}
                 {% else %}
 
                 Customer ID :
@@ -198,21 +296,8 @@
 
                 <hr>
 
-                <strong>
-
-                    Mode :
-
-                </strong>
-
-                {{ invoice.payment_mode }}
-
                 <br>
 
-                <strong>
-
-                    Status :
-
-                </strong><br>
 
                 Mode : {{ invoice.payment_mode }}<br>
 
