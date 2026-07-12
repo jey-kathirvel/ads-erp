@@ -1,0 +1,588 @@
+/*
+=====================================================
+ ADS ERP UI V2
+ Application Shell
+=====================================================
+*/
+
+/* ------------------------------
+   GLOBAL
+------------------------------ */
+
+body{
+
+    background:var(--ads-bg)!important;
+    color:var(--ads-text)!important;
+
+}
+
+.wrapper{
+
+    background:var(--ads-bg)!important;
+
+}
+
+.content-wrapper{
+
+    background:var(--ads-bg)!important;
+    color:var(--ads-text)!important;
+
+    min-height:100vh;
+
+}
+
+
+/* ------------------------------
+   NAVBAR
+------------------------------ */
+
+.main-header{
+
+    background:var(--ads-navbar)!important;
+
+    border:none!important;
+
+    border-bottom:1px solid var(--ads-border)!important;
+
+    box-shadow:none!important;
+
+    height:58px;
+
+}
+
+.main-header .navbar-nav .nav-link{
+
+    color:var(--ads-text-soft)!important;
+
+}
+
+.main-header .nav-link:hover{
+
+    color:var(--ads-primary)!important;
+
+}
+
+.main-header .navbar-nav{
+
+    align-items:center;
+
+}
+
+
+/* Toggle */
+
+.theme-toggle{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:10px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:1px solid var(--ads-border);
+
+    background:var(--ads-surface);
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.theme-toggle:hover{
+
+    background:var(--ads-surface-2);
+
+}
+
+
+/* ------------------------------
+   SIDEBAR
+------------------------------ */
+
+
+
+.brand-link img{
+
+    max-height:42px;
+
+}
+
+
+
+/* ------------------------------
+   MOBILE
+------------------------------ */
+
+@media(max-width:991px){
+
+.content-wrapper{
+
+    margin-left:0;
+
+}
+
+
+
+}
+
+/* =====================================================
+   ADS ERP SIDEBAR V2
+===================================================== */
+
+/* Sidebar Width */
+
+.main-sidebar{
+
+    width:255px !important;
+
+    background:var(--ads-sidebar)!important;
+
+    transition:width .3s ease;
+
+}
+
+
+body.sidebar-collapse .main-sidebar{
+
+    width:4.6rem !important;
+
+}
+
+
+body.sidebar-collapse .brand-link{
+
+    justify-content:center;
+
+}
+
+body.sidebar-collapse .ads-brand-text{
+
+    display:none;
+
+}
+
+body.sidebar-collapse .nav-sidebar > .nav-item > .nav-link > p{
+
+    display:none;
+
+}
+
+body.sidebar-collapse .nav-header{
+
+    display:none;
+
+}
+
+body.sidebar-collapse .nav-sidebar .nav-icon{
+
+    margin-right:0!important;
+
+    width:100%;
+
+    text-align:center;
+
+}
+
+/* Logo */
+
+.brand-link{
+
+    background:var(--ads-sidebar)!important;
+
+    border-bottom:1px solid var(--ads-border)!important;
+
+    height:72px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* Navigation */
+
+.nav-sidebar{
+
+    padding:14px 10px;
+
+}
+
+/* Section Header */
+
+.nav-header{
+
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1.8px;
+
+    color:#94a3b8!important;
+
+    margin-top:18px;
+
+    margin-bottom:8px;
+
+    text-transform:uppercase;
+
+}
+
+/* Menu */
+
+.nav-sidebar .nav-item{
+
+    margin-bottom:4px;
+
+}
+
+.nav-sidebar .nav-link{
+
+    height:44px;
+
+    display:flex;
+
+    align-items:center;
+
+    border-radius:10px;
+
+    transition:.25s;
+
+    font-weight:500;
+
+}
+
+/* Icons */
+
+.nav-sidebar .nav-icon{
+
+    width:22px;
+
+    margin-right:10px;
+
+    color:#64748b;
+
+    transition:.25s;
+
+}
+
+/* Hover */
+
+.nav-sidebar .nav-link:hover{
+
+    background:#eef4ff!important;
+
+    color:#0f172a!important;
+
+}
+
+.nav-sidebar .nav-link:hover .nav-icon{
+
+    color:var(--ads-primary)!important;
+
+}
+
+/* Active */
+
+.nav-sidebar .nav-link.active{
+
+    background:#e8f0ff!important;
+
+    color:var(--ads-primary)!important;
+
+    font-weight:600;
+
+}
+
+.nav-sidebar .nav-link.active .nav-icon{
+
+    color:var(--ads-primary)!important;
+
+}
+
+/* NEW Badge */
+
+.nav-sidebar .badge{
+
+    margin-left:auto;
+
+    border-radius:30px;
+
+    font-size:10px;
+
+    padding:3px 8px;
+
+}
+
+@media(max-width:991px){
+
+.main-sidebar{
+
+    margin-left:-255px!important;
+
+}
+
+.sidebar-open .main-sidebar{
+
+    margin-left:0!important;
+
+}
+
+.content-wrapper,
+.main-header,
+.main-footer{
+
+    margin-left:0!important;
+
+}
+
+}
+
+/* =====================================================
+   ADS ERP SIDEBAR V3
+===================================================== */
+
+/* ---------- Brand ---------- */
+
+.ads-brand{
+
+    display:flex;
+    align-items:center;
+
+    gap:14px;
+
+    height:72px;
+
+    padding:12px 18px;
+
+    text-decoration:none!important;
+
+    background:var(--ads-sidebar)!important;
+
+    border-bottom:1px solid var(--ads-border)!important;
+
+}
+
+.ads-brand-logo{
+
+    width:48px;
+
+    height:48px;
+
+    object-fit:contain;
+
+    flex-shrink:0;
+
+}
+
+.ads-brand-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+}
+
+.ads-brand-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--ads-text);
+
+    line-height:1.2;
+
+}
+
+.ads-brand-subtitle{
+
+    font-size:11px;
+
+    color:var(--ads-text-muted);
+
+    letter-spacing:.5px;
+
+}
+
+/* ---------- Sidebar ---------- */
+
+.ads-sidebar{
+
+    padding:14px 12px 24px;
+
+}
+
+.ads-sidebar-nav{
+
+    margin-top:4px;
+
+}
+
+/* ---------- Section ---------- */
+
+.nav-header{
+
+    padding:16px 10px 6px!important;
+
+    margin:0!important;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1.8px;
+
+    text-transform:uppercase;
+
+    color:var(--ads-text-muted)!important;
+
+}
+
+/* ---------- Menu ---------- */
+
+.nav-sidebar .nav-item{
+
+    margin-bottom:4px;
+
+}
+
+.nav-sidebar .nav-link{
+
+    display:flex;
+
+    align-items:center;
+
+    height:44px;
+
+    border-radius:12px;
+
+    padding:0 14px;
+
+    color:var(--ads-text-soft)!important;
+
+    transition:all .25s ease;
+
+}
+
+/* ---------- Icon ---------- */
+
+.nav-sidebar .nav-icon{
+
+    width:24px;
+
+    margin-right:12px!important;
+
+    text-align:center;
+
+    color:var(--ads-text-muted)!important;
+
+}
+
+/* ---------- Hover ---------- */
+
+.nav-sidebar .nav-link:hover{
+
+    background:rgba(37,99,235,.08)!important;
+
+    color:var(--ads-primary)!important;
+
+}
+
+.nav-sidebar .nav-link:hover .nav-icon{
+
+    color:var(--ads-primary)!important;
+
+}
+
+/* ---------- Active ---------- */
+
+.nav-sidebar .nav-link.active{
+
+    background:rgba(37,99,235,.14)!important;
+
+    color:var(--ads-primary)!important;
+
+    font-weight:600;
+
+}
+
+.nav-sidebar .nav-link.active .nav-icon{
+
+    color:var(--ads-primary)!important;
+
+}
+
+/* ---------- NEW Badge ---------- */
+
+.nav-sidebar .badge{
+
+    margin-left:auto;
+
+    border-radius:20px;
+
+    font-size:10px;
+
+    padding:3px 8px;
+
+}
+
+/* =====================================================
+   ADMINLTE LAYOUT
+===================================================== */
+
+
+
+.layout-fixed .main-sidebar{
+
+    left:0;
+
+}
+
+@media(min-width:992px){
+
+.layout-fixed .content-wrapper,
+
+.layout-fixed .main-header,
+
+.layout-fixed .main-footer{
+
+    margin-left:255px;
+
+}
+
+body.sidebar-collapse .content-wrapper,
+
+body.sidebar-collapse .main-header,
+
+body.sidebar-collapse .main-footer{
+
+    margin-left:4.6rem;
+
+}
+
+}
+
+@media(max-width:991px){
+
+.layout-fixed .content-wrapper,
+
+.layout-fixed .main-header,
+
+.layout-fixed .main-footer{
+
+    margin-left:0;
+
+}
+
+}
