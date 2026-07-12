@@ -1,0 +1,141 @@
+/* ============================================= */
+/* ADS ERP - DARK THEME                          */
+/* ============================================= */
+
+:root{
+
+    --ads-bg:#1b1f27;
+    --ads-surface:#242a34;
+    --ads-sidebar:#1d232d;
+    --ads-navbar:#242a34;
+
+    --ads-text:#f5f7fa;
+    --ads-text-muted:#bfc7d5;
+
+    --ads-primary:#2563eb;
+    --ads-success:#16a34a;
+    --ads-warning:#f59e0b;
+    --ads-danger:#dc2626;
+
+    --ads-border:#384252;
+
+}
+
+/* Body */
+
+body[data-theme="dark"]{
+
+    background:var(--ads-bg);
+    color:var(--ads-text);
+
+}
+
+/* Navbar */
+
+body[data-theme="dark"] .main-header{
+
+    background:var(--ads-navbar);
+
+    border-bottom:1px solid var(--ads-border);
+
+}
+
+/* Sidebar */
+
+body[data-theme="dark"] .main-sidebar{
+
+    background:var(--ads-sidebar);
+
+}
+
+/* Brand */
+
+body[data-theme="dark"] .brand-link{
+
+    background:var(--ads-sidebar);
+
+}
+
+/* Content */
+
+body[data-theme="dark"] .content-wrapper{
+
+    background:var(--ads-bg);
+
+}
+
+/* Cards */
+
+body[data-theme="dark"] .card{
+
+    background:var(--ads-surface);
+
+    color:var(--ads-text);
+
+    border:1px solid var(--ads-border);
+
+}
+
+/* Tables */
+
+body[data-theme="dark"] table{
+
+    color:var(--ads-text);
+
+}
+
+body[data-theme="dark"] .table th{
+
+    border-color:var(--ads-border);
+
+}
+
+body[data-theme="dark"] .table td{
+
+    border-color:var(--ads-border);
+
+}
+
+/* Forms */
+
+body[data-theme="dark"] .form-control{
+
+    background:#2c3440;
+
+    color:#ffffff;
+
+    border:1px solid var(--ads-border);
+
+}
+
+body[data-theme="dark"] .form-control:focus{
+
+    border-color:var(--ads-primary);
+
+    box-shadow:none;
+
+}
+
+/* Footer */
+
+body[data-theme="dark"] .main-footer{
+
+    background:var(--ads-navbar);
+
+    border-top:1px solid var(--ads-border);
+
+}
+
+/* Links */
+
+body[data-theme="dark"] a{
+
+    color:#8cbcff;
+
+}
+
+body[data-theme="dark"] a:hover{
+
+    color:#b7d4ff;
+
+}

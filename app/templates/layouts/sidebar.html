@@ -22,34 +22,38 @@
 {% set can_roles = _is_admin or ("roles" in _allowed) %}
 
 
-<aside class="main-sidebar elevation-2">
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-    <a href="/dashboard" class="brand-link text-center">
+    <a href="/dashboard" class="brand-link ads-brand">
 
-        <img src="/static/uploads/logo/logo.png" alt="ADS ERP" style="
-            max-height:70px;
-            max-width:210px;
-            width:auto;
-            display:block;
-            margin:auto;
-            padding:5px;
-        ">
+        <img src="/static/uploads/logo/logo.png" class="ads-brand-logo" alt="ADS ERP">
+
+        <div class="ads-brand-text">
+
+            <div class="ads-brand-title">
+
+                ADS ERP
+
+            </div>
+
+            <div class="ads-brand-subtitle">
+
+                AI Powered Business Suite
+
+            </div>
+
+        </div>
 
     </a>
 
-    <div style="
-    border-top:5px solid #dcdfe3;
-    margin-bottom:10px;
-"></div>
-
-    <div class="sidebar" style="padding-top:15px;">
+    <div class="sidebar">
 
         <nav class="mt-2">
 
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 {% if can_dashboard %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/dashboard" class="nav-link">
 
@@ -60,17 +64,17 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
                 {% if can_customers or can_suppliers or can_products or can_categories %}
-<li class="nav-header">
+                <li class="nav-header">
 
                     MASTERS
 
                 </li>
 
                 {% if can_customers %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/customers" class="nav-link">
 
@@ -81,10 +85,10 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
                 {% if can_suppliers %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/suppliers" class="nav-link">
 
@@ -95,10 +99,10 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
                 {% if can_suppliers %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/suppliers/outstanding" class="nav-link">
 
@@ -109,10 +113,10 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
                 {% if can_products %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/products" class="nav-link">
 
@@ -123,10 +127,10 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
                 {% if can_categories %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/categories" class="nav-link">
 
@@ -137,11 +141,11 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
-                
-{% if can_billing %}
-<li class="nav-header">
+
+                {% if can_billing %}
+                <li class="nav-header">
 
                     SALES
 
@@ -179,37 +183,30 @@
 
                 </li>
 
-                
 
-{% endif %}
-{% if can_booking %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_booking %}
+                <li class="nav-header">
 
                     BOOKING
 
                 </li>
 
                 <li class="nav-item has-treeview
-                    {% if request.url.path == "/booking"
-                          or request.url.path == "/booking/new"
-                          or request.url.path.startswith("/booking/")
-                    %}menu-open{% endif %}">
+{% if request.url.path == "/booking" or request.url.path=="/booking/new" or request.url.path.startswith("/booking/")
+                    %} menu-open {% endif %} ">
 
-                    <a
-                        href="#"
-                        class="nav-link
-                            {% if request.url.path == "/booking"
-                                  or request.url.path == "/booking/new"
-                                  or request.url.path.startswith("/booking/")
-                            %}active{% endif %}"
-                    >
+                    <a href=" #" class="nav-link
+                            {% if request.url.path == "/booking" or request.url.path=="/booking/new" or
+                    request.url.path.startswith("/booking/") %}active{% endif %}">
 
-                        <i class="nav-icon fas fa-hotel"></i>
+                    <i class="nav-icon fas fa-hotel"></i>
 
-                        <p>
-                            Booking
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
+                    <p>
+                        Booking
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
 
                     </a>
 
@@ -217,17 +214,10 @@
 
                         <li class="nav-item">
 
-                            <a
-                                href="/booking"
-                                class="nav-link
-                                    {% if request.url.path == "/booking"
-                                          or (
-                                              request.url.path.startswith("/booking/")
-                                              and request.url.path != "/booking/new"
-                                              and not request.url.path.endswith("/new")
-                                          )
-                                    %}active{% endif %}"
-                            >
+                            <a href="/booking" class="nav-link
+                                    {% if request.url.path == "/booking" or ( request.url.path.startswith("/booking/")
+                                and request.url.path !="/booking/new" and not request.url.path.endswith("/new") )
+                                %}active{% endif %}">
 
                                 <i class="far fa-circle nav-icon"></i>
 
@@ -239,12 +229,8 @@
 
                         <li class="nav-item">
 
-                            <a
-                                href="/booking/new"
-                                class="nav-link
-                                    {% if request.url.path == "/booking/new"
-                                    %}active{% endif %}"
-                            >
+                            <a href="/booking/new" class="nav-link
+                                    {% if request.url.path == "/booking/new" %}active{% endif %}">
 
                                 <i class="fas fa-plus-circle nav-icon"></i>
 
@@ -253,29 +239,29 @@
                             </a>
 
                         </li>
-						
-						
-                <li class="nav-item">
 
-                    <a href="/reports/booking" class="nav-link">
 
-                        <i class="nav-icon fas fa-calendar-check"></i>
+                        <li class="nav-item">
 
-                        <p>Booking Report</p>
+                            <a href="/reports/booking" class="nav-link">
 
-                    </a>
+                                <i class="nav-icon fas fa-calendar-check"></i>
 
-                </li>
+                                <p>Booking Report</p>
+
+                            </a>
+
+                        </li>
 
                     </ul>
 
                 </li>
 
-                
 
-{% endif %}
-{% if can_inventory %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_inventory %}
+                <li class="nav-header">
 
                     INVENTORY
 
@@ -329,11 +315,11 @@
 
                 </li>
 
-                
 
-{% endif %}
-{% if can_purchase %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_purchase %}
+                <li class="nav-header">
 
                     PURCHASE
 
@@ -375,11 +361,11 @@
 
                 </li>
 
-                
 
-{% endif %}
-{% if can_reports %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_reports %}
+                <li class="nav-header">
 
                     REPORTS
 
@@ -422,11 +408,11 @@
                 </li>
 
 
-                
 
-{% endif %}
-{% if can_accounts %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_accounts %}
+                <li class="nav-header">
 
                     ACCOUNTS
 
@@ -444,11 +430,11 @@
 
                 </li>
 
-                
 
-{% endif %}
-{% if can_company %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_company %}
+                <li class="nav-header">
 
                     SETTINGS
 
@@ -466,18 +452,18 @@
 
                 </li>
 
-                
 
-{% endif %}
-{% if can_users or can_roles %}
-<li class="nav-header">
+
+                {% endif %}
+                {% if can_users or can_roles %}
+                <li class="nav-header">
 
                     ADMINISTRATION
 
                 </li>
 
                 {% if can_users %}
-<li class="nav-item">
+                <li class="nav-item">
 
                     <a href="/users" class="nav-link">
 
@@ -488,9 +474,9 @@
                     </a>
 
                 </li>
-{% endif %}
+                {% endif %}
 
- <!--               {% if can_roles %}
+                <!--               {% if can_roles %}
 <li class="nav-item">
 
                     <a href="/roles" class="nav-link">
@@ -529,11 +515,11 @@
 
                 {% endif %}
 
-                
-{% endif %}
 
-{% endif %}
-<li class="nav-header">
+                {% endif %}
+
+                {% endif %}
+                <li class="nav-header">
 
                     USER
 
