@@ -122,6 +122,42 @@ Edit Customer
 
         <label>
 
+            Address Line 1
+
+        </label>
+
+        <input
+            class="form-control"
+            name="address1"
+            value="{{ customer.address1 or '' }}"
+            placeholder="Door No, Street">
+
+    </div>
+
+    <div class="col-md-6">
+
+        <label>
+
+            Address Line 2
+
+        </label>
+
+        <input
+            class="form-control"
+            name="address2"
+            value="{{ customer.address2 or '' }}"
+            placeholder="Area, Landmark">
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <label>
+
             State
 
         </label>
