@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand">
 
     <!-- Left Menu -->
 
@@ -18,8 +18,10 @@
 
     <!-- Right Menu -->
 
-    <ul class="navbar-nav ml-auto">
-	
+    <ul class="navbar-nav ml-auto align-items-center">
+
+        <!-- ADS ERP -->
+
         <li class="nav-item">
 
             <span class="nav-link text-primary font-weight-bold d-none d-md-block">
@@ -31,10 +33,25 @@
             </span>
 
         </li>
-	
+
+        <!-- Theme Toggle -->
+
+        <li class="nav-item">
+
+            <button id="themeToggle" class="theme-toggle" type="button" class="btn btn-sm btn-outline-secondary mr-3"
+                title="Switch Theme">
+
+                <i class="fas fa-sun"></i>
+
+            </button>
+
+        </li>
+
+        <!-- User -->
+
         <li class="nav-item dropdown">
 
-            <a class="nav-link" data-toggle="dropdown" href="#">
+            <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#">
 
                 <i class="fas fa-user-circle"></i>
 
@@ -44,7 +61,7 @@
 
                 </strong>
 
-                <span class="badge badge-success ml-1">
+                <span class="badge badge-primary ml-2">
 
                     {{ request.session.get("role_code","ADMIN") }}
 
@@ -57,15 +74,23 @@
                 <span class="dropdown-item dropdown-header">
 
                     {% set dropdown_user = request.session.get("user", {}) %}
+
                     <strong>
+
                         {{ dropdown_user.get("name", request.session.get("name", "User")) }}
+
                     </strong>
+
                     <br>
+
                     <small>
+
                         {{ dropdown_user.get("email", "") }}
+
                     </small>
 
                 </span>
+
                 <div class="dropdown-divider"></div>
 
                 <a href="/profile" class="dropdown-item">

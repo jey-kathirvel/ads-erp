@@ -1,0 +1,60 @@
+/*
+=====================================================
+ ADS ERP UI V2
+ Theme Engine
+=====================================================
+*/
+
+:root{
+
+    --ads-bg:#0b0d11;
+    --ads-surface:#151922;
+    --ads-surface-2:#1d2430;
+
+    --ads-navbar:#10151d;
+    --ads-sidebar:#11161e;
+
+    --ads-card:#161d28;
+
+    --ads-border:#2b3443;
+
+    --ads-text:#f8fafc;
+    --ads-text-soft:#cbd5e1;
+    --ads-text-muted:#94a3b8;
+
+    --ads-primary:#2563eb;
+    --ads-primary-hover:#1d4ed8;
+
+    --ads-success:#16a34a;
+    --ads-warning:#f59e0b;
+    --ads-danger:#ef4444;
+
+    --ads-radius:14px;
+
+}
+
+body[data-theme="light"]{
+
+    --ads-bg:#f5f7fb;
+    --ads-surface:#ffffff;
+    --ads-surface-2:#f8fafc;
+
+    --ads-navbar:#ffffff;
+    --ads-sidebar:#ffffff;
+
+    --ads-card:#ffffff;
+
+    --ads-border:#dbe4ef;
+
+    --ads-text:#17212f;
+    --ads-text-soft:#334155;
+    --ads-text-muted:#64748b;
+
+    --ads-primary:#2563eb;
+    --ads-primary-hover:#1d4ed8;
+
+    --ads-success:#16a34a;
+    --ads-warning:#d97706;
+    --ads-danger:#dc2626;
+
+}
