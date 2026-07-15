@@ -1,0 +1,120 @@
+/* Elite Light booking report — loaded after the report's legacy inline theme. */
+
+html body.ads-elite-light:has(#bookingReportTable),
+html body.ads-elite-light:has(#bookingReportTable) .wrapper,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper {
+    color: #172033 !important;
+    background:
+        radial-gradient(circle at 88% 2%, rgba(79, 70, 229, .07), transparent 26rem),
+        #f4f7fb !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h1,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h2,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h3,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-title {
+    color: #172033 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h1 .fas,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-title .fas {
+    color: #4f46e5 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .text-muted {
+    color: #66758b !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card {
+    color: #172033 !important;
+    background: #ffffff !important;
+    border: 1px solid #dfe6ef !important;
+    box-shadow: 0 10px 30px rgba(30, 41, 59, .08) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-header {
+    color: #172033 !important;
+    background: linear-gradient(180deg, #ffffff, #fafbfe) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-body,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper label {
+    color: #344258 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .form-control,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper input,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper select {
+    color: #172033 !important;
+    background: #ffffff !important;
+    border: 1px solid #cfd8e5 !important;
+    color-scheme: light !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .form-control:focus {
+    border-color: #7169e8 !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, .12) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi {
+    color: #172033 !important;
+    background: #ffffff !important;
+    border: 1px solid var(--booking-kpi-border, #dfe6ef) !important;
+    box-shadow: 0 10px 28px rgba(30, 41, 59, .08) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi::before {
+    height: 4px !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi .inner h3 {
+    color: var(--booking-kpi-accent, #4f46e5) !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi .inner p {
+    color: #526178 !important;
+    font-weight: 700 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi .icon {
+    color: var(--booking-kpi-accent, #4f46e5) !important;
+    background: color-mix(in srgb, var(--booking-kpi-accent, #4f46e5) 10%, white) !important;
+    border-color: color-mix(in srgb, var(--booking-kpi-accent, #4f46e5) 22%, white) !important;
+    opacity: .9;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable {
+    color: #344258 !important;
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable thead th {
+    color: #46556d !important;
+    background: #f4f6fa !important;
+    border-color: #dfe6ef !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable tbody td {
+    color: #29364a !important;
+    background: #ffffff !important;
+    border-color: #e7ecf3 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable tbody tr:hover td {
+    background: #f4f3ff !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .btn-secondary {
+    color: #344258 !important;
+    background: #eef2f7 !important;
+    border-color: #d5dde8 !important;
+}
+
+@media (max-width: 767.98px) {
+    html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .container-fluid {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}

@@ -191,3 +191,54 @@ body.ads-elite-light {
 @media (prefers-reduced-motion: reduce) {
     .ads-elite-light *, .ads-elite-light *::before, .ads-elite-light *::after { transition: none !important; }
 }
+
+/* High-specificity compatibility layer for the legacy V2 shell. */
+html body.ads-elite-light .main-header,
+html body.ads-elite-light nav.main-header,
+html body.ads-elite-light .navbar.main-header {
+    background: rgba(255, 255, 255, .96) !important;
+    border-bottom: 1px solid #dde4ee !important;
+    box-shadow: 0 5px 22px rgba(30, 41, 59, .07) !important;
+}
+
+html body.ads-elite-light .main-header .nav-link,
+html body.ads-elite-light .main-header .text-primary {
+    color: #334155 !important;
+}
+
+html body.ads-elite-light .main-header .nav-link:hover {
+    color: #4338ca !important;
+    background: #f0efff !important;
+}
+
+html body.ads-elite-light .main-header [data-widget="pushmenu"] {
+    color: #4f46e5 !important;
+    background: #f0efff !important;
+    border-color: #d7d3ff !important;
+}
+
+html body.ads-elite-light .main-sidebar .nav-sidebar .nav-link,
+html body.ads-elite-light .main-sidebar .nav-sidebar .nav-link p {
+    color: #344258 !important;
+}
+
+html body.ads-elite-light .main-sidebar .nav-sidebar .nav-icon {
+    color: #697991 !important;
+}
+
+html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item > .nav-link.active,
+html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #5b52e8, #4338ca) !important;
+}
+
+html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item > .nav-link.active p,
+html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item > .nav-link.active .nav-icon,
+html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link p,
+html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item.menu-open > .nav-link .nav-icon {
+    color: #ffffff !important;
+}
+
+html body.ads-elite-light .nav-header { color: #67758a !important; }
+html body.ads-elite-light .text-muted { color: #66758b !important; }
+html body.ads-elite-light label { color: #344258 !important; }
