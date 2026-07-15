@@ -28,6 +28,7 @@ MODULES = [
     "booking",
     "crm",
     "hrm",
+    "custom_gst",
     "accounts",
     "company",
     "users",

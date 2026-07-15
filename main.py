@@ -10,6 +10,7 @@ from app.routes.router import api_router
 from app.access_control.middleware import UserUrlAccessMiddleware
 from app.config.database import engine
 from app.hrm.models import Attendance, Employee, LeaveRequest
+from app.custom_gst.models import CustomGSTInvoice
 
 app = FastAPI(title="ADS ERP", version="0.5.1")
 
@@ -61,11 +62,16 @@ app.include_router(api_router)
 
 
 @app.on_event("startup")
-def ensure_hrm_tables():
-    """Create HRM tables on existing deployments without touching ERP data."""
+def ensure_feature_tables():
+    """Create feature-module tables on existing deployments without touching ERP data."""
     Employee.metadata.create_all(
         bind=engine,
         tables=[Employee.__table__, Attendance.__table__, LeaveRequest.__table__],
+        checkfirst=True,
+    )
+    CustomGSTInvoice.metadata.create_all(
+        bind=engine,
+        tables=[CustomGSTInvoice.__table__],
         checkfirst=True,
     )
 

@@ -22,6 +22,7 @@
 {% set can_roles = _is_admin or ("roles" in _allowed) %}
 {% set can_hrm = _is_admin or ("hrm" in _allowed) %}
 {% set can_crm = _is_admin or ("crm" in _allowed) %}
+{% set can_custom_gst = _is_admin or ("custom_gst" in _allowed) %}
 
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -262,11 +263,11 @@
 
 
                 {% endif %}
-                {% if can_crm or can_hrm %}
+                {% if can_crm or can_hrm or can_custom_gst %}
                 <li class="nav-header">TOOLS</li>
 
-                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') %}menu-open{% endif %}">
-                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') %}active{% endif %}">
+                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') %}menu-open{% endif %}">
+                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') %}active{% endif %}">
                         <i class="nav-icon fas fa-toolbox"></i>
                         <p>Tools <i class="right fas fa-angle-left"></i></p>
                     </a>
@@ -278,6 +279,21 @@
                                 <i class="fas fa-handshake nav-icon"></i>
                                 <p>CRM <i class="fas fa-external-link-alt right"></i></p>
                             </a>
+                        </li>
+                        {% endif %}
+
+                        {% if can_custom_gst %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/custom-gst') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/custom-gst') %}active{% endif %}">
+                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                                <p>Custom GST Bill <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/custom-gst" class="nav-link {% if request.url.path == '/custom-gst' %}active{% endif %}"><i class="fas fa-chart-line nav-icon"></i><p>Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/custom-gst/new" class="nav-link {% if request.url.path == '/custom-gst/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>New Invoice</p></a></li>
+                                <li class="nav-item"><a href="/custom-gst/invoices" class="nav-link {% if request.url.path.startswith('/custom-gst/invoices') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Invoice List</p></a></li>
+                                <li class="nav-item"><a href="/custom-gst/reports" class="nav-link {% if request.url.path.startswith('/custom-gst/reports') %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Reports</p></a></li>
+                            </ul>
                         </li>
                         {% endif %}
 
