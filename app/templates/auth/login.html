@@ -1,596 +1,101 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
-    <title>ADS ERP Login</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <style>
-
-        body{
-
-            margin:0;
-
-            height:100vh;
-
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            background:linear-gradient(135deg,#0f172a,#2563eb);
-
-            font-family:Arial,Helvetica,sans-serif;
-
-        }
-
-        .login-card{
-
-            width:420px;
-
-            background:white;
-
-            border-radius:20px;
-
-            padding:40px;
-
-            box-shadow:0 20px 60px rgba(0,0,0,.25);
-
-        }
-
-        .logo{
-
-            width:80px;
-
-            height:80px;
-
-            border-radius:50%;
-
-            background:#2563eb;
-
-            color:white;
-
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            margin:auto;
-
-            font-size:35px;
-
-        }
-
-        .title{
-
-            text-align:center;
-
-            margin-top:20px;
-
-            font-size:30px;
-
-            font-weight:bold;
-
-        }
-
-        .subtitle{
-
-            text-align:center;
-
-            color:gray;
-
-            margin-bottom:30px;
-
-        }
-
-        .form-control{
-
-            height:50px;
-
-        }
-
-        .btn-login{
-
-            height:50px;
-
-            font-size:18px;
-
-        }
-
-    </style>
-
-
-<style id="adsLoginExactPremium68c4r2">
-/* =========================================================
-   STEP 68C4R2 - EXACT LOGIN DOM PREMIUM EXPERIENCE
-   Presentation only. Authentication logic untouched.
-   Exact DOM:
-   body > .login-card
-        > .logo
-        > .title
-        > .subtitle
-        > form
-   ========================================================= */
-
-html,
-body {
-    min-height: 100% !important;
-}
-
-body {
-    margin: 0 !important;
-    min-height: 100vh !important;
-    padding: 28px 18px !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    background:
-        radial-gradient(
-            circle at 82% 16%,
-            rgba(255, 79, 0, 0.22) 0%,
-            rgba(255, 79, 0, 0.07) 20%,
-            transparent 43%
-        ),
-        radial-gradient(
-            circle at 14% 84%,
-            rgba(255, 106, 26, 0.08) 0%,
-            transparent 34%
-        ),
-        linear-gradient(
-            135deg,
-            #050505 0%,
-            #09090a 48%,
-            #111113 100%
-        ) !important;
-
-    color: #f7f7f8 !important;
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif !important;
-}
-
-body > .login-card {
-    width: min(430px, 100%) !important;
-    padding: 42px 40px 34px !important;
-
-    color: #f7f7f8 !important;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(29, 29, 31, 0.985),
-            rgba(14, 14, 15, 0.995)
-        ) !important;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.11) !important;
-
-    border-radius: 24px !important;
-
-    box-shadow:
-        0 30px 90px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(255, 79, 0, 0.04),
-        0 18px 48px rgba(255, 79, 0, 0.055)
-        !important;
-}
-
-body > .login-card > .logo {
-    width: 78px !important;
-    height: 78px !important;
-    margin: 0 auto !important;
-
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    color: #ffffff !important;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff4f00 0%,
-            #ff7a24 100%
-        ) !important;
-
-    border:
-        1px solid
-        rgba(255, 153, 92, 0.55) !important;
-
-    border-radius: 22px !important;
-
-    font-size: 32px !important;
-
-    box-shadow:
-        0 16px 34px rgba(255, 79, 0, 0.30),
-        inset 0 1px 0 rgba(255, 255, 255, 0.20)
-        !important;
-}
-
-body > .login-card > .title {
-    margin-top: 22px !important;
-
-    color: #ffffff !important;
-
-    text-align: center !important;
-    font-size: 32px !important;
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-    letter-spacing: -0.7px !important;
-}
-
-body > .login-card > .subtitle {
-    margin-top: 8px !important;
-    margin-bottom: 30px !important;
-
-    color: #9da0aa !important;
-
-    text-align: center !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-}
-
-body > .login-card form label {
-    margin-bottom: 7px !important;
-
-    color: #e9e9ec !important;
-
-    font-size: 13px !important;
-    font-weight: 800 !important;
-}
-
-body > .login-card .form-control {
-    height: 50px !important;
-
-    color: #ffffff !important;
-    caret-color: #ff6a1a !important;
-
-    background: #101011 !important;
-
-    border:
-        1px solid
-        #35353a !important;
-
-    border-radius: 12px !important;
-
-    box-shadow: none !important;
-
-    transition:
-        border-color 160ms ease,
-        box-shadow 160ms ease,
-        background 160ms ease !important;
-}
-
-body > .login-card .form-control::placeholder {
-    color: #6f7179 !important;
-}
-
-body > .login-card .form-control:focus {
-    color: #ffffff !important;
-
-    background: #121213 !important;
-
-    border-color: #ff5a12 !important;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(255, 90, 18, 0.16)
-        !important;
-}
-
-body > .login-card .input-group > .form-control {
-    border-radius:
-        12px 0 0 12px !important;
-}
-
-body > .login-card
-.input-group
-.btn-outline-secondary {
-    min-width: 52px !important;
-
-    color: #ff6a1a !important;
-
-    background: #151516 !important;
-
-    border-color: #35353a !important;
-
-    border-radius:
-        0 12px 12px 0 !important;
-}
-
-body > .login-card
-.input-group
-.btn-outline-secondary:hover,
-body > .login-card
-.input-group
-.btn-outline-secondary:focus {
-    color: #ffffff !important;
-
-    background: #ff5a12 !important;
-
-    border-color: #ff5a12 !important;
-
-    box-shadow: none !important;
-}
-
-body > .login-card .form-check-input {
-    border-color: #4a4a50 !important;
-    background-color: #101011 !important;
-}
-
-body > .login-card .form-check-input:checked {
-    background-color: #ff5a12 !important;
-    border-color: #ff5a12 !important;
-}
-
-body > .login-card .form-check-label {
-    color: #c8c9ce !important;
-    font-weight: 600 !important;
-}
-
-body > .login-card .btn-login,
-body > .login-card button[type="submit"] {
-    height: 50px !important;
-
-    color: #ffffff !important;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ff4f00 0%,
-            #ff6a1a 100%
-        ) !important;
-
-    border:
-        1px solid
-        #ff6a1a !important;
-
-    border-radius: 12px !important;
-
-    font-size: 16px !important;
-    font-weight: 900 !important;
-
-    box-shadow:
-        0 14px 30px
-        rgba(255, 79, 0, 0.26)
-        !important;
-
-    transition:
-        transform 160ms ease,
-        filter 160ms ease,
-        box-shadow 160ms ease !important;
-}
-
-body > .login-card .btn-login:hover,
-body > .login-card button[type="submit"]:hover {
-    transform: translateY(-1px) !important;
-    filter: brightness(1.08) !important;
-
-    box-shadow:
-        0 18px 38px
-        rgba(255, 79, 0, 0.36)
-        !important;
-}
-
-body > .login-card hr {
-    border-color:
-        rgba(255, 255, 255, 0.10) !important;
-
-    opacity: 1 !important;
-}
-
-body > .login-card .text-muted {
-    color: #8f929b !important;
-}
-
-body > .login-card .alert {
-    border-radius: 12px !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-}
-
-@media (max-width: 576px) {
-    body {
-        padding:
-            20px 14px !important;
-    }
-
-    body > .login-card {
-        padding:
-            32px 22px 28px !important;
-
-        border-radius:
-            20px !important;
-    }
-
-    body > .login-card > .logo {
-        width: 68px !important;
-        height: 68px !important;
-        font-size: 28px !important;
-        border-radius: 19px !important;
-    }
-
-    body > .login-card > .title {
-        font-size: 28px !important;
-    }
-}
-</style>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#4f46e5">
+    <title>Sign in · ADS ERP</title>
+    <link rel="icon" type="image/png" href="/static/uploads/logo/logo.png">
+    <link rel="stylesheet" href="/static/adminlte/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/ads-login.css?v=1">
 </head>
-
 <body>
+    <main class="login-shell">
+        <section class="login-showcase" aria-label="ADS ERP overview">
+            <div class="showcase-orb orb-one"></div>
+            <div class="showcase-orb orb-two"></div>
 
-<div class="login-card">
+            <div class="showcase-content">
+                <a class="login-brand" href="/" aria-label="ADS ERP home">
+                    <span class="brand-mark"><i class="fas fa-layer-group"></i></span>
+                    <span><strong>ADS ERP</strong><small>AI Powered Business Suite</small></span>
+                </a>
 
-    <div class="logo">
+                <div class="showcase-copy">
+                    <span class="eyebrow"><i class="fas fa-magic"></i> Unified business operations</span>
+                    <h1>Run your business<br><span>with clarity.</span></h1>
+                    <p>One secure workspace for sales, inventory, purchasing, hospitality, accounts and people operations.</p>
 
-        <i class="fa fa-building"></i>
+                    <div class="feature-grid">
+                        <div class="feature"><i class="fas fa-chart-line"></i><span><strong>Live insights</strong><small>Decisions backed by current data</small></span></div>
+                        <div class="feature"><i class="fas fa-shield-alt"></i><span><strong>Role based</strong><small>Access tailored to every team</small></span></div>
+                        <div class="feature"><i class="fas fa-bolt"></i><span><strong>Connected</strong><small>Every workflow in one place</small></span></div>
+                    </div>
+                </div>
 
-    </div>
-
-    <div class="title">
-
-        ADS ERP
-
-    </div>
-
-    <div class="subtitle">
-
-        Enterprise Resource Planning
-
-    </div>
-
-    {% if request.query_params.get("logout") %}
-
-    <div class="alert alert-success">
-
-        <i class="fa fa-check-circle"></i>
-
-        Logged out successfully.
-
-    </div>
-
-    {% endif %}
-
-    {% if message %}
-
-    <div class="alert alert-danger">
-
-        {{ message }}
-
-    </div>
-
-    {% endif %}
-
-    <form method="post" action="/login">
-
-        <div class="mb-3">
-
-            <label>Email</label>
-
-            <input
-
-                class="form-control"
-
-                type="email"
-
-                name="email"
-
-                required>
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>Password</label>
-
-            <div class="input-group">
-
-                <input
-
-                    id="password"
-
-                    class="form-control"
-
-                    type="password"
-
-                    name="password"
-
-                    required>
-
-                <button
-
-                    type="button"
-
-                    class="btn btn-outline-secondary"
-
-                    onclick="togglePassword()">
-
-                    <i class="fa fa-eye"></i>
-
-                </button>
-
+                <p class="showcase-footer"><i class="fas fa-lock"></i> Protected by secure session authentication</p>
             </div>
+        </section>
 
-        </div>
+        <section class="login-panel">
+            <div class="login-card">
+                <div class="mobile-brand"><span class="brand-mark"><i class="fas fa-layer-group"></i></span><strong>ADS ERP</strong></div>
+                <div class="login-heading">
+                    <span class="welcome-icon"><i class="fas fa-user-shield"></i></span>
+                    <h2>Welcome back</h2>
+                    <p>Sign in to continue to your ERP workspace.</p>
+                </div>
 
-        <div class="form-check mb-3">
+                {% if request.query_params.get("logout") %}
+                <div class="form-alert success" role="status"><i class="fas fa-check-circle"></i><span>You've been signed out successfully.</span></div>
+                {% endif %}
 
-            <input
+                {% if message %}
+                <div class="form-alert danger" role="alert"><i class="fas fa-exclamation-circle"></i><span>{{ message }}</span></div>
+                {% endif %}
 
-                class="form-check-input"
+                <form method="post" action="/login" id="loginForm">
+                    <div class="field-group">
+                        <label for="email">Email address</label>
+                        <div class="field-control"><i class="far fa-envelope"></i><input id="email" type="email" name="email" placeholder="name@company.com" autocomplete="username" required autofocus></div>
+                    </div>
 
-                type="checkbox"
+                    <div class="field-group">
+                        <label for="password">Password</label>
+                        <div class="field-control"><i class="fas fa-lock"></i><input id="password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" class="password-toggle" id="passwordToggle" aria-label="Show password" aria-pressed="false"><i class="far fa-eye"></i></button></div>
+                    </div>
 
-                id="remember">
+                    <label class="remember-control"><input type="checkbox" id="remember"><span class="checkmark"><i class="fas fa-check"></i></span><span>Remember my email</span></label>
 
-            <label class="form-check-label">
+                    <button class="login-button" type="submit"><span>Sign in securely</span><i class="fas fa-arrow-right"></i></button>
+                </form>
 
-                Remember Me
+                <div class="login-support"><span><i class="fas fa-headset"></i> Need help signing in?</span><small>Contact your system administrator</small></div>
+                <p class="login-copyright">© 2026 ADS Digital Solutions · Version 1.0</p>
+            </div>
+        </section>
+    </main>
 
-            </label>
-
-        </div>
-
-        <button
-
-            class="btn btn-primary btn-login w-100">
-
-            <i class="fa fa-sign-in-alt"></i>
-
-            Login
-
-        </button>
-
-    </form>
-
-    <hr>
-
-    <div class="text-center text-muted">
-
-        ADS ERP v1.0
-
-        <br>
-
-        Copyright 2026 ADS Digital Solutions
-
-    </div>
-
-</div>
-
-<script>
-
-function togglePassword(){
-
-    var x=document.getElementById("password");
-
-    if(x.type==="password")
-
-        x.type="text";
-
-    else
-
-        x.type="password";
-
-}
-
-</script>
-
+    <script>
+        (function () {
+            const password = document.getElementById('password');
+            const toggle = document.getElementById('passwordToggle');
+            const email = document.getElementById('email');
+            const remember = document.getElementById('remember');
+            const savedEmail = localStorage.getItem('ads-login-email');
+            if (savedEmail) { email.value = savedEmail; remember.checked = true; password.focus(); }
+            toggle.addEventListener('click', function () {
+                const show = password.type === 'password';
+                password.type = show ? 'text' : 'password';
+                toggle.setAttribute('aria-pressed', String(show));
+                toggle.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+                toggle.querySelector('i').className = show ? 'far fa-eye-slash' : 'far fa-eye';
+            });
+            document.getElementById('loginForm').addEventListener('submit', function () {
+                if (remember.checked) localStorage.setItem('ads-login-email', email.value.trim());
+                else localStorage.removeItem('ads-login-email');
+            });
+        })();
+    </script>
 </body>
-
 </html>
