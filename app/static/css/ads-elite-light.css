@@ -302,3 +302,160 @@ html body.ads-elite-light label { color: #344258 !important; }
         display: none !important;
     }
 }
+
+/* =====================================================
+   GLOBAL ACCESSIBLE VISIBILITY LAYER
+   Applies to regular authenticated ERP pages.
+===================================================== */
+html body.ads-elite-light .content-wrapper h1,
+html body.ads-elite-light .content-wrapper h2,
+html body.ads-elite-light .content-wrapper h3,
+html body.ads-elite-light .content-wrapper h4,
+html body.ads-elite-light .content-wrapper h5,
+html body.ads-elite-light .content-wrapper .card-title {
+    color: #172033 !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light .content-wrapper .card-title {
+    font-weight: 750 !important;
+}
+
+html body.ads-elite-light .content-wrapper .table,
+html body.ads-elite-light .content-wrapper .table tbody td,
+html body.ads-elite-light .content-wrapper .table tbody th {
+    color: #26344a !important;
+}
+
+html body.ads-elite-light .content-wrapper .table thead th {
+    color: #3f4f67 !important;
+    background: #f1f4f8 !important;
+    font-weight: 800 !important;
+    opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper .text-muted,
+html body.ads-elite-light .content-wrapper small.text-muted,
+html body.ads-elite-light .content-wrapper .help-block,
+html body.ads-elite-light .content-wrapper .form-text {
+    color: #5f6f86 !important;
+    opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper label {
+    color: #344258 !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper .form-control::placeholder,
+html body.ads-elite-light .content-wrapper input::placeholder,
+html body.ads-elite-light .content-wrapper textarea::placeholder {
+    color: #7f8ca0 !important;
+    opacity: 1 !important;
+}
+
+/* Semantic pills use saturated fills and white labels for reliable contrast. */
+html body.ads-elite-light .content-wrapper .badge {
+    padding: .4em .72em !important;
+    border-radius: 999px !important;
+    font-size: .7rem !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    letter-spacing: .015em !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-success {
+    color: #ffffff !important;
+    background: #07865f !important;
+    border: 1px solid #057252 !important;
+    box-shadow: 0 3px 8px rgba(7, 134, 95, .18) !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-danger {
+    color: #ffffff !important;
+    background: #d63c4b !important;
+    border: 1px solid #bd2e3d !important;
+    box-shadow: 0 3px 8px rgba(214, 60, 75, .17) !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-warning {
+    color: #392400 !important;
+    background: #f5b942 !important;
+    border: 1px solid #dc9b1e !important;
+    box-shadow: 0 3px 8px rgba(216, 137, 9, .16) !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-info {
+    color: #ffffff !important;
+    background: #168aad !important;
+    border: 1px solid #107390 !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-primary {
+    color: #ffffff !important;
+    background: #4f46e5 !important;
+    border: 1px solid #4338ca !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-secondary {
+    color: #ffffff !important;
+    background: #526176 !important;
+    border: 1px solid #435166 !important;
+}
+
+html body.ads-elite-light .content-wrapper .badge-light {
+    color: #344258 !important;
+    background: #eef2f7 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+/* Common custom status classes used by legacy module templates. */
+html body.ads-elite-light .content-wrapper .status-active,
+html body.ads-elite-light .content-wrapper .status-approved,
+html body.ads-elite-light .content-wrapper .status-confirmed {
+    color: #ffffff !important;
+    background: #07865f !important;
+    border-color: #057252 !important;
+}
+
+html body.ads-elite-light .content-wrapper .status-inactive,
+html body.ads-elite-light .content-wrapper .status-rejected,
+html body.ads-elite-light .content-wrapper .status-cancelled {
+    color: #ffffff !important;
+    background: #d63c4b !important;
+    border-color: #bd2e3d !important;
+}
+
+html body.ads-elite-light .content-wrapper .btn-info,
+html body.ads-elite-light .content-wrapper .btn-warning,
+html body.ads-elite-light .content-wrapper .btn-danger,
+html body.ads-elite-light .content-wrapper .btn-success,
+html body.ads-elite-light .content-wrapper .btn-primary {
+    font-weight: 750 !important;
+    opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper .btn-info {
+    color: #ffffff !important;
+    background: #176b87 !important;
+    border-color: #135c75 !important;
+}
+
+html body.ads-elite-light .content-wrapper .btn-warning {
+    color: #322000 !important;
+    background: #f2a514 !important;
+    border-color: #dc9006 !important;
+}
+
+html body.ads-elite-light .content-wrapper a:not(.btn):not(.badge) {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+html body.ads-elite-light .content-wrapper .alert {
+    color: #26344a !important;
+    opacity: 1 !important;
+}
