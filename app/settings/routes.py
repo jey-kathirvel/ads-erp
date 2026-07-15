@@ -24,6 +24,21 @@ templates = Jinja2Templates(directory="app/templates")
 BACKUP_FOLDER = "/opt/ads-erp/backups"
 
 
+def admin_only(request: Request) -> bool:
+    return request.session.get("user", {}).get("role_code") == "ADMIN"
+
+
+def backup_path(filename: str) -> str:
+    """Resolve a backup filename while preventing directory traversal."""
+    if not filename or filename != os.path.basename(filename):
+        raise ValueError("Invalid backup filename")
+    folder = os.path.realpath(BACKUP_FOLDER)
+    path = os.path.realpath(os.path.join(folder, filename))
+    if os.path.dirname(path) != folder:
+        raise ValueError("Invalid backup filename")
+    return path
+
+
 @router.get("/settings/company", response_class=HTMLResponse)
 async def company_settings(request: Request, db: Session = Depends(get_db)):
 
@@ -52,7 +67,10 @@ async def backup_screen(request: Request):
 
     os.makedirs(BACKUP_FOLDER, exist_ok=True)
 
-    backups = sorted(os.listdir(BACKUP_FOLDER), reverse=True)
+    backups = sorted(
+        (name for name in os.listdir(BACKUP_FOLDER) if os.path.isfile(backup_path(name))),
+        reverse=True,
+    )
 
     return templates.TemplateResponse(
         request=request, name="settings/backup.html", context={"backups": backups}
@@ -75,7 +93,10 @@ async def run_backup(request: Request):
 
     filename = f"ads_erp_" f"{datetime.now().strftime('%Y%m%d_%H%M%S')}" f".dump"
 
-    filepath = os.path.join(BACKUP_FOLDER, filename)
+    try:
+        filepath = backup_path(filename)
+    except ValueError:
+        return RedirectResponse(url="/settings/backup", status_code=303)
 
     subprocess.run(
     [
@@ -111,7 +132,13 @@ async def download_backup(filename: str, request: Request):
 
         return RedirectResponse(url="/dashboard", status_code=303)
 
-    filepath = os.path.join(BACKUP_FOLDER, filename)
+    try:
+        filepath = backup_path(filename)
+    except ValueError:
+        return RedirectResponse(url="/settings/backup", status_code=303)
+
+    if not os.path.isfile(filepath):
+        return RedirectResponse(url="/settings/backup", status_code=303)
 
     return FileResponse(
         path=filepath, filename=filename, media_type="application/octet-stream"
@@ -130,10 +157,36 @@ async def delete_backup(filename: str, request: Request):
 
         return RedirectResponse(url="/dashboard", status_code=303)
 
-    filepath = os.path.join(BACKUP_FOLDER, filename)
+    try:
+        filepath = backup_path(filename)
+    except ValueError:
+        return RedirectResponse(url="/settings/backup", status_code=303)
 
-    if os.path.exists(filepath):
+    if os.path.isfile(filepath):
 
         os.remove(filepath)
+
+    return RedirectResponse(url="/settings/backup", status_code=303)
+
+
+# ----------------------------------------------------
+# Delete All Backups
+# ----------------------------------------------------
+
+
+@router.post("/settings/backup/delete-all")
+async def delete_all_backups(request: Request):
+    if not admin_only(request):
+        return RedirectResponse(url="/dashboard", status_code=303)
+
+    os.makedirs(BACKUP_FOLDER, exist_ok=True)
+
+    for filename in os.listdir(BACKUP_FOLDER):
+        try:
+            filepath = backup_path(filename)
+        except ValueError:
+            continue
+        if os.path.isfile(filepath):
+            os.remove(filepath)
 
     return RedirectResponse(url="/settings/backup", status_code=303)

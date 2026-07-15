@@ -8,8 +8,11 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.routes.router import api_router
 from app.access_control.middleware import UserUrlAccessMiddleware
-from app.config.database import engine
+from app.config.database import SessionLocal, engine
 from app.hrm.models import Attendance, Employee, LeaveRequest
+from app.custom_gst.models import CustomGSTInvoice
+from app.incidents.models import Incident, IncidentAttachment, IncidentComment, IncidentHistory
+from app.finance_tools.models import FinanceCategory, FinanceExpense, FinanceIncome, FinanceQuotation, FinanceQuotationItem, FinanceVendor
 
 app = FastAPI(title="ADS ERP", version="0.5.1")
 
@@ -61,13 +64,36 @@ app.include_router(api_router)
 
 
 @app.on_event("startup")
-def ensure_hrm_tables():
-    """Create HRM tables on existing deployments without touching ERP data."""
+def ensure_feature_tables():
+    """Create feature-module tables on existing deployments without touching ERP data."""
     Employee.metadata.create_all(
         bind=engine,
         tables=[Employee.__table__, Attendance.__table__, LeaveRequest.__table__],
         checkfirst=True,
     )
+    CustomGSTInvoice.metadata.create_all(
+        bind=engine,
+        tables=[CustomGSTInvoice.__table__],
+        checkfirst=True,
+    )
+    Incident.metadata.create_all(
+        bind=engine,
+        tables=[Incident.__table__, IncidentAttachment.__table__, IncidentComment.__table__, IncidentHistory.__table__],
+        checkfirst=True,
+    )
+    FinanceCategory.metadata.create_all(
+        bind=engine,
+        tables=[FinanceCategory.__table__, FinanceVendor.__table__, FinanceIncome.__table__, FinanceExpense.__table__, FinanceQuotation.__table__, FinanceQuotationItem.__table__],
+        checkfirst=True,
+    )
+    db = SessionLocal()
+    try:
+        if db.query(FinanceCategory).count() == 0:
+            for order, name in enumerate(["Fuel", "Electricity", "Salary", "Rent", "Maintenance", "Supplies", "Tax", "Other"], 1):
+                db.add(FinanceCategory(name=name, display_order=order))
+            db.commit()
+    finally:
+        db.close()
 
 # ----------------------------------------------------
 # Home

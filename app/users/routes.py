@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.config.database import get_db
 from app.users.schemas import UserCreate
@@ -286,3 +287,44 @@ async def toggle_user(user_id: int, db: Session = Depends(get_db)):
     UserService.toggle_status(db, user_id)
 
     return RedirectResponse(url="/users", status_code=303)
+
+
+# ----------------------------------------------------
+# Delete Inactive User
+# ----------------------------------------------------
+
+
+@router.post("/users/{user_id}/delete")
+async def delete_user(
+    user_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    session_user = request.session.get("user", {})
+
+    if session_user.get("role_code") != "ADMIN":
+        return RedirectResponse(url="/dashboard", status_code=303)
+
+    if session_user.get("id") == user_id:
+        return RedirectResponse(url="/users?error=self", status_code=303)
+
+    user = UserService.get_by_id(db, user_id)
+    if not user:
+        return RedirectResponse(url="/users?error=not-found", status_code=303)
+
+    if user.is_active:
+        return RedirectResponse(url="/users?error=active", status_code=303)
+
+    try:
+        (
+            db.query(UserUrlBlock)
+            .filter(UserUrlBlock.user_id == user_id)
+            .delete(synchronize_session=False)
+        )
+        db.delete(user)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        return RedirectResponse(url="/users?error=referenced", status_code=303)
+
+    return RedirectResponse(url="/users?success=deleted", status_code=303)

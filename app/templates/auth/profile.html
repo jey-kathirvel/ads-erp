@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-lg-7 col-xl-6">
+        <div class="card shadow-sm border-0 profile-card">
+            <div class="profile-banner"></div>
+            <div class="card-body px-4 pb-4">
+                <div class="profile-heading">
+                    <div class="profile-avatar">{{ profile_user.full_name[:1]|upper }}</div>
+                    <div>
+                        <h1 class="h3 font-weight-bold mb-1">My Profile</h1>
+                        <p class="text-muted mb-0">Manage your ADS ERP account information.</p>
+                    </div>
+                </div>
+
+                {% if message %}
+                <div class="alert alert-{{ 'success' if success else 'danger' }} mt-4" role="alert">
+                    <i class="fas fa-{{ 'check-circle' if success else 'exclamation-circle' }} mr-2"></i>{{ message }}
+                </div>
+                {% endif %}
+
+                <form method="post" action="/profile" class="mt-4">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user"></i></span></div>
+                            <input id="full_name" name="full_name" class="form-control" value="{{ profile_user.full_name }}" minlength="2" maxlength="100" autocomplete="name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-envelope"></i></span></div>
+                            <input id="email" name="email" type="email" class="form-control" value="{{ profile_user.email }}" maxlength="150" autocomplete="email" required>
+                        </div>
+                        <small class="form-text text-muted">This email is used for your ADS ERP login.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-user-shield"></i></span></div>
+                            <input class="form-control" value="{{ profile_user.role.role_name if profile_user.role else 'Assigned User' }}" readonly>
+                        </div>
+                        <small class="form-text text-muted">Role changes are managed by an administrator.</small>
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-4">
+                        <a href="/change-password" class="btn btn-outline-primary"><i class="fas fa-key mr-2"></i>Change Password</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-card{border-radius:18px;overflow:hidden}.profile-banner{height:92px;background:linear-gradient(120deg,#4f46e5,#2477e8,#16a4c8)}.profile-heading{display:flex;align-items:center;gap:18px;margin-top:-47px}.profile-heading>div:last-child{padding-top:48px}.profile-avatar{display:flex;align-items:center;justify-content:center;width:88px;height:88px;flex:0 0 88px;border-radius:24px;background:#fff;color:#4f46e5;border:5px solid #fff;box-shadow:0 8px 24px rgba(30,50,90,.2);font-size:2rem;font-weight:900}.profile-card label{font-weight:700;color:#26354d}.profile-card .form-control,.profile-card .input-group-text{height:46px}.profile-card .input-group-text{min-width:46px;justify-content:center;color:#52627a}@media(max-width:480px){.profile-heading{align-items:flex-start}.profile-heading>div:last-child{padding-top:52px}.profile-avatar{width:72px;height:72px;flex-basis:72px}}
+</style>
+{% endblock %}
