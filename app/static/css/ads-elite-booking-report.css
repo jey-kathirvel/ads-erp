@@ -1,0 +1,242 @@
+/* Elite Light booking report — loaded after the report's legacy inline theme. */
+
+html body.ads-elite-light:has(#bookingReportTable),
+html body.ads-elite-light:has(#bookingReportTable) .wrapper,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper {
+    color: #172033 !important;
+    background:
+        radial-gradient(circle at 88% 2%, rgba(79, 70, 229, .07), transparent 26rem),
+        #f4f7fb !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h1,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h2,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h3,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-title {
+    color: #172033 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper h1 .fas,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-title .fas {
+    color: #4f46e5 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .text-muted {
+    color: #66758b !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card {
+    color: #172033 !important;
+    background: #ffffff !important;
+    border: 1px solid #dfe6ef !important;
+    box-shadow: 0 10px 30px rgba(30, 41, 59, .08) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-header {
+    color: #172033 !important;
+    background: linear-gradient(180deg, #ffffff, #fafbfe) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .card-body,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper label {
+    color: #344258 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .form-control,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper input,
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper select {
+    color: #172033 !important;
+    background: #ffffff !important;
+    border: 1px solid #cfd8e5 !important;
+    color-scheme: light !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .form-control:focus {
+    border-color: #7169e8 !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, .12) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi {
+    color: #172033 !important;
+    background: #ffffff !important;
+    border: 1px solid var(--booking-kpi-border, #dfe6ef) !important;
+    box-shadow: 0 10px 28px rgba(30, 41, 59, .08) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi::before {
+    height: 4px !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi .inner h3 {
+    color: var(--booking-kpi-accent, #4f46e5) !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi .inner p {
+    color: #526178 !important;
+    font-weight: 700 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-kpi .icon {
+    color: var(--booking-kpi-accent, #4f46e5) !important;
+    background: color-mix(in srgb, var(--booking-kpi-accent, #4f46e5) 10%, white) !important;
+    border-color: color-mix(in srgb, var(--booking-kpi-accent, #4f46e5) 22%, white) !important;
+    opacity: .9;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable {
+    color: #344258 !important;
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable thead th {
+    color: #46556d !important;
+    background: #f4f6fa !important;
+    border-color: #dfe6ef !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable tbody td {
+    color: #29364a !important;
+    background: #ffffff !important;
+    border-color: #e7ecf3 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) #bookingReportTable tbody tr:hover td {
+    background: #f4f3ff !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .btn-secondary {
+    color: #344258 !important;
+    background: #eef2f7 !important;
+    border-color: #d5dde8 !important;
+}
+
+@media (max-width: 767.98px) {
+    html body.ads-elite-light:has(#bookingReportTable) .content-wrapper .container-fluid {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+
+/* Final table repair: defeat row/stripe rules from the legacy dark pilot. */
+html body.ads-elite-light .content-wrapper:has(.booking-report-page),
+html body.ads-elite-light .content-wrapper:has(.booking-report-page) > .content,
+html body.ads-elite-light .booking-report-page {
+    min-height: calc(100vh - 64px) !important;
+    background: #f4f7fb !important;
+}
+
+html body.ads-elite-light .booking-report-page .card:has(#bookingReportTable),
+html body.ads-elite-light .booking-report-page .card:has(#bookingReportTable) .card-body,
+html body.ads-elite-light .booking-report-page .card:has(#bookingReportTable) .table-responsive {
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable,
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr {
+    color: #29364a !important;
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(odd) td,
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(even) td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td:nth-child(12) {
+    color: #29364a !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:hover td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(12) {
+    color: #172033 !important;
+    background: #f0efff !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td:first-child {
+    box-shadow: inset 3px 0 0 #4f46e5 !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable thead th,
+html body.ads-elite-light .booking-report-page #bookingReportTable thead th:nth-child(12) {
+    color: #3f4e65 !important;
+    background: #f1f4f8 !important;
+    border-bottom: 1px solid #d8e0ea !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable td a:not(.btn),
+html body.ads-elite-light .booking-report-page #bookingReportTable td span:not(.badge) {
+    color: inherit !important;
+}
+
+/* The dark pilot repeats the table ID through :has(), giving it ID-level
+   specificity twice. Match that structure and add the page scope. */
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr {
+    color: #29364a !important;
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(odd) td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(even) td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td:nth-child(12) {
+    color: #29364a !important;
+    background: #ffffff !important;
+    border-bottom-color: #e2e8f0 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(12) {
+    color: #172033 !important;
+    background: #f0efff !important;
+}
+
+/* High-contrast room and booking status pills. */
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge {
+    min-width: 64px !important;
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    color: #ffffff !important;
+    font-size: .68rem !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    letter-spacing: .025em !important;
+    text-align: center !important;
+    opacity: 1 !important;
+    box-shadow: 0 4px 10px rgba(30, 41, 59, .14) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-success {
+    color: #ffffff !important;
+    background: #07865f !important;
+    border: 1px solid #057252 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-danger {
+    color: #ffffff !important;
+    background: #d63c4b !important;
+    border: 1px solid #bd2e3d !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-primary {
+    color: #ffffff !important;
+    background: #4f46e5 !important;
+    border: 1px solid #4338ca !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-secondary {
+    color: #ffffff !important;
+    background: #526176 !important;
+    border: 1px solid #435166 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td:nth-child(6) {
+    color: #344258 !important;
+    font-weight: 700 !important;
+}

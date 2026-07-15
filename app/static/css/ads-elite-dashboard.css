@@ -1,0 +1,179 @@
+/* Elite Light dashboard overrides.
+   This file intentionally loads after the legacy capability dashboard. */
+
+body.ads-elite-light .ads-capability-dashboard {
+    --ads-bg: #f4f7fb;
+    --ads-bg-soft: #f8fafc;
+    --ads-panel: #ffffff;
+    --ads-panel-soft: #f7f9fc;
+    --ads-panel-hover: #f1f3ff;
+    --ads-border: #e2e8f1;
+    --ads-border-strong: #c9c5ff;
+    --ads-text: #172033;
+    --ads-text-soft: #3f4d65;
+    --ads-muted: #718096;
+    --ads-primary: #4f46e5;
+    --ads-primary-soft: #635bdf;
+    --ads-primary-bright: #4f46e5;
+    --ads-primary-deep: #3730a3;
+    color: var(--ads-text) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-shell {
+    width: 100%;
+    max-width: 100%;
+    padding: 24px;
+    background:
+        radial-gradient(circle at 7% 0%, rgba(79, 70, 229, .09), transparent 30%),
+        radial-gradient(circle at 94% 15%, rgba(15, 159, 120, .06), transparent 25%),
+        #f8fafc !important;
+    border: 1px solid #e1e7f0 !important;
+    box-shadow: 0 16px 44px rgba(30, 41, 59, .08) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-shell::before {
+    opacity: .4;
+    background-image:
+        linear-gradient(rgba(79, 70, 229, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 70, 229, .035) 1px, transparent 1px) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-hero-main,
+body.ads-elite-light .ads-capability-dashboard .ads-hero-side,
+body.ads-elite-light .ads-capability-dashboard .ads-card,
+body.ads-elite-light .ads-capability-dashboard .ads-section,
+body.ads-elite-light .ads-capability-dashboard .ads-engine,
+body.ads-elite-light .ads-capability-dashboard .ads-flow,
+body.ads-elite-light .ads-capability-dashboard .ads-room-types {
+    color: var(--ads-text) !important;
+    background: rgba(255, 255, 255, .96) !important;
+    border-color: var(--ads-border) !important;
+    box-shadow: 0 9px 28px rgba(30, 41, 59, .07) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-card,
+body.ads-elite-light .ads-capability-dashboard .ads-engine,
+body.ads-elite-light .ads-capability-dashboard .ads-room,
+body.ads-elite-light .ads-capability-dashboard .ads-flow-step,
+body.ads-elite-light .ads-capability-dashboard .ads-security-node,
+body.ads-elite-light .ads-capability-dashboard .ads-backup-stage,
+body.ads-elite-light .ads-capability-dashboard .ads-eco-node {
+    background: #ffffff !important;
+    border-color: var(--ads-border) !important;
+    color: var(--ads-text) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-card:hover,
+body.ads-elite-light .ads-capability-dashboard .ads-engine:hover {
+    border-color: #cbc7ff !important;
+    box-shadow: 0 16px 36px rgba(79, 70, 229, .11) !important;
+    transform: translateY(-2px);
+}
+
+body.ads-elite-light .ads-capability-dashboard h1,
+body.ads-elite-light .ads-capability-dashboard h2,
+body.ads-elite-light .ads-capability-dashboard h3,
+body.ads-elite-light .ads-capability-dashboard strong,
+body.ads-elite-light .ads-capability-dashboard .ads-side-title,
+body.ads-elite-light .ads-capability-dashboard .ads-card h3,
+body.ads-elite-light .ads-capability-dashboard .ads-engine-head h3,
+body.ads-elite-light .ads-capability-dashboard .ads-flow-step strong,
+body.ads-elite-light .ads-capability-dashboard .ads-room strong,
+body.ads-elite-light .ads-capability-dashboard .ads-security-node strong,
+body.ads-elite-light .ads-capability-dashboard .ads-backup-stage strong,
+body.ads-elite-light .ads-capability-dashboard .ads-eco-node strong,
+body.ads-elite-light .ads-capability-dashboard .ads-footer-note strong {
+    color: var(--ads-text) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-gradient-text {
+    background: linear-gradient(90deg, #4f46e5, #655ddf, #168aad) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard p,
+body.ads-elite-light .ads-capability-dashboard .ads-hero-copy,
+body.ads-elite-light .ads-capability-dashboard .ads-section-sub,
+body.ads-elite-light .ads-capability-dashboard .ads-stack-copy span,
+body.ads-elite-light .ads-capability-dashboard .ads-card > p,
+body.ads-elite-light .ads-capability-dashboard .ads-flow-step > span,
+body.ads-elite-light .ads-capability-dashboard .ads-room span,
+body.ads-elite-light .ads-capability-dashboard .ads-security-node span,
+body.ads-elite-light .ads-capability-dashboard .ads-backup-stage span,
+body.ads-elite-light .ads-capability-dashboard .ads-footer-note span {
+    color: var(--ads-muted) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-eyebrow,
+body.ads-elite-light .ads-capability-dashboard .ads-kicker {
+    color: var(--ads-primary) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-eyebrow {
+    background: #efefff !important;
+    border-color: #d6d3ff !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-badge,
+body.ads-elite-light .ads-capability-dashboard .ads-chip,
+body.ads-elite-light .ads-capability-dashboard .ads-status {
+    color: #39475e !important;
+    background: #f7f8fc !important;
+    border-color: #dfe5ee !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-stack-item {
+    border-color: #e9edf3 !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-feature-list li {
+    color: #435169 !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-stack-icon,
+body.ads-elite-light .ads-capability-dashboard .ads-icon {
+    color: #ffffff !important;
+    background: linear-gradient(145deg, #655de2, #4338ca) !important;
+    border-color: rgba(79, 70, 229, .25) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-icon.green {
+    background: linear-gradient(145deg, #16a37c, #08785c) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-icon.violet {
+    background: linear-gradient(145deg, #7c5ce5, #5741b8) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-icon.orange {
+    background: linear-gradient(145deg, #f2a01c, #d37a08) !important;
+}
+
+body.ads-elite-light .ads-capability-dashboard .ads-footer-note {
+    background: #f7f9fc !important;
+    border-color: var(--ads-border) !important;
+}
+
+@media (max-width: 1100px) {
+    body.ads-elite-light .ads-capability-dashboard .ads-hero,
+    body.ads-elite-light .ads-capability-dashboard .ads-wide-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+}
+
+@media (max-width: 700px) {
+    body.ads-elite-light .ads-capability-dashboard .ads-shell { padding: 12px; border-radius: 16px; }
+    body.ads-elite-light .ads-capability-dashboard .ads-hero-main,
+    body.ads-elite-light .ads-capability-dashboard .ads-hero-side,
+    body.ads-elite-light .ads-capability-dashboard .ads-section { padding: 20px; }
+    body.ads-elite-light .ads-capability-dashboard .ads-grid,
+    body.ads-elite-light .ads-capability-dashboard .ads-split,
+    body.ads-elite-light .ads-capability-dashboard .ads-flow,
+    body.ads-elite-light .ads-capability-dashboard .ads-security-flow,
+    body.ads-elite-light .ads-capability-dashboard .ads-backup-track,
+    body.ads-elite-light .ads-capability-dashboard .ads-ecosystem {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+}
