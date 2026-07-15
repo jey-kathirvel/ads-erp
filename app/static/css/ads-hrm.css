@@ -18,3 +18,88 @@
 .hrm-page .table td { color:#29364a !important; }
 .hrm-page .form-section { background:#f8fafc;border:1px solid #e2e8f0;border-radius:13px;padding:18px;margin-bottom:18px; }
 @media(max-width:767px){.hrm-page .hrm-kpi{min-height:105px}.hrm-page .hrm-kpi .icon{display:none}}
+
+/* Compatibility overrides for the legacy high-specificity KPI system. */
+html body.ads-elite-light .content-wrapper .hrm-page .hrm-heading,
+html body.ads-elite-light .content-wrapper .hrm-page h1.hrm-heading {
+    color: #172033 !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .hrm-heading .fas {
+    color: #4f46e5 !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .hrm-subtitle {
+    color: #526176 !important;
+    font-size: .95rem !important;
+    font-weight: 500 !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi {
+    background: #ffffff !important;
+    border: 1px solid #dfe6ef !important;
+    box-shadow: 0 10px 28px rgba(30, 41, 59, .09) !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-blue {
+    background: linear-gradient(135deg, #ffffff 48%, #eeedff) !important;
+    border-top: 4px solid #4f46e5 !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-green {
+    background: linear-gradient(135deg, #ffffff 48%, #e7f8f1) !important;
+    border-top: 4px solid #07865f !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-red {
+    background: linear-gradient(135deg, #ffffff 48%, #fff0f2) !important;
+    border-top: 4px solid #d63c4b !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-amber {
+    background: linear-gradient(135deg, #ffffff 48%, #fff7e6) !important;
+    border-top: 4px solid #d88909 !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi > .inner {
+    padding: 22px !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi > .inner > h3 {
+    color: #172033 !important;
+    font-size: 2.1rem !important;
+    font-weight: 850 !important;
+    line-height: 1.1 !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi > .inner > p {
+    display: block !important;
+    margin-top: 8px !important;
+    color: #415068 !important;
+    font-size: .88rem !important;
+    font-weight: 750 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-shadow: none !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi > .icon {
+    color: rgba(79, 70, 229, .2) !important;
+    opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-green > .icon { color: rgba(7, 134, 95, .2) !important; }
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-red > .icon { color: rgba(214, 60, 75, .2) !important; }
+html body.ads-elite-light .content-wrapper .hrm-page .small-box.hrm-kpi-amber > .icon { color: rgba(216, 137, 9, .22) !important; }
+
+html body.ads-elite-light .content-wrapper .hrm-page .card-header .card-title {
+    color: #172033 !important;
+    font-weight: 750 !important;
+}
+
+html body.ads-elite-light .content-wrapper .hrm-page .table thead th {
+    color: #405068 !important;
+    background: #f2f5f9 !important;
+}

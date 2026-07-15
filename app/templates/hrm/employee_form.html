@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-<link rel="stylesheet" href="/static/css/ads-hrm.css?v=1">
+<link rel="stylesheet" href="/static/css/ads-hrm.css?v=2">
 <div class="hrm-page"><div class="mb-4"><h1 class="h3 hrm-heading mb-1">{{ 'Edit Employee' if employee else 'Add Employee' }}</h1><p class="hrm-subtitle mb-0">Core employment and contact information</p></div>
 <form method="post" action="/hrm/employees/save"><input type="hidden" name="employee_id" value="{{ employee.id if employee else '' }}">
 <div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-id-card mr-2 text-primary"></i>Employee Profile</h3></div><div class="card-body">
