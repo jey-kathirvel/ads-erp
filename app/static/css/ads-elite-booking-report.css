@@ -172,3 +172,27 @@ html body.ads-elite-light .booking-report-page #bookingReportTable td a:not(.btn
 html body.ads-elite-light .booking-report-page #bookingReportTable td span:not(.badge) {
     color: inherit !important;
 }
+
+/* The dark pilot repeats the table ID through :has(), giving it ID-level
+   specificity twice. Match that structure and add the page scope. */
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr {
+    color: #29364a !important;
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(odd) td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(even) td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td:nth-child(12) {
+    color: #29364a !important;
+    background: #ffffff !important;
+    border-bottom-color: #e2e8f0 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td,
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(12) {
+    color: #172033 !important;
+    background: #f0efff !important;
+}

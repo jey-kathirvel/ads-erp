@@ -242,3 +242,63 @@ html body.ads-elite-light .main-sidebar .nav-sidebar > .nav-item.menu-open > .na
 html body.ads-elite-light .nav-header { color: #67758a !important; }
 html body.ads-elite-light .text-muted { color: #66758b !important; }
 html body.ads-elite-light label { color: #344258 !important; }
+
+/* Keep AdminLTE's mini sidebar stable on hover.
+   Expansion remains available only through the navbar menu button. */
+@media (min-width: 992px) {
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar::before {
+        width: 4.6rem !important;
+        overflow: hidden !important;
+    }
+
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .brand-link,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .brand-link {
+        width: 4.6rem !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+    }
+
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .ads-brand-logo,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .ads-brand-logo {
+        width: 48px !important;
+        height: 48px !important;
+        margin: 0 auto !important;
+    }
+
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .ads-brand-text,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-header,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link > p,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .ads-brand-text,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .nav-header,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-link > p {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-link,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-link {
+        width: 52px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        justify-content: center !important;
+        transform: none !important;
+    }
+
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-sidebar .nav-icon,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .nav-sidebar .nav-icon {
+        width: 100% !important;
+        margin: 0 !important;
+        text-align: center !important;
+    }
+
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-treeview,
+    html body.ads-elite-light.sidebar-mini.sidebar-collapse .main-sidebar .nav-treeview {
+        display: none !important;
+    }
+}
