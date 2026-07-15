@@ -14,6 +14,10 @@ from app.customers.models import Customer
 from app.products.models import Product
 from app.billing.models import Invoice
 from app.inventory.models import StockTransaction
+from app.custom_gst.models import CustomGSTInvoice
+from app.finance_tools.models import FinanceExpense, FinanceIncome
+from app.hrm.models import Employee
+from app.incidents.models import Incident
 
 from app.auth.dependencies import login_required
 
@@ -84,6 +88,20 @@ async def dashboard(
 
     total_stock_qty = (db.query(func.sum(Product.current_stock)).scalar()) or 0
 
+    # ------------------------------------
+    # Migrated Tools Snapshot
+    # ------------------------------------
+
+    employee_count = db.query(Employee).filter(Employee.is_active.is_(True)).count()
+    open_incidents = db.query(Incident).filter(Incident.status.notin_(["Closed", "Resolved"])).count()
+    custom_gst_count = db.query(CustomGSTInvoice).count()
+    finance_income = db.query(func.coalesce(func.sum(FinanceIncome.amount), 0)).filter(FinanceIncome.is_active.is_(True)).scalar()
+    finance_expense = db.query(func.coalesce(func.sum(FinanceExpense.total_amount), 0)).filter(FinanceExpense.is_active.is_(True)).scalar()
+
+    activity_values = [invoice_count, custom_gst_count, employee_count, open_incidents]
+    activity_peak = max(activity_values + [1])
+    activity_bars = [max(8, round(value / activity_peak * 100)) if value else 4 for value in activity_values]
+
     return templates.TemplateResponse(
         request=request,
         name="dashboard/index.html",
@@ -97,6 +115,13 @@ async def dashboard(
             "total_stock_qty": float(total_stock_qty),
             "recent_invoices": recent_invoices,
             "recent_transactions": recent_transactions,
+            "employee_count": employee_count,
+            "open_incidents": open_incidents,
+            "custom_gst_count": custom_gst_count,
+            "finance_income": float(finance_income or 0),
+            "finance_expense": float(finance_expense or 0),
+            "finance_balance": float((finance_income or 0) - (finance_expense or 0)),
+            "activity_bars": activity_bars,
             "user": user,
         },
     )

@@ -24,3 +24,10 @@ def test_admin_critical_page_smoke(authenticated_page: Page, qa_base_url: str, p
     expect(authenticated_page).not_to_have_url(f"{qa_base_url}/login")
     expect(authenticated_page.locator("body")).to_be_visible()
     expect(authenticated_page.locator("body")).not_to_contain_text("Internal Server Error")
+
+
+def test_dashboard_renders_metrics_charts_and_tools(authenticated_page: Page):
+    authenticated_page.goto("/dashboard")
+    expect(authenticated_page.locator(".ads-metric")).to_have_count(4)
+    expect(authenticated_page.locator(".ads-bar-chart")).to_be_visible()
+    expect(authenticated_page.locator(".ads-tool-card")).to_have_count(5)
