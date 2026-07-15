@@ -18,6 +18,7 @@ from app.roles.routes import router as roles_router
 from app.permissions.routes import router as permission_router
 from app.settings.routes import router as settings_router
 from app.booking.routes import router as booking_router
+from app.hrm.routes import router as hrm_router
 
 api_router = APIRouter()
 
@@ -72,6 +73,9 @@ api_router.include_router(permission_router, tags=["Permissions"])
 
 # Booking
 api_router.include_router(booking_router, tags=["Booking"])
+
+# Human Resources
+api_router.include_router(hrm_router, tags=["HRM"])
 
 # Reports
 api_router.include_router(reports_router, tags=["Reports"])
