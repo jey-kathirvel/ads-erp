@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.config.database import get_db
 from app.settings.service import CompanyService
+from app.config.settings import settings
 
 from app.auth.dependencies import login_required
 
@@ -21,7 +22,7 @@ router = APIRouter(dependencies=[Depends(login_required)])
 
 templates = Jinja2Templates(directory="app/templates")
 
-BACKUP_FOLDER = "/opt/ads-erp/backups"
+BACKUP_FOLDER = settings.BACKUP_FOLDER
 
 
 def admin_only(request: Request) -> bool:
@@ -100,19 +101,19 @@ async def run_backup(request: Request):
 
     subprocess.run(
     [
-        "/usr/bin/pg_dump",
+        settings.PG_DUMP_PATH,
         "-U",
-        "ads_erp",
+        settings.DB_USER,
         "-h",
-        "localhost",
+        settings.DB_HOST,
         "-Fc",
-        "ads_erp_db",
+        settings.DB_NAME,
         "-f",
         filepath
     ],
     env={
         **os.environ,
-        "PGPASSWORD": "Akshat#0950"
+        "PGPASSWORD": settings.DB_PASSWORD
     },
     check=True
 )
