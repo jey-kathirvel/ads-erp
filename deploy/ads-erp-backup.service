@@ -1,0 +1,6 @@
+[Unit]
+Description=ADS ERP database backup
+[Service]
+Type=oneshot
+User=root
+ExecStart=/opt/ads-erp/scripts/backup.sh
