@@ -30,6 +30,7 @@ MODULES = [
     "hrm",
     "custom_gst",
     "incidents",
+    "finance_tools",
     "accounts",
     "company",
     "users",
