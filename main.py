@@ -11,6 +11,7 @@ from app.access_control.middleware import UserUrlAccessMiddleware
 from app.config.database import engine
 from app.hrm.models import Attendance, Employee, LeaveRequest
 from app.custom_gst.models import CustomGSTInvoice
+from app.incidents.models import Incident, IncidentAttachment, IncidentComment, IncidentHistory
 
 app = FastAPI(title="ADS ERP", version="0.5.1")
 
@@ -72,6 +73,11 @@ def ensure_feature_tables():
     CustomGSTInvoice.metadata.create_all(
         bind=engine,
         tables=[CustomGSTInvoice.__table__],
+        checkfirst=True,
+    )
+    Incident.metadata.create_all(
+        bind=engine,
+        tables=[Incident.__table__, IncidentAttachment.__table__, IncidentComment.__table__, IncidentHistory.__table__],
         checkfirst=True,
     )
 

@@ -23,6 +23,7 @@
 {% set can_hrm = _is_admin or ("hrm" in _allowed) %}
 {% set can_crm = _is_admin or ("crm" in _allowed) %}
 {% set can_custom_gst = _is_admin or ("custom_gst" in _allowed) %}
+{% set can_incidents = _is_admin or ("incidents" in _allowed) %}
 
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -263,11 +264,11 @@
 
 
                 {% endif %}
-                {% if can_crm or can_hrm or can_custom_gst %}
+                {% if can_crm or can_hrm or can_custom_gst or can_incidents %}
                 <li class="nav-header">TOOLS</li>
 
-                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') %}menu-open{% endif %}">
-                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') %}active{% endif %}">
+                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') or request.url.path.startswith('/incidents') %}menu-open{% endif %}">
+                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') or request.url.path.startswith('/incidents') %}active{% endif %}">
                         <i class="nav-icon fas fa-toolbox"></i>
                         <p>Tools <i class="right fas fa-angle-left"></i></p>
                     </a>
@@ -279,6 +280,21 @@
                                 <i class="fas fa-handshake nav-icon"></i>
                                 <p>CRM <i class="fas fa-external-link-alt right"></i></p>
                             </a>
+                        </li>
+                        {% endif %}
+
+                        {% if can_incidents %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/incidents') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/incidents') %}active{% endif %}">
+                                <i class="fas fa-exclamation-triangle nav-icon"></i>
+                                <p>Incidents Tracking <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/incidents" class="nav-link {% if request.url.path == '/incidents' %}active{% endif %}"><i class="fas fa-chart-pie nav-icon"></i><p>Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/incidents/new" class="nav-link {% if request.url.path == '/incidents/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>New Incident</p></a></li>
+                                <li class="nav-item"><a href="/incidents/list" class="nav-link {% if request.url.path == '/incidents/list' or (request.url.path.startswith('/incidents/') and request.url.path != '/incidents/reports/summary' and request.url.path != '/incidents/new') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Incident List</p></a></li>
+                                <li class="nav-item"><a href="/incidents/reports/summary" class="nav-link {% if request.url.path == '/incidents/reports/summary' %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Reports</p></a></li>
+                            </ul>
                         </li>
                         {% endif %}
 

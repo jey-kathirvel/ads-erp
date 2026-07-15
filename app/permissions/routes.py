@@ -29,6 +29,7 @@ MODULES = [
     "crm",
     "hrm",
     "custom_gst",
+    "incidents",
     "accounts",
     "company",
     "users",

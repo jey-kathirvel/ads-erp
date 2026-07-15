@@ -20,6 +20,7 @@ from app.settings.routes import router as settings_router
 from app.booking.routes import router as booking_router
 from app.hrm.routes import router as hrm_router
 from app.custom_gst.routes import router as custom_gst_router
+from app.incidents.routes import router as incidents_router
 
 api_router = APIRouter()
 
@@ -80,6 +81,9 @@ api_router.include_router(hrm_router, tags=["HRM"])
 
 # Custom GST Billing
 api_router.include_router(custom_gst_router, tags=["Custom GST Billing"])
+
+# Incidents Tracking
+api_router.include_router(incidents_router, tags=["Incidents Tracking"])
 
 # Reports
 api_router.include_router(reports_router, tags=["Reports"])
