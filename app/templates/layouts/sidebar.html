@@ -21,6 +21,7 @@
 {% set can_users = _is_admin or ("users" in _allowed) %}
 {% set can_roles = _is_admin or ("roles" in _allowed) %}
 {% set can_hrm = _is_admin or ("hrm" in _allowed) %}
+{% set can_crm = _is_admin or ("crm" in _allowed) %}
 
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -261,19 +262,39 @@
 
 
                 {% endif %}
-                {% if can_hrm %}
-                <li class="nav-header">HUMAN RESOURCES</li>
+                {% if can_crm or can_hrm %}
+                <li class="nav-header">TOOLS</li>
 
                 <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') %}menu-open{% endif %}">
                     <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') %}active{% endif %}">
-                        <i class="nav-icon fas fa-user-tie"></i>
-                        <p>HRM <i class="right fas fa-angle-left"></i></p>
+                        <i class="nav-icon fas fa-toolbox"></i>
+                        <p>Tools <i class="right fas fa-angle-left"></i></p>
                     </a>
+
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"><a href="/hrm" class="nav-link {% if request.url.path == '/hrm' %}active{% endif %}"><i class="fas fa-chart-pie nav-icon"></i><p>HR Dashboard</p></a></li>
-                        <li class="nav-item"><a href="/hrm/employees" class="nav-link {% if request.url.path.startswith('/hrm/employees') %}active{% endif %}"><i class="fas fa-id-card nav-icon"></i><p>Employees</p></a></li>
-                        <li class="nav-item"><a href="/hrm/attendance" class="nav-link {% if request.url.path.startswith('/hrm/attendance') %}active{% endif %}"><i class="fas fa-user-clock nav-icon"></i><p>Attendance</p></a></li>
-                        <li class="nav-item"><a href="/hrm/leaves" class="nav-link {% if request.url.path.startswith('/hrm/leaves') %}active{% endif %}"><i class="fas fa-calendar-minus nav-icon"></i><p>Leave Requests</p></a></li>
+                        {% if can_crm %}
+                        <li class="nav-item">
+                            <a href="https://crm.ads-ai.in" class="nav-link" target="_blank" rel="noopener noreferrer" title="Open ADS CRM in a new tab">
+                                <i class="fas fa-handshake nav-icon"></i>
+                                <p>CRM <i class="fas fa-external-link-alt right"></i></p>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if can_hrm %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') %}active{% endif %}">
+                                <i class="fas fa-user-tie nav-icon"></i>
+                                <p>HRM <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/hrm" class="nav-link {% if request.url.path == '/hrm' %}active{% endif %}"><i class="fas fa-chart-pie nav-icon"></i><p>HR Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/hrm/employees" class="nav-link {% if request.url.path.startswith('/hrm/employees') %}active{% endif %}"><i class="fas fa-id-card nav-icon"></i><p>Employees</p></a></li>
+                                <li class="nav-item"><a href="/hrm/attendance" class="nav-link {% if request.url.path.startswith('/hrm/attendance') %}active{% endif %}"><i class="fas fa-user-clock nav-icon"></i><p>Attendance</p></a></li>
+                                <li class="nav-item"><a href="/hrm/leaves" class="nav-link {% if request.url.path.startswith('/hrm/leaves') %}active{% endif %}"><i class="fas fa-calendar-minus nav-icon"></i><p>Leave Requests</p></a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
                     </ul>
                 </li>
                 {% endif %}
