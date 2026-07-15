@@ -196,3 +196,47 @@ html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #booking
     color: #172033 !important;
     background: #f0efff !important;
 }
+
+/* High-contrast room and booking status pills. */
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge {
+    min-width: 64px !important;
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    color: #ffffff !important;
+    font-size: .68rem !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    letter-spacing: .025em !important;
+    text-align: center !important;
+    opacity: 1 !important;
+    box-shadow: 0 4px 10px rgba(30, 41, 59, .14) !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-success {
+    color: #ffffff !important;
+    background: #07865f !important;
+    border: 1px solid #057252 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-danger {
+    color: #ffffff !important;
+    background: #d63c4b !important;
+    border: 1px solid #bd2e3d !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-primary {
+    color: #ffffff !important;
+    background: #4f46e5 !important;
+    border: 1px solid #4338ca !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td .badge-secondary {
+    color: #ffffff !important;
+    background: #526176 !important;
+    border: 1px solid #435166 !important;
+}
+
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody td:nth-child(6) {
+    color: #344258 !important;
+    font-weight: 700 !important;
+}
