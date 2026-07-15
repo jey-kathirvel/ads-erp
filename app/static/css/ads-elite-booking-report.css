@@ -118,3 +118,57 @@ html body.ads-elite-light:has(#bookingReportTable) .btn-secondary {
         padding-right: 10px !important;
     }
 }
+
+/* Final table repair: defeat row/stripe rules from the legacy dark pilot. */
+html body.ads-elite-light .content-wrapper:has(.booking-report-page),
+html body.ads-elite-light .content-wrapper:has(.booking-report-page) > .content,
+html body.ads-elite-light .booking-report-page {
+    min-height: calc(100vh - 64px) !important;
+    background: #f4f7fb !important;
+}
+
+html body.ads-elite-light .booking-report-page .card:has(#bookingReportTable),
+html body.ads-elite-light .booking-report-page .card:has(#bookingReportTable) .card-body,
+html body.ads-elite-light .booking-report-page .card:has(#bookingReportTable) .table-responsive {
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable,
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr {
+    color: #29364a !important;
+    background: #ffffff !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(odd) td,
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(even) td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td:nth-child(12) {
+    color: #29364a !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:hover td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td,
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(12) {
+    color: #172033 !important;
+    background: #f0efff !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td:first-child {
+    box-shadow: inset 3px 0 0 #4f46e5 !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable thead th,
+html body.ads-elite-light .booking-report-page #bookingReportTable thead th:nth-child(12) {
+    color: #3f4e65 !important;
+    background: #f1f4f8 !important;
+    border-bottom: 1px solid #d8e0ea !important;
+}
+
+html body.ads-elite-light .booking-report-page #bookingReportTable td a:not(.btn),
+html body.ads-elite-light .booking-report-page #bookingReportTable td span:not(.badge) {
+    color: inherit !important;
+}
