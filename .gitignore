@@ -166,3 +166,11 @@ config.py.local
 #######################################################
 
 .cache/
+
+# Local Android build toolchain and generated outputs
+android-sdk/
+android-sdk-temp/
+commandlinetools.zip
+android-app/.gradle/
+android-app/**/build/
+android-app/local.properties
