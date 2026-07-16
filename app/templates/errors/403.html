@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<section class="access-denied-page" role="alert" aria-labelledby="access-denied-title">
+    <div class="access-denied-card">
+        <span class="access-denied-icon"><i class="fas fa-user-lock"></i></span>
+        <span class="access-denied-code">403 · Access restricted</span>
+        <h1 id="access-denied-title">You are not authorized</h1>
+        <p>You are not authorized, please reach out Admin.</p>
+        <small>The requested workspace <strong>{{ blocked_path }}</strong> is blocked for your account.</small>
+        <div class="access-denied-actions">
+            <a href="/dashboard" class="btn btn-primary"><i class="fas fa-home mr-1"></i> Return to dashboard</a>
+            <a href="/profile" class="btn btn-light"><i class="fas fa-user mr-1"></i> View profile</a>
+        </div>
+    </div>
+</section>
+<style>
+.access-denied-page{min-height:calc(100vh - 190px);display:grid;place-items:center;padding:32px 16px}.access-denied-card{width:min(620px,100%);padding:42px;text-align:center;background:linear-gradient(145deg,#fff,#fafaff);border:1px solid #e2e6f2;border-radius:24px;box-shadow:0 22px 55px rgba(30,41,59,.11)}.access-denied-icon{width:72px;height:72px;display:grid;place-items:center;margin:0 auto 18px;color:#fff;background:linear-gradient(145deg,#655de2,#4338ca);border-radius:22px;box-shadow:0 14px 30px rgba(79,70,229,.25);font-size:28px}.access-denied-code{color:#e45b55;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.access-denied-card h1{margin:8px 0;color:#172033;font-size:32px}.access-denied-card p{margin:0 0 8px;color:#3f4d65;font-size:18px;font-weight:700}.access-denied-card small{display:block;color:#718096}.access-denied-actions{display:flex;justify-content:center;gap:10px;margin-top:25px}.access-denied-actions .btn{border-radius:11px;font-weight:800}@media(max-width:600px){.access-denied-card{padding:30px 18px}.access-denied-actions{flex-direction:column}}
+</style>
+{% endblock %}

@@ -88,17 +88,16 @@ class UrlAccessService:
         if pattern == "/*":
             return True
 
-        if pattern.endswith("/*"):
-            prefix = pattern[:-2]
+        # A block is a route subtree by default. Blocking `/billing` therefore
+        # protects `/billing`, `/billing/list`, `/billing/barcode`, etc. The
+        # legacy `/*` suffix remains supported for existing records.
+        prefix = pattern[:-2] if pattern.endswith("/*") else pattern
 
-            return (
-                path == prefix
-                or path.startswith(
-                    prefix + "/"
-                )
-            )
+        return path == prefix or path.startswith(prefix + "/")
 
-        return path == pattern
+    @classmethod
+    def path_is_allowed(cls, patterns: list[str], request_path: str) -> bool:
+        return not any(cls.matches(pattern, request_path) for pattern in patterns)
 
     @staticmethod
     def get_active_blocks(
@@ -120,6 +119,10 @@ class UrlAccessService:
         )
 
     @classmethod
+    def get_active_patterns(cls, db: Session, user_id: int) -> list[str]:
+        return [block.url_pattern for block in cls.get_active_blocks(db, user_id)]
+
+    @classmethod
     def is_blocked(
         cls,
         db: Session,
@@ -127,15 +130,5 @@ class UrlAccessService:
         request_path: str,
     ) -> bool:
 
-        blocks = cls.get_active_blocks(
-            db,
-            user_id,
-        )
-
-        return any(
-            cls.matches(
-                block.url_pattern,
-                request_path,
-            )
-            for block in blocks
-        )
+        patterns = cls.get_active_patterns(db, user_id)
+        return not cls.path_is_allowed(patterns, request_path)
