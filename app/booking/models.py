@@ -252,3 +252,28 @@ class BookingRoom(Base):
     room: Mapped["Room"] = relationship(
         back_populates="booking_rooms",
     )
+
+
+class BookingPayment(Base):
+
+    __tablename__ = "booking_payments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    booking_id: Mapped[int] = mapped_column(
+        ForeignKey("bookings.id"), nullable=False, unique=True, index=True
+    )
+    provider: Mapped[str] = mapped_column(String(30), nullable=False)
+    provider_order_id: Mapped[str] = mapped_column(
+        String(100), nullable=False, unique=True, index=True
+    )
+    provider_payment_id: Mapped[str] = mapped_column(
+        String(100), nullable=False, unique=True, index=True
+    )
+    amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
+    currency: Mapped[str] = mapped_column(String(10), nullable=False, default="INR")
+    status: Mapped[str] = mapped_column(String(30), nullable=False, default="CAPTURED")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+
+    booking: Mapped["Booking"] = relationship()

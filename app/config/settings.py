@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     HOST: str
     PORT: int
 
+    # Optional so the application can still start before payment keys are
+    # configured. Payment endpoints return a clear configuration error.
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+
     class Config:
         env_file = ".env"
 

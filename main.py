@@ -10,6 +10,7 @@ from app.routes.router import api_router
 from app.access_control.middleware import UserUrlAccessMiddleware
 from app.config.database import engine
 from app.hrm.models import Attendance, Employee, LeaveRequest
+from app.booking.models import BookingPayment
 
 app = FastAPI(title="ADS ERP", version="0.5.1")
 
@@ -66,6 +67,11 @@ def ensure_hrm_tables():
     Employee.metadata.create_all(
         bind=engine,
         tables=[Employee.__table__, Attendance.__table__, LeaveRequest.__table__],
+        checkfirst=True,
+    )
+    BookingPayment.metadata.create_all(
+        bind=engine,
+        tables=[BookingPayment.__table__],
         checkfirst=True,
     )
 
