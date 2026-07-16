@@ -13,10 +13,14 @@ from sqlalchemy.orm import Session
 
 from app.auth.dependencies import login_required
 from app.booking.models import Booking
+from app.booking.models import BookingPayment
 from app.booking.models import Room
 from app.booking.models import RoomType
 from app.booking.service import BookingService
 from app.config.database import get_db
+from app.config.settings import settings
+import razorpay
+from razorpay.errors import SignatureVerificationError
 
 
 
@@ -43,6 +47,60 @@ def india_now() -> datetime:
 templates = Jinja2Templates(
     directory="app/templates"
 )
+
+
+def razorpay_client():
+    if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
+        raise HTTPException(status_code=503, detail="Razorpay is not configured")
+    return razorpay.Client(
+        auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+    )
+
+
+@router.post("/booking/api/payment/order")
+async def create_booking_payment_order(
+    room_type_id: int = Form(...),
+    number_of_days: int = Form(...),
+    number_of_rooms: int = Form(...),
+    advance_amount: float = Form(...),
+    db: Session = Depends(get_db),
+):
+    if number_of_days < 1 or number_of_rooms < 1:
+        raise HTTPException(status_code=400, detail="Select a valid stay and room")
+
+    room_type = db.query(RoomType).filter(
+        RoomType.id == room_type_id, RoomType.is_active.is_(True)
+    ).first()
+    if room_type is None:
+        raise HTTPException(status_code=404, detail="Room type not found")
+
+    total_amount = float(room_type.room_rate) * number_of_rooms * number_of_days
+    if advance_amount <= 0 or advance_amount > total_amount:
+        raise HTTPException(
+            status_code=400,
+            detail="Payment must be greater than zero and cannot exceed the booking total",
+        )
+
+    amount_paise = round(advance_amount * 100)
+    try:
+        order = razorpay_client().order.create({
+            "amount": amount_paise,
+            "currency": "INR",
+            "receipt": "booking-" + datetime.now().strftime("%Y%m%d%H%M%S%f")[:31],
+            "notes": {"purpose": "hotel_booking"},
+        })
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail="Unable to start Razorpay payment") from exc
+
+    return {
+        "key_id": settings.RAZORPAY_KEY_ID,
+        "order_id": order["id"],
+        "amount": order["amount"],
+        "currency": order["currency"],
+        "total_amount": total_amount,
+    }
 
 
 @router.get(
@@ -411,6 +469,9 @@ async def save_booking(
     advance_amount: float = Form(0),
     payment_mode: str = Form(""),
     notes: str = Form(""),
+    razorpay_order_id: str = Form(...),
+    razorpay_payment_id: str = Form(...),
+    razorpay_signature: str = Form(...),
     user=Depends(login_required),
     db: Session = Depends(get_db),
 ):
@@ -564,6 +625,40 @@ async def save_booking(
 
     number_of_rooms = len(selected_rooms)
 
+    total_amount = float(room_type.room_rate) * number_of_rooms * number_of_days
+    if advance_amount <= 0 or advance_amount > total_amount:
+        raise HTTPException(status_code=400, detail="Invalid payment amount")
+
+    client = razorpay_client()
+    try:
+        client.utility.verify_payment_signature({
+            "razorpay_order_id": razorpay_order_id,
+            "razorpay_payment_id": razorpay_payment_id,
+            "razorpay_signature": razorpay_signature,
+        })
+        order = client.order.fetch(razorpay_order_id)
+        payment = client.payment.fetch(razorpay_payment_id)
+    except SignatureVerificationError as exc:
+        raise HTTPException(status_code=400, detail="Payment signature verification failed") from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail="Unable to verify Razorpay payment") from exc
+
+    expected_paise = round(advance_amount * 100)
+    if (
+        order.get("amount") != expected_paise
+        or payment.get("amount") != expected_paise
+        or payment.get("order_id") != razorpay_order_id
+        or payment.get("status") != "captured"
+        or order.get("currency") != "INR"
+    ):
+        raise HTTPException(status_code=400, detail="Payment is not captured or amount does not match")
+
+    existing_payment = db.query(BookingPayment).filter(
+        BookingPayment.provider_payment_id == razorpay_payment_id
+    ).first()
+    if existing_payment:
+        return RedirectResponse(url=f"/booking/{existing_payment.booking_id}", status_code=303)
+
     booking_no = (
         "BK-"
         + datetime.now().strftime(
@@ -581,13 +676,9 @@ async def save_booking(
         number_of_days=number_of_days,
         number_of_rooms=number_of_rooms,
         room_rate=room_type.room_rate,
-        total_amount=(
-            room_type.room_rate
-            * number_of_rooms
-            * number_of_days
-        ),
+        total_amount=total_amount,
         advance_amount=advance_amount,
-        payment_mode=payment_mode or None,
+        payment_mode="RAZORPAY",
         notes=notes.strip() or None,
         status="CONFIRMED",
     )
@@ -602,6 +693,16 @@ async def save_booking(
                 room_id=room.id,
             )
         )
+
+    db.add(BookingPayment(
+        booking_id=booking.id,
+        provider="RAZORPAY",
+        provider_order_id=razorpay_order_id,
+        provider_payment_id=razorpay_payment_id,
+        amount=advance_amount,
+        currency="INR",
+        status="CAPTURED",
+    ))
 
     try:
         db.commit()

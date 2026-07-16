@@ -22,4 +22,8 @@ class Settings(BaseSettings):
     SESSION_HTTPS_ONLY: bool = True
     ALLOWED_HOSTS: str = "erp.ads-ai.in,localhost,127.0.0.1"
 
+    # Optional so the application can start before payment keys are configured.
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+
 settings = Settings()
