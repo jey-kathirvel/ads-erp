@@ -2,8 +2,6 @@ name: P0 QA
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 20 * * *"
 
 jobs:
   playwright:
