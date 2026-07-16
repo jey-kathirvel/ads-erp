@@ -1,0 +1,39 @@
+name: P0 QA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: qa
+    env:
+      QA_BASE_URL: ${{ secrets.QA_BASE_URL }}
+      QA_ADMIN_EMAIL: ${{ secrets.QA_ADMIN_EMAIL }}
+      QA_ADMIN_PASSWORD: ${{ secrets.QA_ADMIN_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: Run P0 browser suite
+        run: >-
+          pytest tests/e2e -m p0
+          --browser chromium
+          --tracing retain-on-failure
+          --screenshot only-on-failure
+          --video retain-on-failure
+          --output test-results
+          -q
+      - name: Upload failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-playwright-results
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 14

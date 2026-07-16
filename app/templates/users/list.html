@@ -31,6 +31,30 @@
 
     <div class="card-body">
 
+        {% set user_error = request.query_params.get('error') %}
+        {% if user_error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            {% if user_error == 'active' %}
+                Active users cannot be deleted. Change the user status to Inactive, then try again.
+            {% elif user_error == 'self' %}
+                You cannot delete the account currently signed in.
+            {% elif user_error == 'referenced' %}
+                This user is linked to existing records and cannot be deleted.
+            {% else %}
+                User not found.
+            {% endif %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        {% endif %}
+
+        {% if request.query_params.get('success') == 'deleted' %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle mr-2"></i>User deleted successfully.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        {% endif %}
+
         <div class="row mb-3">
 
             <div class="col-md-4">
@@ -157,6 +181,21 @@
                                 <i class="fas fa-key"></i>
 
                             </button>
+
+                            <form action="/users/{{ user.id }}/delete"
+                                  method="post"
+                                  class="d-inline"
+                                  {% if not user.is_active %}onsubmit="return confirm({{ ('Permanently delete ' ~ user.full_name ~ '? This action cannot be undone.')|tojson|forceescape }})"{% endif %}>
+
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm"
+                                        title="Delete user">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </form>
 
                         </td>
 

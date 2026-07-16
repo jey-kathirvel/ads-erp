@@ -10,8 +10,9 @@ from app.config.database import get_db
 from app.permissions.service import PermissionService
 from fastapi import Form
 from fastapi.responses import RedirectResponse
+from app.auth.dependencies import login_required
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(login_required)])
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -26,7 +27,11 @@ MODULES = [
     "purchase",
     "reports",
     "booking",
+    "crm",
     "hrm",
+    "custom_gst",
+    "incidents",
+    "finance_tools",
     "accounts",
     "company",
     "users",

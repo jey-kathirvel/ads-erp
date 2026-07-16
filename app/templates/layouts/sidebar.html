@@ -5,22 +5,27 @@
 {% set _role_code = _user.get("role_code", "") %}
 {% set _allowed = request.session.get("allowed_modules", []) %}
 {% set _is_admin = (_role_code == "ADMIN") %}
+{% set url_allowed = request.state.url_allowed %}
 
-{% set can_dashboard = _is_admin or ("dashboard" in _allowed) %}
-{% set can_customers = _is_admin or ("customers" in _allowed) %}
-{% set can_suppliers = _is_admin or ("suppliers" in _allowed) %}
-{% set can_products = _is_admin or ("products" in _allowed) %}
-{% set can_categories = _is_admin or ("categories" in _allowed) %}
-{% set can_billing = _is_admin or ("billing" in _allowed) %}
-{% set can_booking = _is_admin or ("booking" in _allowed) %}
-{% set can_inventory = _is_admin or ("inventory" in _allowed) %}
-{% set can_purchase = _is_admin or ("purchase" in _allowed) %}
-{% set can_reports = _is_admin or ("reports" in _allowed) %}
-{% set can_accounts = _is_admin or ("accounts" in _allowed) %}
-{% set can_company = _is_admin or ("company" in _allowed) %}
-{% set can_users = _is_admin or ("users" in _allowed) %}
-{% set can_roles = _is_admin or ("roles" in _allowed) %}
-{% set can_hrm = _is_admin or ("hrm" in _allowed) %}
+{% set can_dashboard = (_is_admin or ("dashboard" in _allowed)) and url_allowed('/dashboard') %}
+{% set can_customers = (_is_admin or ("customers" in _allowed)) and url_allowed('/customers') %}
+{% set can_suppliers = (_is_admin or ("suppliers" in _allowed)) and url_allowed('/suppliers') %}
+{% set can_products = (_is_admin or ("products" in _allowed)) and url_allowed('/products') %}
+{% set can_categories = (_is_admin or ("categories" in _allowed)) and url_allowed('/categories') %}
+{% set can_billing = (_is_admin or ("billing" in _allowed)) and url_allowed('/billing') %}
+{% set can_booking = (_is_admin or ("booking" in _allowed)) and url_allowed('/booking') %}
+{% set can_inventory = (_is_admin or ("inventory" in _allowed)) and url_allowed('/inventory') %}
+{% set can_purchase = (_is_admin or ("purchase" in _allowed)) and url_allowed('/purchase') %}
+{% set can_reports = (_is_admin or ("reports" in _allowed)) and url_allowed('/reports') %}
+{% set can_accounts = (_is_admin or ("accounts" in _allowed)) and url_allowed('/accounts') %}
+{% set can_company = (_is_admin or ("company" in _allowed)) and url_allowed('/settings/company') %}
+{% set can_users = (_is_admin or ("users" in _allowed)) and url_allowed('/users') %}
+{% set can_roles = (_is_admin or ("roles" in _allowed)) and (url_allowed('/roles') or url_allowed('/permissions')) %}
+{% set can_hrm = (_is_admin or ("hrm" in _allowed)) and url_allowed('/hrm') %}
+{% set can_crm = _is_admin or ("crm" in _allowed) %}
+{% set can_custom_gst = (_is_admin or ("custom_gst" in _allowed)) and url_allowed('/custom-gst') %}
+{% set can_incidents = (_is_admin or ("incidents" in _allowed)) and url_allowed('/incidents') %}
+{% set can_finance_tools = (_is_admin or ("finance_tools" in _allowed)) and url_allowed('/finance-tools') %}
 
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -261,19 +266,87 @@
 
 
                 {% endif %}
-                {% if can_hrm %}
-                <li class="nav-header">HUMAN RESOURCES</li>
+                {% if can_crm or can_hrm or can_custom_gst or can_incidents or can_finance_tools %}
+                <li class="nav-header">TOOLS</li>
 
-                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') %}menu-open{% endif %}">
-                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') %}active{% endif %}">
-                        <i class="nav-icon fas fa-user-tie"></i>
-                        <p>HRM <i class="right fas fa-angle-left"></i></p>
+                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') or request.url.path.startswith('/incidents') or request.url.path.startswith('/finance-tools') %}menu-open{% endif %}">
+                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') or request.url.path.startswith('/incidents') or request.url.path.startswith('/finance-tools') %}active{% endif %}">
+                        <i class="nav-icon fas fa-toolbox"></i>
+                        <p>Tools <i class="right fas fa-angle-left"></i></p>
                     </a>
+
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"><a href="/hrm" class="nav-link {% if request.url.path == '/hrm' %}active{% endif %}"><i class="fas fa-chart-pie nav-icon"></i><p>HR Dashboard</p></a></li>
-                        <li class="nav-item"><a href="/hrm/employees" class="nav-link {% if request.url.path.startswith('/hrm/employees') %}active{% endif %}"><i class="fas fa-id-card nav-icon"></i><p>Employees</p></a></li>
-                        <li class="nav-item"><a href="/hrm/attendance" class="nav-link {% if request.url.path.startswith('/hrm/attendance') %}active{% endif %}"><i class="fas fa-user-clock nav-icon"></i><p>Attendance</p></a></li>
-                        <li class="nav-item"><a href="/hrm/leaves" class="nav-link {% if request.url.path.startswith('/hrm/leaves') %}active{% endif %}"><i class="fas fa-calendar-minus nav-icon"></i><p>Leave Requests</p></a></li>
+                        {% if can_crm %}
+                        <li class="nav-item">
+                            <a href="https://crm.ads-ai.in" class="nav-link" target="_blank" rel="noopener noreferrer" title="Open ADS CRM in a new tab">
+                                <i class="fas fa-handshake nav-icon"></i>
+                                <p>CRM <i class="fas fa-external-link-alt right"></i></p>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% if can_finance_tools %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/finance-tools') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/finance-tools') %}active{% endif %}">
+                                <i class="fas fa-wallet nav-icon"></i>
+                                <p>Credit &amp; Debit <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/finance-tools" class="nav-link"><i class="fas fa-chart-pie nav-icon"></i><p>Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/finance-tools/income" class="nav-link"><i class="fas fa-arrow-circle-down nav-icon"></i><p>Income</p></a></li>
+                                <li class="nav-item"><a href="/finance-tools/expenses" class="nav-link"><i class="fas fa-arrow-circle-up nav-icon"></i><p>Expenses</p></a></li>
+                                <li class="nav-item"><a href="/finance-tools/vendors" class="nav-link"><i class="fas fa-store nav-icon"></i><p>Vendors</p></a></li>
+                                <li class="nav-item"><a href="/finance-tools/categories" class="nav-link"><i class="fas fa-tags nav-icon"></i><p>Categories</p></a></li>
+                                <li class="nav-item"><a href="/finance-tools/quotations" class="nav-link"><i class="fas fa-file-signature nav-icon"></i><p>Quotations</p></a></li>
+                                <li class="nav-item"><a href="/finance-tools/reports" class="nav-link"><i class="fas fa-chart-line nav-icon"></i><p>Reports</p></a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+
+                        {% if can_incidents %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/incidents') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/incidents') %}active{% endif %}">
+                                <i class="fas fa-exclamation-triangle nav-icon"></i>
+                                <p>Incidents Tracking <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/incidents" class="nav-link {% if request.url.path == '/incidents' %}active{% endif %}"><i class="fas fa-chart-pie nav-icon"></i><p>Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/incidents/new" class="nav-link {% if request.url.path == '/incidents/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>New Incident</p></a></li>
+                                <li class="nav-item"><a href="/incidents/list" class="nav-link {% if request.url.path == '/incidents/list' or (request.url.path.startswith('/incidents/') and request.url.path != '/incidents/reports/summary' and request.url.path != '/incidents/new') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Incident List</p></a></li>
+                                <li class="nav-item"><a href="/incidents/reports/summary" class="nav-link {% if request.url.path == '/incidents/reports/summary' %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Reports</p></a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+
+                        {% if can_custom_gst %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/custom-gst') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/custom-gst') %}active{% endif %}">
+                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                                <p>Custom GST Bill <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/custom-gst" class="nav-link {% if request.url.path == '/custom-gst' %}active{% endif %}"><i class="fas fa-chart-line nav-icon"></i><p>Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/custom-gst/new" class="nav-link {% if request.url.path == '/custom-gst/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>New Invoice</p></a></li>
+                                <li class="nav-item"><a href="/custom-gst/invoices" class="nav-link {% if request.url.path.startswith('/custom-gst/invoices') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Invoice List</p></a></li>
+                                <li class="nav-item"><a href="/custom-gst/reports" class="nav-link {% if request.url.path.startswith('/custom-gst/reports') %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Reports</p></a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+
+                        {% if can_hrm %}
+                        <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') %}menu-open{% endif %}">
+                            <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') %}active{% endif %}">
+                                <i class="fas fa-user-tie nav-icon"></i>
+                                <p>HRM <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"><a href="/hrm" class="nav-link {% if request.url.path == '/hrm' %}active{% endif %}"><i class="fas fa-chart-pie nav-icon"></i><p>HR Dashboard</p></a></li>
+                                <li class="nav-item"><a href="/hrm/employees" class="nav-link {% if request.url.path.startswith('/hrm/employees') %}active{% endif %}"><i class="fas fa-id-card nav-icon"></i><p>Employees</p></a></li>
+                                <li class="nav-item"><a href="/hrm/attendance" class="nav-link {% if request.url.path.startswith('/hrm/attendance') %}active{% endif %}"><i class="fas fa-user-clock nav-icon"></i><p>Attendance</p></a></li>
+                                <li class="nav-item"><a href="/hrm/leaves" class="nav-link {% if request.url.path.startswith('/hrm/leaves') %}active{% endif %}"><i class="fas fa-calendar-minus nav-icon"></i><p>Leave Requests</p></a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
                     </ul>
                 </li>
                 {% endif %}

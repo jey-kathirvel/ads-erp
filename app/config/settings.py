@@ -1,7 +1,8 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     APP_NAME: str
     APP_ENV: str
     SECRET_KEY: str
@@ -15,13 +16,14 @@ class Settings(BaseSettings):
     HOST: str
     PORT: int
 
-    # Optional so the application can still start before payment keys are
-    # configured. Payment endpoints return a clear configuration error.
+    BACKUP_FOLDER: str = "/opt/ads-erp/backups"
+    PG_DUMP_PATH: str = "/usr/bin/pg_dump"
+    SESSION_MAX_AGE: int = 28800
+    SESSION_HTTPS_ONLY: bool = True
+    ALLOWED_HOSTS: str = "erp.ads-ai.in,localhost,127.0.0.1"
+
+    # Optional so the application can start before payment keys are configured.
     RAZORPAY_KEY_ID: str = ""
     RAZORPAY_KEY_SECRET: str = ""
-
-    class Config:
-        env_file = ".env"
-
 
 settings = Settings()

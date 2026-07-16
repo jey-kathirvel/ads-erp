@@ -1,0 +1,62 @@
+<div class="card-body pt-0">
+    <section class="url-access-panel" aria-labelledby="url-access-title">
+        <div class="url-access-heading">
+            <span class="url-access-icon"><i class="fas fa-route"></i></span>
+            <div>
+                <h3 id="url-access-title">User URL restrictions</h3>
+                <p>Blocked routes are enforced by the server and automatically hidden from this user's sidebar.</p>
+            </div>
+            <span class="url-access-badge"><i class="fas fa-shield-alt"></i> Backend enforced</span>
+        </div>
+
+        <label class="url-access-label">Quick module blocks</label>
+        <div class="url-preset-grid">
+            <button type="button" class="url-preset" data-url-block="/billing"><i class="fas fa-file-invoice"></i> Billing</button>
+            <button type="button" class="url-preset" data-url-block="/booking"><i class="fas fa-hotel"></i> Booking</button>
+            <button type="button" class="url-preset" data-url-block="/inventory"><i class="fas fa-boxes"></i> Inventory</button>
+            <button type="button" class="url-preset" data-url-block="/purchase"><i class="fas fa-shopping-cart"></i> Purchase</button>
+            <button type="button" class="url-preset" data-url-block="/reports"><i class="fas fa-chart-line"></i> Reports</button>
+            <button type="button" class="url-preset" data-url-block="/hrm"><i class="fas fa-user-tie"></i> HRM</button>
+            <button type="button" class="url-preset" data-url-block="/custom-gst"><i class="fas fa-receipt"></i> Custom GST</button>
+            <button type="button" class="url-preset" data-url-block="/incidents"><i class="fas fa-life-ring"></i> Incidents</button>
+            <button type="button" class="url-preset" data-url-block="/finance-tools"><i class="fas fa-wallet"></i> Finance</button>
+        </div>
+
+        <div class="form-group mb-0">
+            <label class="url-access-label" for="blocked_urls">Blocked routes</label>
+            <textarea id="blocked_urls" name="blocked_urls" class="form-control url-access-textarea" rows="6" placeholder="/billing&#10;/inventory&#10;/incidents">{{ blocked_urls|default("") }}</textarea>
+            <div class="url-access-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Enter one route per line. A route includes all pages below it: <strong>/billing</strong> also blocks <strong>/billing/list</strong> and <strong>/billing/barcode</strong>. Click a quick block again to remove it.</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+.url-access-panel{padding:20px;background:linear-gradient(145deg,#f8f9ff,#fff);border:1px solid #e1e5f2;border-radius:18px}.url-access-heading{display:flex;align-items:center;gap:13px;margin-bottom:18px}.url-access-icon{flex:0 0 44px;width:44px;height:44px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#655de2,#4338ca);border-radius:13px;box-shadow:0 9px 22px rgba(79,70,229,.2)}.url-access-heading h3{margin:0;color:#172033;font-size:17px;font-weight:900}.url-access-heading p{margin:3px 0 0;color:#66758c;font-size:12px}.url-access-badge{margin-left:auto;padding:6px 9px;color:#08785c;background:#ecfdf5;border:1px solid #c5efdf;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}.url-access-label{display:block;margin-bottom:8px;color:#344258;font-size:12px;font-weight:900}.url-preset-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}.url-preset{padding:8px 10px;color:#4c5a70;background:#fff;border:1px solid #dfe5ee;border-radius:9px;font-size:11px;font-weight:800;transition:.16s ease}.url-preset:hover,.url-preset.active{color:#fff;background:#5148dd;border-color:#5148dd;box-shadow:0 7px 17px rgba(79,70,229,.18)}.url-access-textarea{min-height:128px;border-color:#d9dfeb;border-radius:11px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.7}.url-access-help{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 12px;color:#5d6b81;background:#f3f6fa;border-radius:10px;font-size:11px;line-height:1.5}.url-access-help i{margin-top:2px;color:#4f46e5}@media(max-width:700px){.url-access-heading{align-items:flex-start;flex-wrap:wrap}.url-access-badge{margin-left:0}.url-access-panel{padding:15px}}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const field = document.getElementById('blocked_urls');
+    const buttons = document.querySelectorAll('[data-url-block]');
+    if (!field || !buttons.length) return;
+
+    const read = () => field.value.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+    const refresh = () => {
+        const selected = new Set(read());
+        buttons.forEach(button => button.classList.toggle('active', selected.has(button.dataset.urlBlock)));
+    };
+
+    buttons.forEach(button => button.addEventListener('click', function () {
+        const values = read();
+        const path = button.dataset.urlBlock;
+        const next = values.includes(path) ? values.filter(value => value !== path) : [...values, path];
+        field.value = next.join('\n');
+        refresh();
+    }));
+    field.addEventListener('input', refresh);
+    refresh();
+});
+</script>

@@ -1,4 +1,4 @@
-<div class="ads-capability-dashboard">
+<div class="ads-capability-dashboard{% if public_view|default(false) %} ads-public-dashboard-view{% endif %}">
     <div class="ads-shell">
         <div class="ads-relative">
 
@@ -19,10 +19,9 @@
                     </h1>
 
                     <p class="ads-hero-copy">
-                        ADS ERP connects product management, inventory operations,
-                        GST invoicing, barcode billing, hotel booking workflows,
-                        role-based permissions, URL-level access protection and
-                        PostgreSQL backup operations in one unified platform.
+                        ADS ERP connects sales, inventory, hospitality and people
+                        operations with the newly migrated CRM, finance, custom GST
+                        billing and incident-management tools in one secure workspace.
                     </p>
 
                     <div class="ads-badges">
@@ -54,6 +53,11 @@
                         <span class="ads-badge">
                             <i class="fas fa-database"></i>
                             Backup & Recovery
+                        </span>
+
+                        <span class="ads-badge">
+                            <i class="fas fa-toolbox"></i>
+                            Connected Tools
                         </span>
                     </div>
                 </div>
@@ -116,6 +120,106 @@
                     </div>
                 </aside>
 
+            </section>
+
+            <!-- LIVE OVERVIEW -->
+            <section class="ads-overview" aria-label="Platform overview">
+                <div class="ads-metric-grid">
+                    <article class="ads-metric metric-indigo">
+                        <span class="ads-metric-icon"><i class="fas fa-file-invoice"></i></span>
+                        <div><small>ERP invoices</small><strong>{{ invoice_count|default('Unified') }}</strong><span>Core billing flow</span></div>
+                    </article>
+                    <article class="ads-metric metric-cyan">
+                        <span class="ads-metric-icon"><i class="fas fa-file-signature"></i></span>
+                        <div><small>Custom GST bills</small><strong>{{ custom_gst_count|default('Ready') }}</strong><span>Migrated billing tool</span></div>
+                    </article>
+                    <article class="ads-metric metric-emerald">
+                        <span class="ads-metric-icon"><i class="fas fa-users"></i></span>
+                        <div><small>Active employees</small><strong>{{ employee_count|default('HRM') }}</strong><span>People operations</span></div>
+                    </article>
+                    <article class="ads-metric metric-amber">
+                        <span class="ads-metric-icon"><i class="fas fa-shield-alt"></i></span>
+                        <div><small>Open incidents</small><strong>{{ open_incidents|default('SRE') }}</strong><span>Service visibility</span></div>
+                    </article>
+                </div>
+
+                <div class="ads-insight-grid">
+                    <article class="ads-insight-card">
+                        <div class="ads-insight-head">
+                            <div><span class="ads-kicker">Operations pulse</span><h2>Connected activity</h2></div>
+                            <span class="ads-live-pill"><i></i> Live workspace</span>
+                        </div>
+                        {% set bars = activity_bars|default([82, 64, 76, 48]) %}
+                        <div class="ads-bar-chart" role="img" aria-label="Relative module activity">
+                            <div class="ads-bar-column"><span style="height: {{ bars[0] }}%"></span><small>Billing</small></div>
+                            <div class="ads-bar-column"><span style="height: {{ bars[1] }}%"></span><small>GST Tool</small></div>
+                            <div class="ads-bar-column"><span style="height: {{ bars[2] }}%"></span><small>HRM</small></div>
+                            <div class="ads-bar-column"><span style="height: {{ bars[3] }}%"></span><small>Incidents</small></div>
+                        </div>
+                    </article>
+
+                    <article class="ads-insight-card ads-finance-spotlight">
+                        <div class="ads-insight-head">
+                            <div><span class="ads-kicker">Finance command</span><h2>Cash-flow view</h2></div>
+                            <span class="ads-chart-orbit"><i class="fas fa-chart-pie"></i></span>
+                        </div>
+                        {% if user %}
+                        <div class="ads-finance-values">
+                            <div><small>Income</small><strong>₹{{ '{:,.0f}'.format(finance_income) }}</strong></div>
+                            <div><small>Expense</small><strong>₹{{ '{:,.0f}'.format(finance_expense) }}</strong></div>
+                            <div class="balance"><small>Balance</small><strong>₹{{ '{:,.0f}'.format(finance_balance) }}</strong></div>
+                        </div>
+                        {% else %}
+                        <p class="ads-public-insight">Track income, expenses, quotations and vendors from one clean operational view.</p>
+                        <a class="ads-inline-link" href="/login">Explore after sign in <i class="fas fa-arrow-right"></i></a>
+                        {% endif %}
+                    </article>
+                </div>
+            </section>
+
+            <!-- MIGRATED TOOLS -->
+            <section class="ads-section ads-tools-section" id="connected-tools">
+                <div class="ads-section-head">
+                    <div>
+                        <div class="ads-kicker">Recently unified</div>
+                        <h2>Your specialist tools. One ADS ERP experience.</h2>
+                        <p class="ads-section-sub">Purpose-built workflows now live beside core ERP operations with shared access control and a consistent interface.</p>
+                    </div>
+                    <span class="ads-suite-count">5 connected tools</span>
+                </div>
+
+                <div class="ads-tools-grid">
+                    <a class="ads-tool-card tool-crm" href="https://crm.ads-ai.in" {% if user %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                        <span class="ads-tool-top"><i class="fas fa-handshake"></i><em>Connected</em></span>
+                        <h3>ADS CRM</h3><p>Customer relationships, pipeline visibility and focused follow-up workflows.</p>
+                        <span class="ads-tool-features"><b>Leads</b><b>Pipeline</b><b>Follow-ups</b></span>
+                        <span class="ads-tool-link">Open CRM <i class="fas fa-external-link-alt"></i></span>
+                    </a>
+                    <a class="ads-tool-card tool-finance" href="{% if user %}/finance-tools{% else %}/login{% endif %}">
+                        <span class="ads-tool-top"><i class="fas fa-wallet"></i><em>Migrated</em></span>
+                        <h3>Credit & Debit</h3><p>Income, expenses, vendors, quotations and decision-ready reports.</p>
+                        <span class="ads-tool-features"><b>Cash flow</b><b>Vendors</b><b>Reports</b></span>
+                        <span class="ads-tool-link">Open Finance <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <a class="ads-tool-card tool-incident" href="{% if user %}/incidents{% else %}/login{% endif %}">
+                        <span class="ads-tool-top"><i class="fas fa-life-ring"></i><em>Migrated</em></span>
+                        <h3>Incidents Tracking</h3><p>Own service cases from report and assignment through resolution.</p>
+                        <span class="ads-tool-features"><b>Cases</b><b>Priority</b><b>SLA view</b></span>
+                        <span class="ads-tool-link">Open Incidents <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <a class="ads-tool-card tool-gst" href="{% if user %}/custom-gst{% else %}/login{% endif %}">
+                        <span class="ads-tool-top"><i class="fas fa-receipt"></i><em>Migrated</em></span>
+                        <h3>Custom GST Bill</h3><p>Hospitality-ready GST invoices, PDFs and focused billing reports.</p>
+                        <span class="ads-tool-features"><b>Invoices</b><b>GST</b><b>PDF</b></span>
+                        <span class="ads-tool-link">Open GST Tool <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <a class="ads-tool-card tool-hrm" href="{% if user %}/hrm{% else %}/login{% endif %}">
+                        <span class="ads-tool-top"><i class="fas fa-user-tie"></i><em>Integrated</em></span>
+                        <h3>Human Resources</h3><p>Employees, attendance and leave requests in a simple people workspace.</p>
+                        <span class="ads-tool-features"><b>People</b><b>Attendance</b><b>Leave</b></span>
+                        <span class="ads-tool-link">Open HRM <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                </div>
             </section>
 
             <!-- CORE CAPABILITIES -->

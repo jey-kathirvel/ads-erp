@@ -9,8 +9,10 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.routes.router import api_router
 from app.access_control.middleware import UserUrlAccessMiddleware
 from app.config.database import engine
-from app.hrm.models import Attendance, Employee, LeaveRequest
 from app.booking.models import BookingPayment
+from app.config.settings import settings
+from app.security.middleware import CSRFMiddleware, ModuleAuthorizationMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 app = FastAPI(title="ADS ERP", version="0.5.1")
 
@@ -22,12 +24,21 @@ app.add_middleware(
     UserUrlAccessMiddleware
 )
 
+app.add_middleware(ModuleAuthorizationMiddleware)
+
+app.add_middleware(CSRFMiddleware)
+
 app.add_middleware(
     SessionMiddleware,
-    secret_key="ads-erp-secret-key",
-    max_age=60 * 60 * 8,
+    secret_key=settings.SECRET_KEY,
+    max_age=settings.SESSION_MAX_AGE,
     same_site="lax",
-    https_only=True,
+    https_only=settings.SESSION_HTTPS_ONLY,
+)
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=[host.strip() for host in settings.ALLOWED_HOSTS.split(",") if host.strip()],
 )
 
 # ----------------------------------------------------
@@ -62,19 +73,13 @@ app.include_router(api_router)
 
 
 @app.on_event("startup")
-def ensure_hrm_tables():
-    """Create HRM tables on existing deployments without touching ERP data."""
-    Employee.metadata.create_all(
-        bind=engine,
-        tables=[Employee.__table__, Attendance.__table__, LeaveRequest.__table__],
-        checkfirst=True,
-    )
+def ensure_booking_payment_table():
+    """Add payment storage safely on both new and existing deployments."""
     BookingPayment.metadata.create_all(
         bind=engine,
         tables=[BookingPayment.__table__],
         checkfirst=True,
     )
-
 # ----------------------------------------------------
 # Home
 # ----------------------------------------------------
