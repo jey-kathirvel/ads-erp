@@ -8,6 +8,8 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from app.routes.router import api_router
 from app.access_control.middleware import UserUrlAccessMiddleware
+from app.config.database import engine
+from app.booking.models import BookingPayment
 from app.config.settings import settings
 from app.security.middleware import CSRFMiddleware, ModuleAuthorizationMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -70,6 +72,14 @@ templates.env.globals["current_user"] = current_user
 app.include_router(api_router)
 
 
+@app.on_event("startup")
+def ensure_booking_payment_table():
+    """Add payment storage safely on both new and existing deployments."""
+    BookingPayment.metadata.create_all(
+        bind=engine,
+        tables=[BookingPayment.__table__],
+        checkfirst=True,
+    )
 # ----------------------------------------------------
 # Home
 # ----------------------------------------------------

@@ -33,6 +33,9 @@
             name="selected_room_ids"
             value=""
         >
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
 
         <div class="row">
 
@@ -283,9 +286,11 @@
                                         id="advance_amount"
                                         name="advance_amount"
                                         class="form-control"
-                                        value="0"
-                                        min="0"
+                                        value=""
+                                        min="0.01"
                                         step="0.01"
+                                        required
+                                        placeholder="Enter full or partial amount"
                                     >
                                 </div>
                             </div>
@@ -301,13 +306,7 @@
                                         name="payment_mode"
                                         class="form-control"
                                     >
-                                        <option value="">Select</option>
-                                        <option value="CASH">Cash</option>
-                                        <option value="UPI">UPI</option>
-                                        <option value="CARD">Card</option>
-                                        <option value="BANK_TRANSFER">
-                                            Bank Transfer
-                                        </option>
+                                        <option value="RAZORPAY" selected>Razorpay</option>
                                     </select>
                                 </div>
                             </div>
@@ -442,8 +441,8 @@
                     class="btn btn-primary btn-lg btn-block"
                     disabled
                 >
-                    <i class="fas fa-save mr-2"></i>
-                    Save Booking
+                    <i class="fas fa-lock mr-2"></i>
+                    Pay & Confirm Booking
                 </button>
 
                 <small
@@ -623,6 +622,7 @@
 }
 </style>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -650,6 +650,70 @@ document.addEventListener("DOMContentLoaded", function () {
     const sameDayBookingCount = document.getElementById(
         "sameDayBookingCount"
     );
+    const bookingForm = document.getElementById("bookingForm");
+    let paymentInProgress = false;
+
+    bookingForm.addEventListener("submit", async function (event) {
+        if (document.getElementById("razorpay_payment_id").value) {
+            return;
+        }
+
+        event.preventDefault();
+        if (paymentInProgress || !bookingForm.reportValidity()) {
+            return;
+        }
+
+        paymentInProgress = true;
+        saveBookingButton.disabled = true;
+        saveBookingHelp.textContent = "Creating secure payment order...";
+
+        try {
+            const response = await fetch("/booking/api/payment/order", {
+                method: "POST",
+                body: new FormData(bookingForm)
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.detail || "Unable to start payment");
+            }
+
+            const checkout = new Razorpay({
+                key: data.key_id,
+                amount: data.amount,
+                currency: data.currency,
+                name: "ADS ERP Hotel Booking",
+                description: "Room booking payment",
+                order_id: data.order_id,
+                prefill: {
+                    name: document.getElementById("guest_name").value,
+                    contact: document.getElementById("mobile").value
+                },
+                theme: {color: "#4f46e5"},
+                handler: function (result) {
+                    document.getElementById("razorpay_order_id").value = result.razorpay_order_id;
+                    document.getElementById("razorpay_payment_id").value = result.razorpay_payment_id;
+                    document.getElementById("razorpay_signature").value = result.razorpay_signature;
+                    saveBookingHelp.textContent = "Payment received. Confirming room...";
+                    bookingForm.requestSubmit();
+                },
+                modal: {ondismiss: function () {
+                    paymentInProgress = false;
+                    saveBookingButton.disabled = false;
+                    saveBookingHelp.textContent = "Payment cancelled. The room has not been booked.";
+                }}
+            });
+            checkout.on("payment.failed", function (result) {
+                paymentInProgress = false;
+                saveBookingButton.disabled = false;
+                saveBookingHelp.textContent = result.error.description || "Payment failed. The room has not been booked.";
+            });
+            checkout.open();
+        } catch (error) {
+            paymentInProgress = false;
+            saveBookingButton.disabled = false;
+            saveBookingHelp.textContent = error.message;
+        }
+    });
 
     function escapeSameDayHtml(value) {
         return String(
