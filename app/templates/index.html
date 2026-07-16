@@ -9,6 +9,19 @@
 <link rel="stylesheet"
       href="/static/css/ads-dashboard-tools.css?v=1">
 
-{% include "dashboard/_public_showcase.html" %}
+{#
+  Reuse the authenticated dashboard presentation without querying or exposing
+  operational data. These values are product labels and illustrative chart
+  heights only; every protected tool continues to send guests to sign-in.
+#}
+{% set public_view = true %}
+{% set user = none %}
+{% set invoice_count = "Unified" %}
+{% set custom_gst_count = "Ready" %}
+{% set employee_count = "HRM" %}
+{% set open_incidents = "SRE" %}
+{% set activity_bars = [82, 64, 76, 48] %}
+
+{% include "dashboard/_capability_content.html" %}
 
 {% endblock %}

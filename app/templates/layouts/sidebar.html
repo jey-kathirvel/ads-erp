@@ -5,26 +5,27 @@
 {% set _role_code = _user.get("role_code", "") %}
 {% set _allowed = request.session.get("allowed_modules", []) %}
 {% set _is_admin = (_role_code == "ADMIN") %}
+{% set url_allowed = request.state.url_allowed %}
 
-{% set can_dashboard = _is_admin or ("dashboard" in _allowed) %}
-{% set can_customers = _is_admin or ("customers" in _allowed) %}
-{% set can_suppliers = _is_admin or ("suppliers" in _allowed) %}
-{% set can_products = _is_admin or ("products" in _allowed) %}
-{% set can_categories = _is_admin or ("categories" in _allowed) %}
-{% set can_billing = _is_admin or ("billing" in _allowed) %}
-{% set can_booking = _is_admin or ("booking" in _allowed) %}
-{% set can_inventory = _is_admin or ("inventory" in _allowed) %}
-{% set can_purchase = _is_admin or ("purchase" in _allowed) %}
-{% set can_reports = _is_admin or ("reports" in _allowed) %}
-{% set can_accounts = _is_admin or ("accounts" in _allowed) %}
-{% set can_company = _is_admin or ("company" in _allowed) %}
-{% set can_users = _is_admin or ("users" in _allowed) %}
-{% set can_roles = _is_admin or ("roles" in _allowed) %}
-{% set can_hrm = _is_admin or ("hrm" in _allowed) %}
+{% set can_dashboard = (_is_admin or ("dashboard" in _allowed)) and url_allowed('/dashboard') %}
+{% set can_customers = (_is_admin or ("customers" in _allowed)) and url_allowed('/customers') %}
+{% set can_suppliers = (_is_admin or ("suppliers" in _allowed)) and url_allowed('/suppliers') %}
+{% set can_products = (_is_admin or ("products" in _allowed)) and url_allowed('/products') %}
+{% set can_categories = (_is_admin or ("categories" in _allowed)) and url_allowed('/categories') %}
+{% set can_billing = (_is_admin or ("billing" in _allowed)) and url_allowed('/billing') %}
+{% set can_booking = (_is_admin or ("booking" in _allowed)) and url_allowed('/booking') %}
+{% set can_inventory = (_is_admin or ("inventory" in _allowed)) and url_allowed('/inventory') %}
+{% set can_purchase = (_is_admin or ("purchase" in _allowed)) and url_allowed('/purchase') %}
+{% set can_reports = (_is_admin or ("reports" in _allowed)) and url_allowed('/reports') %}
+{% set can_accounts = (_is_admin or ("accounts" in _allowed)) and url_allowed('/accounts') %}
+{% set can_company = (_is_admin or ("company" in _allowed)) and url_allowed('/settings/company') %}
+{% set can_users = (_is_admin or ("users" in _allowed)) and url_allowed('/users') %}
+{% set can_roles = (_is_admin or ("roles" in _allowed)) and (url_allowed('/roles') or url_allowed('/permissions')) %}
+{% set can_hrm = (_is_admin or ("hrm" in _allowed)) and url_allowed('/hrm') %}
 {% set can_crm = _is_admin or ("crm" in _allowed) %}
-{% set can_custom_gst = _is_admin or ("custom_gst" in _allowed) %}
-{% set can_incidents = _is_admin or ("incidents" in _allowed) %}
-{% set can_finance_tools = _is_admin or ("finance_tools" in _allowed) %}
+{% set can_custom_gst = (_is_admin or ("custom_gst" in _allowed)) and url_allowed('/custom-gst') %}
+{% set can_incidents = (_is_admin or ("incidents" in _allowed)) and url_allowed('/incidents') %}
+{% set can_finance_tools = (_is_admin or ("finance_tools" in _allowed)) and url_allowed('/finance-tools') %}
 
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">

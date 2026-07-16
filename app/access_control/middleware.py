@@ -2,7 +2,7 @@ from starlette.middleware.base import (
     BaseHTTPMiddleware,
 )
 from starlette.requests import Request
-from starlette.responses import PlainTextResponse
+from fastapi.templating import Jinja2Templates
 
 from app.config.database import SessionLocal
 from app.access_control.service import (
@@ -22,6 +22,9 @@ class UserUrlAccessMiddleware(
         user = request.session.get(
             "user"
         )
+
+        request.state.blocked_url_patterns = []
+        request.state.url_allowed = lambda path: True
 
         if not user:
             return await call_next(
@@ -56,20 +59,21 @@ class UserUrlAccessMiddleware(
         db = SessionLocal()
 
         try:
-            blocked = (
-                UrlAccessService.is_blocked(
-                    db=db,
-                    user_id=int(user_id),
-                    request_path=request_path,
-                )
-            )
+            patterns = UrlAccessService.get_active_patterns(db, int(user_id))
 
         finally:
             db.close()
 
+        request.state.blocked_url_patterns = patterns
+        request.state.url_allowed = lambda path: UrlAccessService.path_is_allowed(patterns, path)
+        blocked = not request.state.url_allowed(request_path)
+
         if blocked:
-            return PlainTextResponse(
-                "You Are Not Authorized",
+            templates = Jinja2Templates(directory="app/templates")
+            return templates.TemplateResponse(
+                request=request,
+                name="errors/403.html",
+                context={"blocked_path": request_path},
                 status_code=403,
             )
 
