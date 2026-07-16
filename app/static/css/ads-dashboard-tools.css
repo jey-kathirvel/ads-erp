@@ -59,6 +59,13 @@ body.ads-public-body .ads-public-navbar-inner { min-height:72px; padding:10px cl
 body.ads-public-body .ads-public-brand img { height:48px; }
 body.ads-public-body .ads-public-login { background:linear-gradient(135deg,#5b55e7,#4338ca); border:0; border-radius:12px; box-shadow:0 9px 24px rgba(79,70,229,.22); }
 body.ads-public-body .ads-public-main { padding:18px clamp(12px,3vw,42px) 30px; background:radial-gradient(circle at 8% 0,rgba(79,70,229,.09),transparent 25%),#f6f8fc; }
+body.ads-public-body .ads-public-dashboard-view .ads-shell { max-width:1600px; margin:0 auto; }
+body.ads-public-body .ads-public-dashboard-view .ads-hero-main,
+body.ads-public-body .ads-public-dashboard-view .ads-hero-side,
+body.ads-public-body .ads-public-dashboard-view .ads-section,
+body.ads-public-body .ads-public-dashboard-view .ads-metric,
+body.ads-public-body .ads-public-dashboard-view .ads-insight-card { background-color:#fff; }
+body.ads-public-body .ads-public-dashboard-view a.ads-tool-card:not(.tool-crm) { cursor:pointer; }
 body.ads-public-body .ads-public-showcase .ads-shell { padding:0!important; overflow:visible; background:transparent!important; border:0!important; box-shadow:none!important; }
 body.ads-public-body .ads-public-showcase .ads-shell::before { display:none; }
 .ads-public-showcase .ads-public-hero { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(340px,.7fr); gap:18px; padding:clamp(28px,5vw,68px); background:linear-gradient(135deg,#fff 0%,#f8f7ff 55%,#eefbf8 100%); border:1px solid #e0e5ef; border-radius:26px; box-shadow:0 18px 50px rgba(30,41,59,.09); }
