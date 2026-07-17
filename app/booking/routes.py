@@ -414,6 +414,7 @@ async def toggle_test_room(
                 BookingRoom.room_id == room.id,
                 BookingRoom.status == "ACTIVE",
                 Booking.status.in_(ACTIVE_BOOKING_STATUSES),
+                Booking.check_out_at > india_now(),
             )
             .first()
         )
