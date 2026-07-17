@@ -80,3 +80,16 @@ During Phase 2 testing, ADS ERP runs from `/opt/ads-erp-phase2`. The previous `/
 The booking form accepts an optional guest email. After a staff Razorpay booking is committed, ADS ERP sends a branded confirmation containing the booking, tax, amount paid, balance, and payment reference. A missing email skips delivery; an SMTP failure is logged and never rolls back the confirmed booking.
 
 Configure Hostinger SMTP in `.env` using `.env.example`. Use the mailbox password for `akshatroyalstay@ads-ai.in`, do not commit it, and restart `ads-erp.service` after configuration. The customer-facing terms and refund policy are published by online-ars.
+
+## Hotel invoice workflow
+
+The Custom GST area now provides hotel invoices linked to confirmed bookings.
+
+- Search by the guest's 10-digit mobile number or the final five booking characters. If multiple bookings match, the latest confirmed booking is selected.
+- Booking, guest, room, tax, captured payment and balance values are prefilled but remain editable before invoice generation.
+- Staff can add multiple named charges, a discount, customer GSTIN/address and payment notes.
+- Invoice numbers use the financial-year sequence ARS/YYYY-YY/NNNN.
+- The branded invoice supports browser print, a one-page PDF, and email delivery with the PDF attached.
+- Property snapshot: Akshat Royal Stay, test GSTIN GSTAKSHATJM81, No. 85 Kamaraj Bazaar Road, Bodinayakanur, Theni District, Tamil Nadu, India - 625513.
+
+Deployment requires alembic upgrade head before restarting ADS ERP. Replace the test GSTIN with the registered GSTIN before production tax invoices are issued.
