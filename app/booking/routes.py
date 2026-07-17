@@ -427,7 +427,8 @@ async def toggle_test_room(
             room_type = (
                 db.query(RoomType)
                 .filter(
-                    RoomType.name.ilike("%Non-AC Single%"),
+                    RoomType.name.ilike("%Single%"),
+                    RoomType.name.ilike("%Non-AC%"),
                     RoomType.is_active.is_(True),
                 )
                 .first()
