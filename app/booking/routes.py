@@ -229,7 +229,10 @@ async def booking_dashboard(
     online_payment_requests = []
     online_bookings = (
         db.query(Booking)
-        .filter(Booking.booking_source == "ONLINE")
+        .filter(
+            Booking.booking_source == "ONLINE",
+            Booking.status != "DELETED",
+        )
         .order_by(Booking.created_at.desc(), Booking.id.desc())
         .limit(20)
         .all()
@@ -983,7 +986,7 @@ async def view_booking(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1029,7 +1032,7 @@ async def update_booking(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1312,7 +1315,7 @@ async def edit_booking_form(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1369,7 +1372,7 @@ async def cancel_booking_rooms(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1534,7 +1537,7 @@ async def cancel_booking(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1548,6 +1551,14 @@ async def cancel_booking(
 
     booking.status = "CANCELLED"
 
+    cancellation_time = india_now()
+    for assignment in booking.booking_rooms:
+        if assignment.status != "ACTIVE":
+            continue
+        assignment.status = "CANCELLED"
+        assignment.cancelled_at = cancellation_time
+        assignment.cancellation_reason = "Full booking cancelled by staff"
+
     try:
         db.commit()
 
@@ -1559,4 +1570,38 @@ async def cancel_booking(
         url="/booking",
         status_code=303,
     )
+@router.post(
+    "/booking/{booking_id}/delete",
+    name="delete_booking",
+)
+async def delete_booking(
+    booking_id: int,
+    user=Depends(login_required),
+    db: Session = Depends(get_db),
+):
+    booking = db.query(Booking).filter(Booking.id == booking_id).first()
 
+    if booking is None or booking.status == "DELETED":
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    if booking.status != "CANCELLED":
+        raise HTTPException(
+            status_code=409,
+            detail="Cancel the booking before deleting it",
+        )
+
+    booking.status = "DELETED"
+    deletion_note = "Archived by staff after full cancellation"
+    booking.notes = (
+        f"{booking.notes}\n{deletion_note}"
+        if booking.notes
+        else deletion_note
+    )
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return RedirectResponse(url="/booking", status_code=303)

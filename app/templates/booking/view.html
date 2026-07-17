@@ -33,6 +33,8 @@
                     </a>
                     {% endif %}
 
+                    {% if booking.status != "CANCELLED" %}
+
                     <a
                         href="/booking/{{ booking.id }}/edit"
                         class="btn btn-warning"
@@ -41,6 +43,19 @@
                         Edit
                     </a>
 
+
+                    <form method="post" action="/booking/{{ booking.id }}/cancel" class="d-inline" onsubmit="return confirm('Fully cancel this booking? Reserved rooms will be released. Payment refund is not automatic.');">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-ban mr-1"></i> Full Cancel
+                        </button>
+                    </form>
+                    {% else %}
+                    <form method="post" action="/booking/{{ booking.id }}/delete" class="d-inline" onsubmit="return confirm('Archive this cancelled booking? Audit records will be retained.');">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fas fa-trash mr-1"></i> Delete
+                        </button>
+                    </form>
+                    {% endif %}
                     <a
                         href="/booking"
                         class="btn btn-outline-secondary"
