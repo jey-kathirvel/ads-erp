@@ -16,6 +16,49 @@ ACTIVE_BOOKING_STATUSES = (
 
 class BookingService:
 
+    ONLINE_PAYMENT_EXPIRED_REASON = "Online payment window expired"
+
+    @staticmethod
+    def expire_online_payment_holds(db: Session, now: datetime | None = None) -> int:
+        """Cancel expired online holds and release their rooms atomically."""
+        now = now or datetime.utcnow()
+        expired = (
+            db.query(Booking)
+            .filter(
+                Booking.booking_source == "ONLINE",
+                Booking.status == "RESERVED",
+                Booking.payment_expires_at.isnot(None),
+                Booking.payment_expires_at <= now,
+            )
+            .with_for_update()
+            .all()
+        )
+        for booking in expired:
+            reason = BookingService.ONLINE_PAYMENT_EXPIRED_REASON
+            booking.status = "CANCELLED"
+            booking.updated_at = now
+            booking.notes = (
+                f"{booking.notes}\n{reason}" if booking.notes else reason
+            )
+            (
+                db.query(BookingRoom)
+                .filter(
+                    BookingRoom.booking_id == booking.id,
+                    BookingRoom.status == "ACTIVE",
+                )
+                .update(
+                    {
+                        BookingRoom.status: "CANCELLED",
+                        BookingRoom.cancelled_at: now,
+                        BookingRoom.cancellation_reason: reason,
+                    },
+                    synchronize_session=False,
+                )
+            )
+        if expired:
+            db.commit()
+        return len(expired)
+
     @staticmethod
     def calculate_price(room_rate, number_of_rooms: int, number_of_days: int, gst_percent=5):
         rate = Decimal(str(room_rate))

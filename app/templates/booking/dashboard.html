@@ -146,6 +146,40 @@
 
     </div>
 
+    <div class="card card-outline card-warning online-payment-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0"><i class="fas fa-globe mr-2"></i>Online Payment Requests</h3>
+            <span class="badge badge-warning ml-auto">Latest {{ online_payment_requests|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead><tr><th>Booking</th><th>Guest / Mobile</th><th>Room</th><th>Payment</th><th>Time Remaining</th><th>Reason</th><th>Action</th></tr></thead>
+                    <tbody>
+                    {% for item in online_payment_requests %}
+                        {% set booking = item.booking %}
+                        <tr class="online-payment-row" data-booking-status="{{ booking.status }}">
+                            <td><strong>{{ booking.booking_no }}</strong><br><small class="text-muted">{{ booking.created_at.strftime('%d-%b-%Y %I:%M %p') }}</small></td>
+                            <td><strong>{{ booking.guest_name }}</strong><br><a href="tel:{{ booking.mobile }}">{{ booking.mobile or '-' }}</a></td>
+                            <td>{{ booking.room_type.name }}<br><small>{{ booking.number_of_rooms }} room(s)</small></td>
+                            <td><span class="badge badge-{{ item.payment_badge }} px-2 py-1">{{ item.payment_status }}</span><br><small>Booking: {{ booking.status }}</small></td>
+                            <td>
+                                {% if booking.status == 'RESERVED' %}
+                                <strong class="online-hold-countdown text-warning" data-seconds="{{ item.remaining_seconds }}">--:--</strong><br><small>10-minute hold</small>
+                                {% else %}<span class="text-muted">—</span>{% endif %}
+                            </td>
+                            <td>{% if item.cancellation_reason %}<span class="text-danger">{{ item.cancellation_reason }}</span>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+                            <td><a href="/booking/{{ booking.id }}/view" class="btn btn-info btn-sm"><i class="fas fa-eye mr-1"></i>View</a></td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="7" class="text-center text-muted py-4">No online payment requests yet.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="card card-outline card-secondary">
 
         <div class="card-header">
@@ -413,6 +447,7 @@
 </div>
 
 <style>
+.online-payment-card .table td{vertical-align:middle}.online-hold-countdown{font-size:1.05rem;font-variant-numeric:tabular-nums}.online-payment-row[data-booking-status="CANCELLED"]{background:#fff7f7}.online-payment-row[data-booking-status="CONFIRMED"]{background:#f6fff8}
 @media (max-width: 768px) {
 
     .small-box {
@@ -437,6 +472,32 @@
     }
 }
 </style>
+<script id="onlinePaymentCountdownScript">
+document.addEventListener("DOMContentLoaded", function () {
+    let reloadScheduled = false;
+    function tick() {
+        document.querySelectorAll(".online-hold-countdown").forEach(function (element) {
+            let seconds = Number(element.dataset.seconds || 0);
+            if (seconds <= 0) {
+                element.textContent = "EXPIRED";
+                element.classList.remove("text-warning");
+                element.classList.add("text-danger");
+                if (!reloadScheduled) {
+                    reloadScheduled = true;
+                    window.setTimeout(function () { window.location.reload(); }, 1500);
+                }
+                return;
+            }
+            const minutes = Math.floor(seconds / 60);
+            const remainder = seconds % 60;
+            element.textContent = String(minutes).padStart(2, "0") + ":" + String(remainder).padStart(2, "0");
+            element.dataset.seconds = String(seconds - 1);
+        });
+    }
+    tick();
+    window.setInterval(tick, 1000);
+});
+</script>
 <link rel="stylesheet" href="/static/css/ads-elite-booking-dashboard.css?v=1">
 
 

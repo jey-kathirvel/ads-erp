@@ -117,6 +117,11 @@ async def booking_dashboard(
 ):
 
     now = india_now()
+    utc_now = datetime.utcnow()
+    BookingService.expire_online_payment_holds(
+        db=db,
+        now=utc_now,
+    )
 
     total_rooms = (
         db.query(Room)
@@ -219,6 +224,48 @@ async def booking_dashboard(
         .limit(10)
         .all()
     )
+
+    online_payment_requests = []
+    online_bookings = (
+        db.query(Booking)
+        .filter(Booking.booking_source == "ONLINE")
+        .order_by(Booking.created_at.desc(), Booking.id.desc())
+        .limit(20)
+        .all()
+    )
+    for booking in online_bookings:
+        remaining_seconds = 0
+        if booking.status == "RESERVED" and booking.payment_expires_at:
+            remaining_seconds = max(
+                int((booking.payment_expires_at - utc_now).total_seconds()),
+                0,
+            )
+            payment_status = "AWAITING PAYMENT"
+            payment_badge = "warning"
+        elif booking.status in ("CONFIRMED", "CHECKED_IN", "CHECKED_OUT"):
+            payment_status = "PAYMENT CAPTURED"
+            payment_badge = "success"
+        elif booking.status == "CANCELLED" and (
+            BookingService.ONLINE_PAYMENT_EXPIRED_REASON in (booking.notes or "")
+        ):
+            payment_status = "PAYMENT EXPIRED"
+            payment_badge = "danger"
+        else:
+            payment_status = booking.status
+            payment_badge = "secondary"
+        online_payment_requests.append(
+            {
+                "booking": booking,
+                "remaining_seconds": remaining_seconds,
+                "payment_status": payment_status,
+                "payment_badge": payment_badge,
+                "cancellation_reason": (
+                    BookingService.ONLINE_PAYMENT_EXPIRED_REASON
+                    if payment_status == "PAYMENT EXPIRED"
+                    else ""
+                ),
+            }
+        )
 
     # -------------------------------------
     # Checkout alerts: next 2 hours
@@ -337,6 +384,7 @@ async def booking_dashboard(
             "available_now": available_now,
             "room_type_summary": room_type_summary,
             "active_bookings": active_bookings,
+            "online_payment_requests": online_payment_requests,
             "checkout_alerts": checkout_alerts,
             "checkout_alert_until": checkout_alert_until,
         },
