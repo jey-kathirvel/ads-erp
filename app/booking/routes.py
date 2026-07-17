@@ -374,6 +374,8 @@ async def booking_dashboard(
             }
         )
 
+    test_room = db.query(Room).filter(Room.room_number == "TEST-01").first()
+    can_manage_test_room = user.get("role_code") == "ADMIN"
     return templates.TemplateResponse(
         request=request,
         name="booking/dashboard.html",
@@ -388,9 +390,65 @@ async def booking_dashboard(
             "online_payment_requests": online_payment_requests,
             "checkout_alerts": checkout_alerts,
             "checkout_alert_until": checkout_alert_until,
+            "test_room": test_room,
+            "can_manage_test_room": can_manage_test_room,
         },
     )
 
+
+@router.post("/booking/test-room/toggle")
+async def toggle_test_room(
+    request: Request,
+    user=Depends(login_required),
+    db: Session = Depends(get_db),
+):
+    if user.get("role_code") != "ADMIN":
+        raise HTTPException(status_code=403, detail="Administrator access required")
+
+    room = db.query(Room).filter(Room.room_number == "TEST-01").first()
+    if room and room.is_active:
+        active_booking = (
+            db.query(Booking.id)
+            .join(BookingRoom, BookingRoom.booking_id == Booking.id)
+            .filter(
+                BookingRoom.room_id == room.id,
+                BookingRoom.status == "ACTIVE",
+                Booking.status.in_(ACTIVE_BOOKING_STATUSES),
+            )
+            .first()
+        )
+        if active_booking:
+            return RedirectResponse("/booking?test_room=blocked", status_code=303)
+        room.is_active = False
+        action = "disabled"
+    else:
+        if room is None:
+            room_type = (
+                db.query(RoomType)
+                .filter(
+                    RoomType.name.ilike("%Non-AC Single%"),
+                    RoomType.is_active.is_(True),
+                )
+                .first()
+            )
+            if room_type is None:
+                return RedirectResponse("/booking?test_room=no_type", status_code=303)
+            room = Room(room_number="TEST-01", room_type_id=room_type.id, is_active=True)
+            db.add(room)
+            db.flush()
+        else:
+            room.is_active = True
+            room_type = db.get(RoomType, room.room_type_id)
+        action = "enabled"
+
+    room_type = db.get(RoomType, room.room_type_id)
+    room_type.total_rooms = (
+        db.query(Room)
+        .filter(Room.room_type_id == room_type.id, Room.is_active.is_(True))
+        .count()
+    )
+    db.commit()
+    return RedirectResponse(f"/booking?test_room={action}", status_code=303)
 
 @router.get(
     "/booking/new",

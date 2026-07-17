@@ -20,8 +20,28 @@
                 <i class="far fa-clock mr-1"></i>
                 24-Hour Stay Rule
             </span>
+            {% if can_manage_test_room %}
+            <form method="post" action="/booking/test-room/toggle" class="d-inline ml-2">
+                <button class="btn btn-sm {{ 'btn-danger' if test_room and test_room.is_active else 'btn-success' }}"
+                        onclick="return confirm('{{ 'Disable TEST-01 from online availability?' if test_room and test_room.is_active else 'Enable TEST-01 for online integration testing?' }}')">
+                    <i class="fas {{ 'fa-toggle-on' if test_room and test_room.is_active else 'fa-toggle-off' }} mr-1"></i>
+                    TEST-01: {{ 'Online' if test_room and test_room.is_active else 'Offline' }}
+                </button>
+            </form>
+            {% endif %}
         </div>
     </div>
+
+
+    {% if request.query_params.get("test_room") == "enabled" %}
+    <div class="alert alert-success"><i class="fas fa-check-circle mr-2"></i>TEST-01 is active and included in online availability.</div>
+    {% elif request.query_params.get("test_room") == "disabled" %}
+    <div class="alert alert-info"><i class="fas fa-power-off mr-2"></i>TEST-01 is offline. Its record and history are retained.</div>
+    {% elif request.query_params.get("test_room") == "blocked" %}
+    <div class="alert alert-warning"><i class="fas fa-shield-alt mr-2"></i>TEST-01 cannot be disabled while it has an active booking.</div>
+    {% elif request.query_params.get("test_room") == "no_type" %}
+    <div class="alert alert-danger"><i class="fas fa-exclamation-circle mr-2"></i>Non-AC Single room type was not found; TEST-01 was not created.</div>
+    {% endif %}
 
     <div class="row">
 
@@ -209,6 +229,15 @@
             >
                 {{ checkout_alerts|length }}
             </span>
+            {% if can_manage_test_room %}
+            <form method="post" action="/booking/test-room/toggle" class="d-inline ml-2">
+                <button class="btn btn-sm {{ 'btn-danger' if test_room and test_room.is_active else 'btn-success' }}"
+                        onclick="return confirm('{{ 'Disable TEST-01 from online availability?' if test_room and test_room.is_active else 'Enable TEST-01 for online integration testing?' }}')">
+                    <i class="fas {{ 'fa-toggle-on' if test_room and test_room.is_active else 'fa-toggle-off' }} mr-1"></i>
+                    TEST-01: {{ 'Online' if test_room and test_room.is_active else 'Offline' }}
+                </button>
+            </form>
+            {% endif %}
         </div>
 
         <div class="card-body">
