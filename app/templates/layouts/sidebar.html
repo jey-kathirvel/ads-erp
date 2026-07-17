@@ -262,15 +262,26 @@
                     </ul>
 
                 </li>
-
-
-
+                {% if can_custom_gst %}
+                <li class="nav-item has-treeview {% if request.url.path.startswith('/custom-gst') %}menu-open{% endif %}">
+                    <a href="#" class="nav-link {% if request.url.path.startswith('/custom-gst') %}active{% endif %}">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                        <p>Hotel Invoices <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a href="/custom-gst" class="nav-link {% if request.url.path == '/custom-gst' %}active{% endif %}"><i class="fas fa-chart-line nav-icon"></i><p>Invoice Dashboard</p></a></li>
+                        <li class="nav-item"><a href="/custom-gst/new" class="nav-link {% if request.url.path == '/custom-gst/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>Generate Invoice</p></a></li>
+                        <li class="nav-item"><a href="/custom-gst/invoices" class="nav-link {% if request.url.path.startswith('/custom-gst/invoices') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Invoice History</p></a></li>
+                        <li class="nav-item"><a href="/custom-gst/reports" class="nav-link {% if request.url.path.startswith('/custom-gst/reports') %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Invoice Reports</p></a></li>
+                    </ul>
+                </li>
                 {% endif %}
-                {% if can_crm or can_hrm or can_custom_gst or can_incidents or can_finance_tools %}
+                {% endif %}
+                {% if can_crm or can_hrm or can_incidents or can_finance_tools %}
                 <li class="nav-header">TOOLS</li>
 
-                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') or request.url.path.startswith('/incidents') or request.url.path.startswith('/finance-tools') %}menu-open{% endif %}">
-                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/custom-gst') or request.url.path.startswith('/incidents') or request.url.path.startswith('/finance-tools') %}active{% endif %}">
+                <li class="nav-item has-treeview {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/incidents') or request.url.path.startswith('/finance-tools') %}menu-open{% endif %}">
+                    <a href="#" class="nav-link {% if request.url.path.startswith('/hrm') or request.url.path.startswith('/incidents') or request.url.path.startswith('/finance-tools') %}active{% endif %}">
                         <i class="nav-icon fas fa-toolbox"></i>
                         <p>Tools <i class="right fas fa-angle-left"></i></p>
                     </a>
@@ -314,21 +325,6 @@
                                 <li class="nav-item"><a href="/incidents/new" class="nav-link {% if request.url.path == '/incidents/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>New Incident</p></a></li>
                                 <li class="nav-item"><a href="/incidents/list" class="nav-link {% if request.url.path == '/incidents/list' or (request.url.path.startswith('/incidents/') and request.url.path != '/incidents/reports/summary' and request.url.path != '/incidents/new') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Incident List</p></a></li>
                                 <li class="nav-item"><a href="/incidents/reports/summary" class="nav-link {% if request.url.path == '/incidents/reports/summary' %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Reports</p></a></li>
-                            </ul>
-                        </li>
-                        {% endif %}
-
-                        {% if can_custom_gst %}
-                        <li class="nav-item has-treeview {% if request.url.path.startswith('/custom-gst') %}menu-open{% endif %}">
-                            <a href="#" class="nav-link {% if request.url.path.startswith('/custom-gst') %}active{% endif %}">
-                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
-                                <p>Custom GST Bill <i class="right fas fa-angle-left"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item"><a href="/custom-gst" class="nav-link {% if request.url.path == '/custom-gst' %}active{% endif %}"><i class="fas fa-chart-line nav-icon"></i><p>Dashboard</p></a></li>
-                                <li class="nav-item"><a href="/custom-gst/new" class="nav-link {% if request.url.path == '/custom-gst/new' %}active{% endif %}"><i class="fas fa-plus-circle nav-icon"></i><p>New Invoice</p></a></li>
-                                <li class="nav-item"><a href="/custom-gst/invoices" class="nav-link {% if request.url.path.startswith('/custom-gst/invoices') %}active{% endif %}"><i class="fas fa-list nav-icon"></i><p>Invoice List</p></a></li>
-                                <li class="nav-item"><a href="/custom-gst/reports" class="nav-link {% if request.url.path.startswith('/custom-gst/reports') %}active{% endif %}"><i class="fas fa-chart-bar nav-icon"></i><p>Reports</p></a></li>
                             </ul>
                         </li>
                         {% endif %}
