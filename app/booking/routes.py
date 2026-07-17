@@ -229,7 +229,10 @@ async def booking_dashboard(
     online_payment_requests = []
     online_bookings = (
         db.query(Booking)
-        .filter(Booking.booking_source == "ONLINE")
+        .filter(
+            Booking.booking_source == "ONLINE",
+            Booking.status != "DELETED",
+        )
         .order_by(Booking.created_at.desc(), Booking.id.desc())
         .limit(20)
         .all()
@@ -600,9 +603,9 @@ async def save_booking(
     advance_amount: float = Form(0),
     payment_mode: str = Form(""),
     notes: str = Form(""),
-    razorpay_order_id: str = Form(...),
-    razorpay_payment_id: str = Form(...),
-    razorpay_signature: str = Form(...),
+    razorpay_order_id: str = Form(""),
+    razorpay_payment_id: str = Form(""),
+    razorpay_signature: str = Form(""),
     user=Depends(login_required),
     db: Session = Depends(get_db),
 ):
@@ -763,35 +766,40 @@ async def save_booking(
     if advance_amount <= 0 or advance_amount > total_amount:
         raise HTTPException(status_code=400, detail="Invalid payment amount")
 
-    client = razorpay_client()
-    try:
-        client.utility.verify_payment_signature({
-            "razorpay_order_id": razorpay_order_id,
-            "razorpay_payment_id": razorpay_payment_id,
-            "razorpay_signature": razorpay_signature,
-        })
-        order = client.order.fetch(razorpay_order_id)
-        payment = client.payment.fetch(razorpay_payment_id)
-    except SignatureVerificationError as exc:
-        raise HTTPException(status_code=400, detail="Payment signature verification failed") from exc
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail="Unable to verify Razorpay payment") from exc
+    payment_mode = payment_mode.strip().upper()
+    if payment_mode not in {"RAZORPAY", "UPI", "CASH"}:
+        raise HTTPException(status_code=400, detail="Invalid payment mode")
 
-    expected_paise = round(advance_amount * 100)
-    if (
-        order.get("amount") != expected_paise
-        or payment.get("amount") != expected_paise
-        or payment.get("order_id") != razorpay_order_id
-        or payment.get("status") != "captured"
-        or order.get("currency") != "INR"
-    ):
-        raise HTTPException(status_code=400, detail="Payment is not captured or amount does not match")
+    if payment_mode == "RAZORPAY":
+        client = razorpay_client()
+        try:
+            client.utility.verify_payment_signature({
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature,
+            })
+            order = client.order.fetch(razorpay_order_id)
+            payment = client.payment.fetch(razorpay_payment_id)
+        except SignatureVerificationError as exc:
+            raise HTTPException(status_code=400, detail="Payment signature verification failed") from exc
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail="Unable to verify Razorpay payment") from exc
 
-    existing_payment = db.query(BookingPayment).filter(
-        BookingPayment.provider_payment_id == razorpay_payment_id
-    ).first()
-    if existing_payment:
-        return RedirectResponse(url=f"/booking/{existing_payment.booking_id}", status_code=303)
+        expected_paise = round(advance_amount * 100)
+        if (
+            order.get("amount") != expected_paise
+            or payment.get("amount") != expected_paise
+            or payment.get("order_id") != razorpay_order_id
+            or payment.get("status") != "captured"
+            or order.get("currency") != "INR"
+        ):
+            raise HTTPException(status_code=400, detail="Payment is not captured or amount does not match")
+
+        existing_payment = db.query(BookingPayment).filter(
+            BookingPayment.provider_payment_id == razorpay_payment_id
+        ).first()
+        if existing_payment:
+            return RedirectResponse(url=f"/booking/{existing_payment.booking_id}", status_code=303)
 
     booking_no = (
         "BK-"
@@ -799,6 +807,9 @@ async def save_booking(
             "%Y%m%d%H%M%S%f"
         )
     )
+
+    provider_order_id = razorpay_order_id or f"{payment_mode}-{booking_no}-ORDER"
+    provider_payment_id = razorpay_payment_id or f"{payment_mode}-{booking_no}"
 
     booking = Booking(
         booking_no=booking_no,
@@ -816,7 +827,7 @@ async def save_booking(
         gst_amount=gst_amount,
         total_amount=total_amount,
         advance_amount=advance_amount,
-        payment_mode="RAZORPAY",
+        payment_mode=payment_mode,
         booking_source="ERP",
         notes=notes.strip() or None,
         status="CONFIRMED",
@@ -835,9 +846,9 @@ async def save_booking(
 
     db.add(BookingPayment(
         booking_id=booking.id,
-        provider="RAZORPAY",
-        provider_order_id=razorpay_order_id,
-        provider_payment_id=razorpay_payment_id,
+        provider=payment_mode,
+        provider_order_id=provider_order_id,
+        provider_payment_id=provider_payment_id,
         amount=advance_amount,
         currency="INR",
         status="CAPTURED",
@@ -858,7 +869,7 @@ async def save_booking(
         subtotal_amount=booking.subtotal_amount, gst_amount=booking.gst_amount,
         total_amount=booking.total_amount, paid_amount=booking.advance_amount,
         balance_amount=float(booking.total_amount)-float(booking.advance_amount),
-        payment_mode="Razorpay", payment_id=razorpay_payment_id,
+        payment_mode=payment_mode.title(), payment_id=provider_payment_id,
     ))
 
     return RedirectResponse(
@@ -975,7 +986,7 @@ async def view_booking(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1021,7 +1032,7 @@ async def update_booking(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1304,7 +1315,7 @@ async def edit_booking_form(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1361,7 +1372,7 @@ async def cancel_booking_rooms(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1526,7 +1537,7 @@ async def cancel_booking(
         .first()
     )
 
-    if booking is None:
+    if booking is None or booking.status == "DELETED":
         raise HTTPException(
             status_code=404,
             detail="Booking not found",
@@ -1540,6 +1551,14 @@ async def cancel_booking(
 
     booking.status = "CANCELLED"
 
+    cancellation_time = india_now()
+    for assignment in booking.booking_rooms:
+        if assignment.status != "ACTIVE":
+            continue
+        assignment.status = "CANCELLED"
+        assignment.cancelled_at = cancellation_time
+        assignment.cancellation_reason = "Full booking cancelled by staff"
+
     try:
         db.commit()
 
@@ -1551,4 +1570,38 @@ async def cancel_booking(
         url="/booking",
         status_code=303,
     )
+@router.post(
+    "/booking/{booking_id}/delete",
+    name="delete_booking",
+)
+async def delete_booking(
+    booking_id: int,
+    user=Depends(login_required),
+    db: Session = Depends(get_db),
+):
+    booking = db.query(Booking).filter(Booking.id == booking_id).first()
 
+    if booking is None or booking.status == "DELETED":
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    if booking.status != "CANCELLED":
+        raise HTTPException(
+            status_code=409,
+            detail="Cancel the booking before deleting it",
+        )
+
+    booking.status = "DELETED"
+    deletion_note = "Archived by staff after full cancellation"
+    booking.notes = (
+        f"{booking.notes}\n{deletion_note}"
+        if booking.notes
+        else deletion_note
+    )
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    return RedirectResponse(url="/booking", status_code=303)

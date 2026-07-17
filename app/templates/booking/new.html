@@ -311,8 +311,11 @@
                                         id="payment_mode"
                                         name="payment_mode"
                                         class="form-control"
+                                        required
                                     >
                                         <option value="RAZORPAY" selected>Razorpay</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="CASH">Cash</option>
                                     </select>
                                 </div>
                             </div>
@@ -657,9 +660,26 @@ document.addEventListener("DOMContentLoaded", function () {
         "sameDayBookingCount"
     );
     const bookingForm = document.getElementById("bookingForm");
+    const paymentMode = document.getElementById("payment_mode");
     let paymentInProgress = false;
 
+    function updatePaymentAction() {
+        const mode = paymentMode.value;
+        const icon = mode === "RAZORPAY" ? "fa-lock" : "fa-check-circle";
+        const label = mode === "RAZORPAY"
+            ? "Pay & Confirm Booking"
+            : `Confirm ${mode === "UPI" ? "UPI" : "Cash"} Booking`;
+        saveBookingButton.innerHTML = `<i class="fas ${icon} mr-2"></i>${label}`;
+    }
+
+    paymentMode.addEventListener("change", updatePaymentAction);
+    updatePaymentAction();
+
     bookingForm.addEventListener("submit", async function (event) {
+        if (paymentMode.value !== "RAZORPAY") {
+            return;
+        }
+
         if (document.getElementById("razorpay_payment_id").value) {
             return;
         }
