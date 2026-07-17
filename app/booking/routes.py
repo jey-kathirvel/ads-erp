@@ -406,6 +406,8 @@ async def toggle_test_room(
         raise HTTPException(status_code=403, detail="Administrator access required")
 
     room = db.query(Room).filter(Room.room_number == "TEST-01").first()
+    test_type = db.query(RoomType).filter(RoomType.name == "E2E Test Room").first()
+
     if room and room.is_active:
         active_booking = (
             db.query(Booking.id)
@@ -421,34 +423,50 @@ async def toggle_test_room(
         if active_booking:
             return RedirectResponse("/booking?test_room=blocked", status_code=303)
         room.is_active = False
+        if test_type:
+            test_type.is_active = False
+            test_type.total_rooms = 0
         action = "disabled"
     else:
-        if room is None:
-            room_type = (
-                db.query(RoomType)
-                .filter(
-                    RoomType.name.ilike("%Single%"),
-                    RoomType.name.ilike("%Non-AC%"),
-                    RoomType.is_active.is_(True),
-                )
-                .first()
+        if test_type is None:
+            test_type = RoomType(
+                name="E2E Test Room",
+                total_rooms=1,
+                room_rate=5,
+                is_active=True,
             )
-            if room_type is None:
-                return RedirectResponse("/booking?test_room=no_type", status_code=303)
-            room = Room(room_number="TEST-01", room_type_id=room_type.id, is_active=True)
-            db.add(room)
+            db.add(test_type)
             db.flush()
         else:
+            test_type.room_rate = 5
+            test_type.total_rooms = 1
+            test_type.is_active = True
+
+        if room is None:
+            room = Room(
+                room_number="TEST-01",
+                room_type_id=test_type.id,
+                is_active=True,
+            )
+            db.add(room)
+        else:
+            old_type_id = room.room_type_id
+            room.room_type_id = test_type.id
             room.is_active = True
-            room_type = db.get(RoomType, room.room_type_id)
+            if old_type_id != test_type.id:
+                old_type = db.get(RoomType, old_type_id)
+                if old_type:
+                    old_type.total_rooms = (
+                        db.query(Room)
+                        .filter(
+                            Room.room_type_id == old_type.id,
+                            Room.is_active.is_(True),
+                            Room.id != room.id,
+                        )
+                        .count()
+                    )
         action = "enabled"
 
-    room_type = db.get(RoomType, room.room_type_id)
-    room_type.total_rooms = (
-        db.query(Room)
-        .filter(Room.room_type_id == room_type.id, Room.is_active.is_(True))
-        .count()
-    )
     db.commit()
     return RedirectResponse(f"/booking?test_room={action}", status_code=303)
 
