@@ -600,9 +600,9 @@ async def save_booking(
     advance_amount: float = Form(0),
     payment_mode: str = Form(""),
     notes: str = Form(""),
-    razorpay_order_id: str = Form(...),
-    razorpay_payment_id: str = Form(...),
-    razorpay_signature: str = Form(...),
+    razorpay_order_id: str = Form(""),
+    razorpay_payment_id: str = Form(""),
+    razorpay_signature: str = Form(""),
     user=Depends(login_required),
     db: Session = Depends(get_db),
 ):
@@ -763,35 +763,40 @@ async def save_booking(
     if advance_amount <= 0 or advance_amount > total_amount:
         raise HTTPException(status_code=400, detail="Invalid payment amount")
 
-    client = razorpay_client()
-    try:
-        client.utility.verify_payment_signature({
-            "razorpay_order_id": razorpay_order_id,
-            "razorpay_payment_id": razorpay_payment_id,
-            "razorpay_signature": razorpay_signature,
-        })
-        order = client.order.fetch(razorpay_order_id)
-        payment = client.payment.fetch(razorpay_payment_id)
-    except SignatureVerificationError as exc:
-        raise HTTPException(status_code=400, detail="Payment signature verification failed") from exc
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail="Unable to verify Razorpay payment") from exc
+    payment_mode = payment_mode.strip().upper()
+    if payment_mode not in {"RAZORPAY", "UPI", "CASH"}:
+        raise HTTPException(status_code=400, detail="Invalid payment mode")
 
-    expected_paise = round(advance_amount * 100)
-    if (
-        order.get("amount") != expected_paise
-        or payment.get("amount") != expected_paise
-        or payment.get("order_id") != razorpay_order_id
-        or payment.get("status") != "captured"
-        or order.get("currency") != "INR"
-    ):
-        raise HTTPException(status_code=400, detail="Payment is not captured or amount does not match")
+    if payment_mode == "RAZORPAY":
+        client = razorpay_client()
+        try:
+            client.utility.verify_payment_signature({
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature,
+            })
+            order = client.order.fetch(razorpay_order_id)
+            payment = client.payment.fetch(razorpay_payment_id)
+        except SignatureVerificationError as exc:
+            raise HTTPException(status_code=400, detail="Payment signature verification failed") from exc
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail="Unable to verify Razorpay payment") from exc
 
-    existing_payment = db.query(BookingPayment).filter(
-        BookingPayment.provider_payment_id == razorpay_payment_id
-    ).first()
-    if existing_payment:
-        return RedirectResponse(url=f"/booking/{existing_payment.booking_id}", status_code=303)
+        expected_paise = round(advance_amount * 100)
+        if (
+            order.get("amount") != expected_paise
+            or payment.get("amount") != expected_paise
+            or payment.get("order_id") != razorpay_order_id
+            or payment.get("status") != "captured"
+            or order.get("currency") != "INR"
+        ):
+            raise HTTPException(status_code=400, detail="Payment is not captured or amount does not match")
+
+        existing_payment = db.query(BookingPayment).filter(
+            BookingPayment.provider_payment_id == razorpay_payment_id
+        ).first()
+        if existing_payment:
+            return RedirectResponse(url=f"/booking/{existing_payment.booking_id}", status_code=303)
 
     booking_no = (
         "BK-"
@@ -799,6 +804,9 @@ async def save_booking(
             "%Y%m%d%H%M%S%f"
         )
     )
+
+    provider_order_id = razorpay_order_id or f"{payment_mode}-{booking_no}-ORDER"
+    provider_payment_id = razorpay_payment_id or f"{payment_mode}-{booking_no}"
 
     booking = Booking(
         booking_no=booking_no,
@@ -816,7 +824,7 @@ async def save_booking(
         gst_amount=gst_amount,
         total_amount=total_amount,
         advance_amount=advance_amount,
-        payment_mode="RAZORPAY",
+        payment_mode=payment_mode,
         booking_source="ERP",
         notes=notes.strip() or None,
         status="CONFIRMED",
@@ -835,9 +843,9 @@ async def save_booking(
 
     db.add(BookingPayment(
         booking_id=booking.id,
-        provider="RAZORPAY",
-        provider_order_id=razorpay_order_id,
-        provider_payment_id=razorpay_payment_id,
+        provider=payment_mode,
+        provider_order_id=provider_order_id,
+        provider_payment_id=provider_payment_id,
         amount=advance_amount,
         currency="INR",
         status="CAPTURED",
@@ -858,7 +866,7 @@ async def save_booking(
         subtotal_amount=booking.subtotal_amount, gst_amount=booking.gst_amount,
         total_amount=booking.total_amount, paid_amount=booking.advance_amount,
         balance_amount=float(booking.total_amount)-float(booking.advance_amount),
-        payment_mode="Razorpay", payment_id=razorpay_payment_id,
+        payment_mode=payment_mode.title(), payment_id=provider_payment_id,
     ))
 
     return RedirectResponse(
