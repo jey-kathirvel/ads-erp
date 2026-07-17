@@ -93,3 +93,9 @@ The Custom GST area now provides hotel invoices linked to confirmed bookings.
 - Property snapshot: Akshat Royal Stay, test GSTIN GSTAKSHATJM81, No. 85 Kamaraj Bazaar Road, Bodinayakanur, Theni District, Tamil Nadu, India - 625513.
 
 Deployment requires alembic upgrade head before restarting ADS ERP. Replace the test GSTIN with the registered GSTIN before production tax invoices are issued.
+
+## UI refactor branch
+
+The ui-refactor branch introduces an authoritative light design layer for the whole ERP. It standardizes typography, navigation, cards, forms, buttons, tables, badges, alerts, modals, responsive spacing and focus states while preserving existing business routes and templates. Hotel booking receives additional hospitality-focused dashboard styling.
+
+Rollout rule: validate shared screens and permissions on ui-refactor before promotion to develop; do not cherry-pick individual CSS files without the corresponding base-layout link.
