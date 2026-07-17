@@ -26,5 +26,15 @@ class Settings(BaseSettings):
     RAZORPAY_KEY_ID: str = ""
     RAZORPAY_KEY_SECRET: str = ""
     BOOKING_GST_PERCENT: float = 5.0
+    SMTP_HOST: str = "smtp.hostinger.com"
+    SMTP_PORT: int = 465
+    SMTP_USERNAME: str = "akshatroyalstay@ads-ai.in"
+    SMTP_PASSWORD: str = ""
+    SMTP_USE_SSL: bool = True
+    SMTP_USE_STARTTLS: bool = False
+    SMTP_FROM_EMAIL: str = "akshatroyalstay@ads-ai.in"
+    SMTP_FROM_NAME: str = "Akshat Royal Stay"
+    SMTP_REPLY_TO: str = "ars.familystay@gmail.com"
+    SMTP_TIMEOUT_SECONDS: int = 15
 
 settings = Settings()

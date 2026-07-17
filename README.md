@@ -74,3 +74,9 @@ During Phase 2 testing, ADS ERP runs from `/opt/ads-erp-phase2`. The previous `/
 ## Repository
 
 [github.com/jey-kathirvel/ads-erp](https://github.com/jey-kathirvel/ads-erp)
+
+## Phase 3: booking confirmation email
+
+The booking form accepts an optional guest email. After a staff Razorpay booking is committed, ADS ERP sends a branded confirmation containing the booking, tax, amount paid, balance, and payment reference. A missing email skips delivery; an SMTP failure is logged and never rolls back the confirmed booking.
+
+Configure Hostinger SMTP in `.env` using `.env.example`. Use the mailbox password for `akshatroyalstay@ads-ai.in`, do not commit it, and restart `ads-erp.service` after configuration. The customer-facing terms and refund policy are published by online-ars.

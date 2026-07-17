@@ -17,6 +17,7 @@ from app.booking.models import BookingPayment
 from app.booking.models import Room
 from app.booking.models import RoomType
 from app.booking.service import BookingService
+from app.booking.email_service import BookingEmail, send_booking_confirmation
 from app.config.database import get_db
 from app.config.settings import settings
 import razorpay
@@ -510,6 +511,7 @@ async def save_booking(
     request: Request,
     guest_name: str = Form(...),
     mobile: str = Form(...),
+    email: str = Form(""),
     selected_room_ids: str = Form(...),
     room_type_id: int = Form(...),
     check_in_date: str = Form(...),
@@ -724,6 +726,7 @@ async def save_booking(
         booking_no=booking_no,
         guest_name=guest_name,
         mobile=mobile,
+        email=email.strip().lower() or None,
         room_type_id=room_type_id,
         check_in_at=check_in_at,
         check_out_at=effective_check_out_at,
@@ -768,6 +771,17 @@ async def save_booking(
     except Exception:
         db.rollback()
         raise
+
+    send_booking_confirmation(BookingEmail(
+        recipient=booking.email or "", guest_name=booking.guest_name,
+        booking_no=booking.booking_no, room_type=room_type.name,
+        check_in_at=booking.check_in_at, check_out_at=booking.check_out_at,
+        number_of_rooms=booking.number_of_rooms, number_of_days=booking.number_of_days,
+        subtotal_amount=booking.subtotal_amount, gst_amount=booking.gst_amount,
+        total_amount=booking.total_amount, paid_amount=booking.advance_amount,
+        balance_amount=float(booking.total_amount)-float(booking.advance_amount),
+        payment_mode="Razorpay", payment_id=razorpay_payment_id,
+    ))
 
     return RedirectResponse(
         url="/booking",
