@@ -1,0 +1,84 @@
+﻿/*
+ * Final ADS ERP light-form guard.
+ * Legacy theme bundles still contain dark focus rules; keep every business form readable.
+ */
+html body.ads-elite-light .content-wrapper .form-control,
+html body.ads-elite-light .content-wrapper .custom-select,
+html body.ads-elite-light .content-wrapper input[type="text"],
+html body.ads-elite-light .content-wrapper input[type="email"],
+html body.ads-elite-light .content-wrapper input[type="tel"],
+html body.ads-elite-light .content-wrapper input[type="number"],
+html body.ads-elite-light .content-wrapper input[type="date"],
+html body.ads-elite-light .content-wrapper input[type="time"],
+html body.ads-elite-light .content-wrapper input[type="datetime-local"],
+html body.ads-elite-light .content-wrapper input[type="password"],
+html body.ads-elite-light .content-wrapper input[type="search"],
+html body.ads-elite-light .content-wrapper input[type="url"],
+html body.ads-elite-light .content-wrapper select,
+html body.ads-elite-light .content-wrapper textarea {
+  color-scheme: light !important;
+  background-color: #ffffff !important;
+  color: #17233b !important;
+  border-color: #cedbea !important;
+  -webkit-text-fill-color: #17233b !important;
+}
+
+html body.ads-elite-light .content-wrapper .form-control:focus,
+html body.ads-elite-light .content-wrapper .custom-select:focus,
+html body.ads-elite-light .content-wrapper input[type="text"]:focus,
+html body.ads-elite-light .content-wrapper input[type="email"]:focus,
+html body.ads-elite-light .content-wrapper input[type="tel"]:focus,
+html body.ads-elite-light .content-wrapper input[type="number"]:focus,
+html body.ads-elite-light .content-wrapper input[type="date"]:focus,
+html body.ads-elite-light .content-wrapper input[type="time"]:focus,
+html body.ads-elite-light .content-wrapper input[type="datetime-local"]:focus,
+html body.ads-elite-light .content-wrapper input[type="password"]:focus,
+html body.ads-elite-light .content-wrapper input[type="search"]:focus,
+html body.ads-elite-light .content-wrapper input[type="url"]:focus,
+html body.ads-elite-light .content-wrapper select:focus,
+html body.ads-elite-light .content-wrapper textarea:focus {
+  background-color: #f4fbff !important;
+  color: #16324a !important;
+  border-color: #62bce9 !important;
+  box-shadow: 0 0 0 3px rgba(63, 174, 230, .16) !important;
+  outline: 0 !important;
+  -webkit-text-fill-color: #16324a !important;
+}
+
+html body.ads-elite-light .content-wrapper input:-webkit-autofill,
+html body.ads-elite-light .content-wrapper input:-webkit-autofill:hover,
+html body.ads-elite-light .content-wrapper input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #f4fbff inset !important;
+  -webkit-text-fill-color: #16324a !important;
+  caret-color: #16324a !important;
+  transition: background-color 9999s ease-out 0s;
+}
+
+html body.ads-elite-light .content-wrapper input::placeholder,
+html body.ads-elite-light .content-wrapper textarea::placeholder {
+  color: #7890a4 !important;
+  -webkit-text-fill-color: #7890a4 !important;
+  opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper .form-control[readonly],
+html body.ads-elite-light .content-wrapper input[readonly] {
+  background-color: #f2f6fa !important;
+  color: #4b6174 !important;
+  -webkit-text-fill-color: #4b6174 !important;
+}
+
+html body.ads-elite-light .content-wrapper .form-control:disabled,
+html body.ads-elite-light .content-wrapper input:disabled,
+html body.ads-elite-light .content-wrapper select:disabled,
+html body.ads-elite-light .content-wrapper textarea:disabled {
+  background-color: #e9eff5 !important;
+  color: #718293 !important;
+  -webkit-text-fill-color: #718293 !important;
+  opacity: 1 !important;
+}
+
+html body.ads-elite-light .content-wrapper select option {
+  background: #ffffff !important;
+  color: #17233b !important;
+}
