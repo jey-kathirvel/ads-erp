@@ -46,19 +46,24 @@ async def booking_lookup(q:str,db:Session=Depends(get_db)):
     else: query=query.filter(Booking.booking_no.ilike(f"%{term[-5:]}"))
     b=query.order_by(Booking.created_at.desc(),Booking.id.desc()).first()
     if not b: raise HTTPException(404,"No confirmed booking found")
-    rt=db.get(RoomType,b.room_type_id); pay=db.query(BookingPayment).filter(BookingPayment.booking_id==b.id).order_by(BookingPayment.id.desc()).first()
-    return {"booking_id":b.id,"booking_no":b.booking_no,"customer_name":b.guest_name,"mobile":b.mobile or "","customer_email":b.email or "","room_type":rt.name if rt else f"Room type {b.room_type_id}","number_of_rooms":b.number_of_rooms,"checkin_date":b.check_in_at.date().isoformat(),"checkout_date":b.check_out_at.date().isoformat(),"room_charge":float(b.subtotal_amount),"gst_percent":float(b.gst_percent),"amount_paid":float(b.advance_amount),"payment_mode":b.payment_mode or "","payment_reference":pay.provider_payment_id if pay else "","booking_total":float(b.total_amount)}
+    rt=db.get(RoomType,b.room_type_id); existing=db.query(CustomGSTInvoice).filter(CustomGSTInvoice.booking_id==b.id).first(); pay=db.query(BookingPayment).filter(BookingPayment.booking_id==b.id).order_by(BookingPayment.id.desc()).first()
+    return {"booking_id":b.id,"booking_no":b.booking_no,"customer_name":b.guest_name,"mobile":b.mobile or "","customer_email":b.email or "","room_type":rt.name if rt else f"Room type {b.room_type_id}","number_of_rooms":b.number_of_rooms,"checkin_date":b.check_in_at.date().isoformat(),"checkout_date":b.check_out_at.date().isoformat(),"room_charge":float(b.subtotal_amount),"gst_percent":float(b.gst_percent),"amount_paid":float(b.advance_amount),"payment_mode":b.payment_mode or "","payment_reference":pay.provider_payment_id if pay else "","booking_total":float(b.total_amount),"existing_invoice":{"id":existing.id,"invoice_no":existing.invoice_no} if existing else None}
 
 @router.get("/new",response_class=HTMLResponse)
 async def new_invoice(request:Request,db:Session=Depends(get_db)):
     return templates.TemplateResponse(request=request,name="custom_gst/form.html",context={"invoice_no":next_invoice_no(db),"invoice":None,"today":date.today().isoformat()})
 
 @router.post("/save")
-async def save_invoice(invoice_no:str=Form(...),invoice_date:date=Form(...),booking_id:int|None=Form(None),booking_no:str=Form(""),customer_name:str=Form(...),mobile:str=Form(""),customer_email:str=Form(""),customer_address:str=Form(""),customer_gstin:str=Form(""),room_type:str=Form(...),number_of_rooms:int=Form(1),checkin_date:date=Form(...),checkout_date:date=Form(...),room_charge:Decimal=Form(0),additional_descriptions:list[str]=Form([]),additional_amounts:list[Decimal]=Form([]),discount_amount:Decimal=Form(0),gst_percent:Decimal=Form(5),payment_mode:str=Form(""),payment_reference:str=Form(""),amount_paid:Decimal=Form(0),notes:str=Form(""),db:Session=Depends(get_db)):
+async def save_invoice(invoice_no:str=Form(...),invoice_id:int|None=Form(None),invoice_date:date=Form(...),booking_id:int|None=Form(None),booking_no:str=Form(""),customer_name:str=Form(...),mobile:str=Form(""),customer_email:str=Form(""),customer_address:str=Form(""),customer_gstin:str=Form(""),room_type:str=Form(...),number_of_rooms:int=Form(1),checkin_date:date=Form(...),checkout_date:date=Form(...),room_charge:Decimal=Form(0),additional_descriptions:list[str]=Form([]),additional_amounts:list[Decimal]=Form([]),discount_amount:Decimal=Form(0),gst_percent:Decimal=Form(5),payment_mode:str=Form(""),payment_reference:str=Form(""),amount_paid:Decimal=Form(0),notes:str=Form(""),db:Session=Depends(get_db)):
     if checkout_date<checkin_date: raise HTTPException(400,"Check-out cannot be before check-in")
     extra_items=[{"description":d.strip() or "Additional charge","amount":float(money(a))} for d,a in zip(additional_descriptions,additional_amounts) if money(a)>0]
     extra=sum((money(x["amount"]) for x in extra_items),Decimal(0)); taxable,gst,total,paid,balance=invoice_totals(room_charge,extra,discount_amount,gst_percent,amount_paid)
-    row=CustomGSTInvoice(booking_id=booking_id,booking_no=booking_no.strip() or None,invoice_no=invoice_no.strip(),invoice_date=invoice_date,customer_name=customer_name.strip(),mobile=mobile.strip() or None,customer_email=customer_email.strip().lower() or None,customer_address=customer_address.strip() or None,customer_gstin=customer_gstin.strip().upper() or None,room_type=room_type.strip(),number_of_rooms=max(1,number_of_rooms),checkin_date=checkin_date,checkout_date=checkout_date,room_charge=money(room_charge),extra_charge=extra,additional_items_json=json.dumps(extra_items),discount_amount=money(discount_amount),gst_percent=money(gst_percent),gst_amount=gst,total_amount=total,payment_mode=payment_mode.strip() or None,payment_reference=payment_reference.strip() or None,amount_paid=paid,balance_amount=balance,notes=notes.strip() or None)
+    duplicate=db.query(CustomGSTInvoice).filter(CustomGSTInvoice.booking_id==booking_id).first() if booking_id else None
+    if duplicate and duplicate.id!=invoice_id:
+        raise HTTPException(409,f"Invoice {duplicate.invoice_no} already exists for this booking. Edit or delete it first.")
+    values=dict(booking_id=booking_id,booking_no=booking_no.strip() or None,invoice_no=invoice_no.strip(),invoice_date=invoice_date,customer_name=customer_name.strip(),mobile=mobile.strip() or None,customer_email=customer_email.strip().lower() or None,customer_address=customer_address.strip() or None,customer_gstin=customer_gstin.strip().upper() or None,room_type=room_type.strip(),number_of_rooms=max(1,number_of_rooms),checkin_date=checkin_date,checkout_date=checkout_date,room_charge=money(room_charge),extra_charge=extra,additional_items_json=json.dumps(extra_items),discount_amount=money(discount_amount),gst_percent=money(gst_percent),gst_amount=gst,total_amount=total,payment_mode=payment_mode.strip() or None,payment_reference=payment_reference.strip() or None,amount_paid=paid,balance_amount=balance,notes=notes.strip() or None)
+    row=invoice_or_404(db,invoice_id) if invoice_id else CustomGSTInvoice()
+    for key,value in values.items(): setattr(row,key,value)
     db.add(row); db.commit(); db.refresh(row); return RedirectResponse(f"/custom-gst/invoices/{row.id}",303)
 
 @router.get("/invoices",response_class=HTMLResponse)
@@ -71,6 +76,18 @@ async def invoices(request:Request,search:str="",db:Session=Depends(get_db)):
 @router.get("/invoices/{invoice_id}",response_class=HTMLResponse)
 async def view_invoice(invoice_id:int,request:Request,db:Session=Depends(get_db)):
     row=invoice_or_404(db,invoice_id); return templates.TemplateResponse(request=request,name="custom_gst/view.html",context={"invoice":row,"items":json.loads(row.additional_items_json or "[]"),"nights":max(1,(row.checkout_date-row.checkin_date).days)})
+
+@router.get("/invoices/{invoice_id}/edit",response_class=HTMLResponse)
+async def edit_invoice(invoice_id:int,request:Request,db:Session=Depends(get_db)):
+    row=invoice_or_404(db,invoice_id)
+    initial={key:(value.isoformat() if hasattr(value,"isoformat") else float(value) if isinstance(value,Decimal) else value or "") for key,value in {
+        "booking_id":row.booking_id,"booking_no":row.booking_no,"customer_name":row.customer_name,"mobile":row.mobile,
+        "customer_email":row.customer_email,"customer_address":row.customer_address,"customer_gstin":row.customer_gstin,
+        "room_type":row.room_type,"number_of_rooms":row.number_of_rooms,"checkin_date":row.checkin_date,
+        "checkout_date":row.checkout_date,"room_charge":row.room_charge,"discount_amount":row.discount_amount,
+        "gst_percent":row.gst_percent,"amount_paid":row.amount_paid,"payment_mode":row.payment_mode,
+        "payment_reference":row.payment_reference,"notes":row.notes}.items()}
+    return templates.TemplateResponse(request=request,name="custom_gst/form.html",context={"invoice_no":row.invoice_no,"invoice":row,"today":row.invoice_date.isoformat(),"initial_json":json.dumps(initial),"items_json":row.additional_items_json or "[]"})
 
 @router.get("/invoices/{invoice_id}/pdf")
 async def invoice_pdf(invoice_id:int,db:Session=Depends(get_db)):

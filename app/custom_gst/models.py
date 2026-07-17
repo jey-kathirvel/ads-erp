@@ -1,4 +1,4 @@
-﻿from datetime import date, datetime
+from datetime import date, datetime
 from decimal import Decimal
 
 from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, Text
@@ -8,7 +8,7 @@ from app.models.base import Base
 class CustomGSTInvoice(Base):
     __tablename__ = "custom_gst_invoices"
     id: Mapped[int] = mapped_column(primary_key=True)
-    booking_id: Mapped[int | None] = mapped_column(ForeignKey("bookings.id"), nullable=True, index=True)
+    booking_id: Mapped[int | None] = mapped_column(ForeignKey("bookings.id"), nullable=True, index=True) # uniqueness enforced by Alembic partial-safe index
     booking_no: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
     invoice_no: Mapped[str] = mapped_column(String(40), unique=True, index=True)
     invoice_date: Mapped[date] = mapped_column(Date, default=date.today)
