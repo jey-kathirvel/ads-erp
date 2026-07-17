@@ -1537,6 +1537,7 @@ async def booking_report(
     to_date: str = "",
     status: str = "",
     payment_mode: str = "",
+    booking_source: str = "",
     user=Depends(login_required),
     db: Session = Depends(get_db),
 ):
@@ -1559,6 +1560,7 @@ async def booking_report(
     normalized_to_date = to_date.strip()
     normalized_status = status.strip().upper()
     normalized_payment_mode = payment_mode.strip().upper()
+    normalized_booking_source = booking_source.strip().upper()
 
     if normalized_from_date:
         try:
@@ -1608,6 +1610,12 @@ async def booking_report(
         query = query.filter(
             Booking.payment_mode
             == normalized_payment_mode
+        )
+
+    if normalized_booking_source:
+        query = query.filter(
+            Booking.booking_source
+            == normalized_booking_source
         )
 
     bookings = query.all()
@@ -1761,5 +1769,7 @@ async def booking_report(
             "status": normalized_status,
             "payment_mode": normalized_payment_mode,
             "payment_modes": payment_modes,
+            "booking_source": normalized_booking_source,
+            "booking_sources": ("ERP", "ONLINE"),
         },
     )

@@ -74,7 +74,10 @@ async def create_booking_payment_order(
     if room_type is None:
         raise HTTPException(status_code=404, detail="Room type not found")
 
-    total_amount = float(room_type.room_rate) * number_of_rooms * number_of_days
+    subtotal_amount, gst_amount, total_amount = BookingService.calculate_price(
+        room_type.room_rate, number_of_rooms, number_of_days, settings.BOOKING_GST_PERCENT
+    )
+    total_amount = float(total_amount)
     if advance_amount <= 0 or advance_amount > total_amount:
         raise HTTPException(
             status_code=400,
@@ -625,7 +628,10 @@ async def save_booking(
 
     number_of_rooms = len(selected_rooms)
 
-    total_amount = float(room_type.room_rate) * number_of_rooms * number_of_days
+    subtotal_amount, gst_amount, total_amount = BookingService.calculate_price(
+        room_type.room_rate, number_of_rooms, number_of_days, settings.BOOKING_GST_PERCENT
+    )
+    total_amount = float(total_amount)
     if advance_amount <= 0 or advance_amount > total_amount:
         raise HTTPException(status_code=400, detail="Invalid payment amount")
 
@@ -676,9 +682,13 @@ async def save_booking(
         number_of_days=number_of_days,
         number_of_rooms=number_of_rooms,
         room_rate=room_type.room_rate,
+        subtotal_amount=subtotal_amount,
+        gst_percent=settings.BOOKING_GST_PERCENT,
+        gst_amount=gst_amount,
         total_amount=total_amount,
         advance_amount=advance_amount,
         payment_mode="RAZORPAY",
+        booking_source="ERP",
         notes=notes.strip() or None,
         status="CONFIRMED",
     )
@@ -1043,11 +1053,13 @@ async def update_booking(
         booking.number_of_days = number_of_days
         booking.number_of_rooms = number_of_rooms
         booking.room_rate = room_type.room_rate
-        booking.total_amount = (
-            room_type.room_rate
-            * number_of_rooms
-            * number_of_days
+        subtotal, gst, total = BookingService.calculate_price(
+            room_type.room_rate, number_of_rooms, number_of_days, settings.BOOKING_GST_PERCENT
         )
+        booking.subtotal_amount = subtotal
+        booking.gst_percent = settings.BOOKING_GST_PERCENT
+        booking.gst_amount = gst
+        booking.total_amount = total
         booking.advance_amount = advance_amount
         booking.payment_mode = (
             payment_mode.strip() or None
@@ -1338,11 +1350,12 @@ async def cancel_booking_rooms(
             remaining_active_count
         )
 
-        booking.total_amount = (
-            booking.room_rate
-            * remaining_active_count
-            * booking.number_of_days
+        subtotal, gst, total = BookingService.calculate_price(
+            booking.room_rate, remaining_active_count, booking.number_of_days, booking.gst_percent
         )
+        booking.subtotal_amount = subtotal
+        booking.gst_amount = gst
+        booking.total_amount = total
 
         db.commit()
 

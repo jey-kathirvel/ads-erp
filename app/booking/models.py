@@ -120,6 +120,8 @@ class Booking(Base):
         index=True,
     )
 
+    email: Mapped[str | None] = mapped_column(String(254), index=True)
+
     check_in_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
@@ -171,6 +173,28 @@ class Booking(Base):
     payment_mode: Mapped[str | None] = mapped_column(
         String(50),
     )
+
+    subtotal_amount: Mapped[float] = mapped_column(
+        Numeric(12, 2), default=0, nullable=False,
+    )
+
+    gst_percent: Mapped[float] = mapped_column(
+        Numeric(5, 2), default=5, nullable=False,
+    )
+
+    gst_amount: Mapped[float] = mapped_column(
+        Numeric(12, 2), default=0, nullable=False,
+    )
+
+    booking_source: Mapped[str] = mapped_column(
+        String(20),
+        default="ERP",
+        nullable=False,
+        index=True,
+    )
+
+    payment_expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, index=True)
+    provider_order_id: Mapped[str | None] = mapped_column(String(100), nullable=True, unique=True, index=True)
 
     status: Mapped[str] = mapped_column(
         String(30),

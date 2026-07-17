@@ -144,7 +144,7 @@ html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr {
 html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(odd) td,
 html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(even) td,
 html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td,
-html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td:nth-child(12) {
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td:nth-child(13) {
     color: #29364a !important;
     background: #ffffff !important;
     border-bottom: 1px solid #e2e8f0 !important;
@@ -152,7 +152,7 @@ html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr td:n
 
 html body.ads-elite-light .booking-report-page #bookingReportTable.table-striped tbody tr:hover td,
 html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td,
-html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(12) {
+html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(13) {
     color: #172033 !important;
     background: #f0efff !important;
 }
@@ -162,7 +162,7 @@ html body.ads-elite-light .booking-report-page #bookingReportTable tbody tr:hove
 }
 
 html body.ads-elite-light .booking-report-page #bookingReportTable thead th,
-html body.ads-elite-light .booking-report-page #bookingReportTable thead th:nth-child(12) {
+html body.ads-elite-light .booking-report-page #bookingReportTable thead th:nth-child(13) {
     color: #3f4e65 !important;
     background: #f1f4f8 !important;
     border-bottom: 1px solid #d8e0ea !important;
@@ -185,14 +185,14 @@ html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #booking
 html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(odd) td,
 html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable.table-striped tbody tr:nth-of-type(even) td,
 html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td,
-html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td:nth-child(12) {
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr td:nth-child(13) {
     color: #29364a !important;
     background: #ffffff !important;
     border-bottom-color: #e2e8f0 !important;
 }
 
 html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td,
-html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(12) {
+html body.ads-elite-light:has(#bookingReportTable) .booking-report-page #bookingReportTable tbody tr:hover td:nth-child(13) {
     color: #172033 !important;
     background: #f0efff !important;
 }

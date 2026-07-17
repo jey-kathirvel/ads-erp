@@ -576,6 +576,17 @@ document.addEventListener(
                                 </dd>
 
                                 <dt class="col-6">
+                                    Booking Type
+                                </dt>
+                                <dd class="col-6 text-right">
+                                    {% if booking.booking_source == "ONLINE" %}
+                                    <span class="badge badge-info">Online</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">ADS ERP</span>
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-6">
                                     Status
                                 </dt>
                                 <dd class="col-6 text-right">
@@ -599,6 +610,12 @@ document.addEventListener(
                                         ₹{{ booking.total_amount }}
                                     </strong>
                                 </dd>
+
+                                <dt class="col-6">Subtotal</dt>
+                                <dd class="col-6 text-right">₹{{ booking.subtotal_amount }}</dd>
+
+                                <dt class="col-6">GST ({{ booking.gst_percent }}%)</dt>
+                                <dd class="col-6 text-right">₹{{ booking.gst_amount }}</dd>
 
                                 <dt class="col-6">
                                     Advance

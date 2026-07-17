@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
+from decimal import Decimal, ROUND_HALF_UP
 
+from sqlalchemy import and_, or_
 from sqlalchemy.orm import Session
 
 from app.booking.models import Booking, BookingRoom, Room
@@ -13,6 +15,15 @@ ACTIVE_BOOKING_STATUSES = (
 
 
 class BookingService:
+
+    @staticmethod
+    def calculate_price(room_rate, number_of_rooms: int, number_of_days: int, gst_percent=5):
+        rate = Decimal(str(room_rate))
+        subtotal = (rate * number_of_rooms * number_of_days).quantize(Decimal("0.01"))
+        gst = (subtotal * Decimal(str(gst_percent)) / Decimal("100")).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        return subtotal, gst, subtotal + gst
 
     @staticmethod
     def calculate_check_out(
@@ -52,6 +63,11 @@ class BookingService:
                     ACTIVE_BOOKING_STATUSES
                 ),
                 BookingRoom.status == "ACTIVE",
+                or_(
+                    Booking.status != "RESERVED",
+                    Booking.payment_expires_at.is_(None),
+                    Booking.payment_expires_at > datetime.utcnow(),
+                ),
                 Booking.check_in_at < check_out_at,
                 Booking.check_out_at > check_in_at,
             )

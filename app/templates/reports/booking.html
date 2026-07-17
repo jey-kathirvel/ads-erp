@@ -39,7 +39,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="from_date">
                             From Date
                         </label>
@@ -53,7 +53,7 @@
                         >
                     </div>
 
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="to_date">
                             To Date
                         </label>
@@ -67,7 +67,7 @@
                         >
                     </div>
 
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="status">
                             Booking Status
                         </label>
@@ -123,6 +123,18 @@
                                 {% endif %}
                             >
                                 {{ mode }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="booking_source">Booking Type</label>
+                        <select id="booking_source" name="booking_source" class="form-control">
+                            <option value="">All Booking Types</option>
+                            {% for source in booking_sources %}
+                            <option value="{{ source }}" {% if booking_source == source %}selected{% endif %}>
+                                {{ "Online" if source == "ONLINE" else "ADS ERP" }}
                             </option>
                             {% endfor %}
                         </select>
@@ -287,6 +299,7 @@
                     <thead>
                         <tr>
                             <th>Booking No</th>
+                            <th>Booking Type</th>
                             <th>Guest</th>
                             <th>Mobile</th>
                             <th>Check-in</th>
@@ -311,6 +324,14 @@
 
                             <td class="text-nowrap">
                                 {{ booking.booking_no }}
+                            </td>
+
+                            <td>
+                                {% if booking.booking_source == "ONLINE" %}
+                                <span class="badge badge-info">Online</span>
+                                {% else %}
+                                <span class="badge badge-secondary">ADS ERP</span>
+                                {% endif %}
                             </td>
 
                             <td>
@@ -429,7 +450,7 @@
 
                         <tr>
                             <td
-                                colspan="12"
+                                colspan="13"
                                 class="text-center text-muted py-5"
                             >
                                 <i
@@ -517,8 +538,8 @@
         text-align: right;
     }
 
-    #bookingReportTable th:nth-child(12),
-    #bookingReportTable td:nth-child(12) {
+    #bookingReportTable th:nth-child(13),
+    #bookingReportTable td:nth-child(13) {
         min-width: 80px;
         text-align: center;
     }
@@ -882,8 +903,8 @@ document.addEventListener(
         font-variant-numeric: tabular-nums;
     }
 
-    #bookingReportTable th:nth-child(12),
-    #bookingReportTable td:nth-child(12) {
+    #bookingReportTable th:nth-child(13),
+    #bookingReportTable td:nth-child(13) {
         min-width: 82px;
         white-space: nowrap;
         text-align: center;
@@ -892,23 +913,23 @@ document.addEventListener(
         z-index: 1;
     }
 
-    #bookingReportTable thead th:nth-child(12) {
+    #bookingReportTable thead th:nth-child(13) {
         z-index: 4;
         background: #dbeafe;
     }
 
-    #bookingReportTable tbody td:nth-child(12) {
+    #bookingReportTable tbody td:nth-child(13) {
         background: #ffffff;
         box-shadow: -8px 0 12px -12px rgba(0, 0, 0, 0.55);
     }
 
     #bookingReportTable tbody tr:nth-of-type(odd)
-    td:nth-child(12) {
+    td:nth-child(13) {
         background: rgba(0, 0, 0, 0.03);
     }
 
     #bookingReportTable tbody tr:hover
-    td:nth-child(12) {
+    td:nth-child(13) {
         background: #eef6ff;
     }
 
@@ -919,7 +940,7 @@ document.addEventListener(
         white-space: nowrap;
     }
 
-    #bookingReportTable td:nth-child(12) .btn {
+    #bookingReportTable td:nth-child(13) .btn {
         margin: 0.08rem;
     }
 
@@ -994,8 +1015,8 @@ document.addEventListener(
             text-align: right !important;
         }
 
-        #bookingReportTable th:nth-child(12),
-        #bookingReportTable td:nth-child(12) {
+        #bookingReportTable th:nth-child(13),
+        #bookingReportTable td:nth-child(13) {
             display: none !important;
         }
     }

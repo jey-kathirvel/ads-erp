@@ -25,5 +25,6 @@ class Settings(BaseSettings):
     # Optional so the application can start before payment keys are configured.
     RAZORPAY_KEY_ID: str = ""
     RAZORPAY_KEY_SECRET: str = ""
+    BOOKING_GST_PERCENT: float = 5.0
 
 settings = Settings()
