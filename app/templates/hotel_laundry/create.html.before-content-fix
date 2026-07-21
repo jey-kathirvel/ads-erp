@@ -12,7 +12,7 @@ Create Laundry Batch
 
 {% endblock %}
 
-{% block content %}
+{% block body %}
 
 <div class="container-fluid laundry-create-page">
 
