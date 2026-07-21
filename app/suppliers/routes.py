@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from app.config.database import get_db
 
@@ -162,6 +163,48 @@ async def update_supplier(
     SupplierService.update(db, supplier_id, supplier)
 
     return RedirectResponse(url="/suppliers", status_code=303)
+
+
+
+# ----------------------------------------------------
+# Delete Supplier
+# ----------------------------------------------------
+
+
+@router.post("/suppliers/{supplier_id}/delete")
+async def delete_supplier(
+    supplier_id: int,
+    db: Session = Depends(get_db),
+):
+    supplier = SupplierService.get_by_id(db, supplier_id)
+
+    if supplier is None:
+        return RedirectResponse(
+            url="/suppliers?error=Supplier+not+found",
+            status_code=303,
+        )
+
+    try:
+        deleted = SupplierService.delete(db, supplier_id)
+
+        if not deleted:
+            return RedirectResponse(
+                url="/suppliers?error=Supplier+not+found",
+                status_code=303,
+            )
+
+    except IntegrityError:
+        db.rollback()
+
+        return RedirectResponse(
+            url="/suppliers?error=Supplier+cannot+be+deleted+because+purchase+or+ledger+records+exist",
+            status_code=303,
+        )
+
+    return RedirectResponse(
+        url="/suppliers?success=Supplier+deleted+successfully",
+        status_code=303,
+    )
 
 
 # ----------------------------------------------------

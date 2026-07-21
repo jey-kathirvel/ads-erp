@@ -1,0 +1,283 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/ads-hotel-operations.css?v=1">
+
+<div class="hotel-ops-page">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 hotel-ops-heading mb-1">Housekeeping Tasks</h1>
+            <p class="hotel-ops-subtitle mb-0">
+                Create, assign and track room service activities.
+            </p>
+        </div>
+
+        <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal">
+            <i class="fas fa-plus mr-1"></i>
+            New Task
+        </button>
+    </div>
+
+    <div class="card ops-filter-card mb-4">
+        <div class="card-body">
+            <form method="get">
+                <div class="row align-items-end">
+                    <div class="col-md-3 form-group">
+                        <label>Room</label>
+                        <select class="form-control" name="room_id">
+                            <option value="">All rooms</option>
+                            {% for room in rooms %}
+                            <option
+                                value="{{ room.id }}"
+                                {% if selected_room_id == room.id %}selected{% endif %}
+                            >
+                                Room {{ room.room_number }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 form-group">
+                        <label>Staff</label>
+                        <select class="form-control" name="staff_id">
+                            <option value="">All staff</option>
+                            {% for staff in staff_members %}
+                            <option
+                                value="{{ staff.id }}"
+                                {% if selected_staff_id == staff.id %}selected{% endif %}
+                            >
+                                {{ staff.staff_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 form-group">
+                        <label>Status</label>
+                        <select class="form-control" name="task_status">
+                            <option value="">All statuses</option>
+                            {% for value in task_statuses %}
+                            <option
+                                value="{{ value }}"
+                                {% if selected_task_status == value %}selected{% endif %}
+                            >
+                                {{ value|replace('_', ' ')|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 form-group">
+                        <label>Task Type</label>
+                        <select class="form-control" name="task_type">
+                            <option value="">All types</option>
+                            {% for value in task_types %}
+                            <option
+                                value="{{ value }}"
+                                {% if selected_task_type == value %}selected{% endif %}
+                            >
+                                {{ value|replace('_', ' ')|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 form-group">
+                        <button class="btn btn-outline-primary btn-block">
+                            <i class="fas fa-filter mr-1"></i>
+                            Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card hotel-ops-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-list-check mr-2 text-primary"></i>
+                Task Register
+            </h3>
+            <span class="badge badge-primary float-right">
+                {{ tasks|length }} tasks
+            </span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Task</th>
+                            <th>Priority</th>
+                            <th>Assigned Staff</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>
+                                <strong>Room {{ task.room.room_number if task.room else '-' }}</strong>
+                            </td>
+                            <td>{{ task.task_type|replace('_', ' ')|title }}</td>
+                            <td>
+                                <span class="task-priority-pill priority-{{ task.priority }}">
+                                    {{ task.priority|title }}
+                                </span>
+                            </td>
+                            <td>{{ task.staff.staff_name if task.staff else 'Unassigned' }}</td>
+                            <td>
+                                <span class="task-status-pill task-status-{{ task.status }}">
+                                    {{ task.status|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+                            <td>{{ task.remarks or '-' }}</td>
+                            <td>
+                                <form
+                                    method="post"
+                                    action="/hotel-operations/housekeeping/tasks/{{ task.id }}/status"
+                                    class="d-inline"
+                                >
+                                    {% if task.status in ['PENDING', 'ASSIGNED'] %}
+                                    <button
+                                        name="status"
+                                        value="IN_PROGRESS"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Start"
+                                    >
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    {% endif %}
+
+                                    {% if task.status == 'IN_PROGRESS' %}
+                                    <button
+                                        name="status"
+                                        value="COMPLETED"
+                                        class="btn btn-sm btn-success"
+                                        title="Complete"
+                                    >
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    {% endif %}
+
+                                    {% if task.status not in ['COMPLETED', 'CANCELLED'] %}
+                                    <button
+                                        name="status"
+                                        value="CANCELLED"
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="Cancel"
+                                    >
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    {% endif %}
+                                </form>
+
+                                <form
+                                    method="post"
+                                    action="/hotel-operations/housekeeping/tasks/{{ task.id }}/delete"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Delete this task?')"
+                                >
+                                    <button class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                No housekeeping tasks found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade ops-modal" id="taskModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="/hotel-operations/housekeeping/tasks">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Housekeeping Task</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Room</label>
+                        <select class="form-control" name="room_id" required>
+                            <option value="">Select room</option>
+                            {% for room in rooms %}
+                            <option value="{{ room.id }}">
+                                Room {{ room.room_number }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Task Type</label>
+                        <select class="form-control" name="task_type" required>
+                            {% for value in task_types %}
+                            <option value="{{ value }}">
+                                {{ value|replace('_', ' ')|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select class="form-control" name="priority">
+                            {% for value in task_priorities %}
+                            <option value="{{ value }}">
+                                {{ value|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assign Staff</label>
+                        <select class="form-control" name="staff_id">
+                            <option value="">Unassigned</option>
+                            {% for staff in staff_members %}
+                            <option value="{{ staff.id }}">
+                                {{ staff.staff_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label>Remarks</label>
+                        <textarea class="form-control" name="remarks" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save mr-1"></i>
+                        Create Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

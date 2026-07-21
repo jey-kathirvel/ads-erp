@@ -10,6 +10,13 @@ from app.routes.router import api_router
 from app.access_control.middleware import UserUrlAccessMiddleware
 from app.config.database import engine
 from app.booking.models import BookingPayment
+from app.hotel_operations.models import (
+    HotelInventoryItem,
+    HotelInventoryTransaction,
+    HotelRoomStatus,
+    HotelStaff,
+    HousekeepingTask,
+)
 from app.config.settings import settings
 from app.security.middleware import CSRFMiddleware, ModuleAuthorizationMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -80,6 +87,23 @@ def ensure_booking_payment_table():
         tables=[BookingPayment.__table__],
         checkfirst=True,
     )
+
+
+@app.on_event("startup")
+def ensure_hotel_operations_tables():
+    # Create only hotel operations tables.
+    HotelStaff.metadata.create_all(
+        bind=engine,
+        tables=[
+            HotelStaff.__table__,
+            HotelRoomStatus.__table__,
+            HousekeepingTask.__table__,
+            HotelInventoryItem.__table__,
+            HotelInventoryTransaction.__table__,
+        ],
+        checkfirst=True,
+    )
+
 # ----------------------------------------------------
 # Home
 # ----------------------------------------------------

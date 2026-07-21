@@ -195,7 +195,7 @@
                 {% if can_booking %}
                 <li class="nav-header">
 
-                    BOOKING
+                    PMS
 
                 </li>
 
@@ -210,7 +210,7 @@
                     <i class="nav-icon fas fa-hotel"></i>
 
                     <p>
-                        Booking
+                        PMS
                         <i class="right fas fa-angle-left"></i>
                     </p>
 
@@ -259,7 +259,63 @@
 
                         </li>
 
-                    </ul>
+                    
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-hotel"></i>
+        <p>
+            Hotel Operations
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="/hotel-operations" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/hotel-operations/rooms" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Room Status</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/hotel-operations/housekeeping" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Housekeeping</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/hotel-operations/staff-management" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Staff</p>
+            </a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="/hotel-operations/inventory"
+               class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Inventory</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/hotel-operations/laundry"
+               class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Laundry</p>
+            </a>
+        </li>
+</ul>
+</li>
+</ul>
 
                 </li>
                 {% if can_custom_gst %}
@@ -625,7 +681,10 @@
 
                 </li>
 
-            </ul>
+            
+
+
+</ul>
 
         </nav>
 

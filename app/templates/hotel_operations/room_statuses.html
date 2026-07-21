@@ -1,0 +1,140 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/ads-hotel-operations.css?v=1">
+
+<div class="hotel-ops-page">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 hotel-ops-heading mb-1">Room Status Board</h1>
+            <p class="hotel-ops-subtitle mb-0">
+                Monitor and update operational room readiness.
+            </p>
+        </div>
+
+        <form method="post" action="/hotel-operations/initialize-room-statuses">
+            <button class="btn btn-outline-primary">
+                <i class="fas fa-sync-alt mr-1"></i>
+                Initialize Rooms
+            </button>
+        </form>
+    </div>
+
+    <div class="room-board">
+        {% for item in room_items %}
+        <div class="card room-card status-{{ item.status }}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <div class="room-number">Room {{ item.room.room_number }}</div>
+                        <div class="room-type">
+                            {{ item.room.room_type.name if item.room.room_type else 'Room' }}
+                        </div>
+                    </div>
+
+                    <i class="fas fa-bed text-muted"></i>
+                </div>
+
+                <div class="mb-3">
+                    <span class="room-status-pill">
+                        <i class="fas fa-circle"></i>
+                        {{ item.status|replace('_', ' ')|title }}
+                    </span>
+                </div>
+
+                {% if item.remarks %}
+                <p class="small text-muted mb-3">{{ item.remarks }}</p>
+                {% endif %}
+
+                <button
+                    class="btn btn-primary btn-sm btn-block"
+                    data-toggle="modal"
+                    data-target="#roomStatusModal"
+                    data-room-id="{{ item.room.id }}"
+                    data-room-number="{{ item.room.room_number }}"
+                    data-status="{{ item.status }}"
+                    data-remarks="{{ item.remarks or '' }}"
+                >
+                    <i class="fas fa-edit mr-1"></i>
+                    Update Status
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <div class="card hotel-ops-card">
+            <div class="card-body text-center text-muted py-5">
+                No active rooms found.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade ops-modal" id="roomStatusModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" id="roomStatusForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Update Room <span id="roomStatusNumber"></span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" name="status" id="roomStatusValue" required>
+                            {% for value in room_statuses %}
+                            <option value="{{ value }}">
+                                {{ value|replace('_', ' ')|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label>Remarks</label>
+                        <textarea
+                            class="form-control"
+                            name="remarks"
+                            id="roomStatusRemarks"
+                            rows="3"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save mr-1"></i>
+                        Save Status
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    $("#roomStatusModal").on("show.bs.modal", function (event) {
+        const button = $(event.relatedTarget);
+        const roomId = button.data("room-id");
+        const roomNumber = button.data("room-number");
+        const status = button.data("status");
+        const remarks = button.data("remarks");
+
+        document.getElementById("roomStatusForm").action =
+            "/hotel-operations/room-statuses/" + roomId;
+
+        document.getElementById("roomStatusNumber").textContent = roomNumber;
+        document.getElementById("roomStatusValue").value = status;
+        document.getElementById("roomStatusRemarks").value = remarks || "";
+    });
+});
+</script>
+{% endblock %}

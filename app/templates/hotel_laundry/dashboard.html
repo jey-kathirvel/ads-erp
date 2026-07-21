@@ -1,0 +1,705 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet"
+      href="/static/css/ads-hotel-laundry.css?v=3">
+
+<div class="laundry-page">
+
+    <section class="laundry-hero">
+
+        <div class="laundry-hero-decoration laundry-bubble-one"></div>
+        <div class="laundry-hero-decoration laundry-bubble-two"></div>
+
+        <div class="laundry-hero-content">
+
+            <div class="laundry-hero-copy">
+
+                <div class="laundry-eyebrow">
+                    <i class="fas fa-tshirt"></i>
+                    HOTEL OPERATIONS
+                </div>
+
+                <h1>
+                    Laundry &amp; Linen Management
+                </h1>
+
+                <p>
+                    Track linen collection, vendor processing, clean returns,
+                    damaged items and missing quantities from one dashboard.
+                </p>
+
+                <div class="laundry-hero-meta">
+
+                    <span>
+                        <i class="fas fa-box-open"></i>
+                        {{ total_batches }} total batches
+                    </span>
+
+                    <span>
+                        <i class="fas fa-sync-alt"></i>
+                        {{ active_batches }} active
+                    </span>
+
+                    <span>
+                        <i class="fas fa-check-circle"></i>
+                        {{ completed_batches }} completed
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="laundry-hero-actions">
+
+                <a href="/hotel-operations/laundry/create"
+                   class="btn laundry-primary-action">
+
+                    <i class="fas fa-plus-circle"></i>
+                    Create Laundry Batch
+
+                </a>
+
+                <a href="/hotel-operations/inventory"
+                   class="btn laundry-secondary-action">
+
+                    <i class="fas fa-boxes"></i>
+                    Linen Inventory
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="laundry-kpi-grid">
+
+        <article class="laundry-kpi laundry-kpi-blue">
+
+            <div class="laundry-kpi-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+
+            <div class="laundry-kpi-content">
+
+                <span>Total Batches</span>
+
+                <strong>{{ total_batches }}</strong>
+
+                <small>
+                    All recorded laundry movements
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="laundry-kpi laundry-kpi-purple">
+
+            <div class="laundry-kpi-icon">
+                <i class="fas fa-spinner"></i>
+            </div>
+
+            <div class="laundry-kpi-content">
+
+                <span>Active Batches</span>
+
+                <strong>{{ active_batches }}</strong>
+
+                <small>
+                    Collected, processing or partly returned
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="laundry-kpi laundry-kpi-green">
+
+            <div class="laundry-kpi-icon">
+                <i class="fas fa-check-double"></i>
+            </div>
+
+            <div class="laundry-kpi-content">
+
+                <span>Completed</span>
+
+                <strong>{{ completed_batches }}</strong>
+
+                <small>
+                    Fully reconciled laundry batches
+                </small>
+
+            </div>
+
+        </article>
+
+
+        <article class="laundry-kpi laundry-kpi-red">
+
+            <div class="laundry-kpi-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+
+            <div class="laundry-kpi-content">
+
+                <span>Needs Attention</span>
+
+                <strong>{{ attention_batches }}</strong>
+
+                <small>
+                    Partial, damaged or missing items
+                </small>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <section class="laundry-quantity-grid">
+
+        <article class="laundry-quantity-card quantity-issued">
+
+            <div class="laundry-quantity-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+
+            <div>
+
+                <span>Total Linen Issued</span>
+
+                <strong>
+                    {{ "%.2f"|format(total_issued) }}
+                </strong>
+
+                <small>Pieces / units sent</small>
+
+            </div>
+
+        </article>
+
+
+        <article class="laundry-quantity-card quantity-clean">
+
+            <div class="laundry-quantity-icon">
+                <i class="fas fa-sparkles"></i>
+            </div>
+
+            <div>
+
+                <span>Clean Returned</span>
+
+                <strong>
+                    {{ "%.2f"|format(total_clean) }}
+                </strong>
+
+                <small>Returned to inventory</small>
+
+            </div>
+
+        </article>
+
+
+        <article class="laundry-quantity-card quantity-damaged">
+
+            <div class="laundry-quantity-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+
+            <div>
+
+                <span>Damaged</span>
+
+                <strong>
+                    {{ "%.2f"|format(total_damaged) }}
+                </strong>
+
+                <small>Requires review or replacement</small>
+
+            </div>
+
+        </article>
+
+
+        <article class="laundry-quantity-card quantity-missing">
+
+            <div class="laundry-quantity-icon">
+                <i class="fas fa-search-minus"></i>
+            </div>
+
+            <div>
+
+                <span>Missing</span>
+
+                <strong>
+                    {{ "%.2f"|format(total_missing) }}
+                </strong>
+
+                <small>Not returned by vendor</small>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <section class="laundry-status-section">
+
+        <div class="laundry-section-heading">
+
+            <div>
+
+                <span class="laundry-section-eyebrow">
+                    LIVE WORKFLOW
+                </span>
+
+                <h2>Batch Status Summary</h2>
+
+            </div>
+
+        </div>
+
+        <div class="laundry-status-grid">
+
+            <div class="laundry-status-summary status-collected">
+
+                <span>Collected</span>
+
+                <strong>
+                    {{ status_counts.get("COLLECTED", 0) }}
+                </strong>
+
+            </div>
+
+
+            <div class="laundry-status-summary status-sent">
+
+                <span>Sent to Laundry</span>
+
+                <strong>
+                    {{ status_counts.get("SENT_TO_LAUNDRY", 0) }}
+                </strong>
+
+            </div>
+
+
+            <div class="laundry-status-summary status-processing">
+
+                <span>In Process</span>
+
+                <strong>
+                    {{ status_counts.get("IN_PROCESS", 0) }}
+                </strong>
+
+            </div>
+
+
+            <div class="laundry-status-summary status-partial">
+
+                <span>Partly Returned</span>
+
+                <strong>
+                    {{ status_counts.get("PARTIALLY_RETURNED", 0) }}
+                </strong>
+
+            </div>
+
+
+            <div class="laundry-status-summary status-completed">
+
+                <span>Completed</span>
+
+                <strong>
+                    {{ status_counts.get("COMPLETED", 0) }}
+                </strong>
+
+            </div>
+
+
+            <div class="laundry-status-summary status-cancelled">
+
+                <span>Cancelled</span>
+
+                <strong>
+                    {{ status_counts.get("CANCELLED", 0) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="laundry-table-card">
+
+        <div class="laundry-table-header">
+
+            <div>
+
+                <span class="laundry-section-eyebrow">
+                    RECENT ACTIVITY
+                </span>
+
+                <h2>Laundry Batches</h2>
+
+                <p>
+                    Latest 50 laundry batches and their reconciliation status.
+                </p>
+
+            </div>
+
+            <div class="laundry-table-actions">
+
+                <a href="/hotel-operations/laundry/create"
+                   class="btn btn-primary">
+
+                    <i class="fas fa-plus mr-1"></i>
+                    New Batch
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table laundry-table mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Batch</th>
+
+                        <th>Date</th>
+
+                        <th>Source</th>
+
+                        <th>Vendor</th>
+
+                        <th class="text-right">Issued</th>
+
+                        <th class="text-right">Returned</th>
+
+                        <th class="text-right">Damaged</th>
+
+                        <th class="text-right">Missing</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for batch in batches %}
+
+                    {% set returned_total =
+                        (batch.clean_quantity or 0)
+                        + (batch.damaged_quantity or 0)
+                        + (batch.missing_quantity or 0)
+                    %}
+
+                    <tr class="{% if (batch.damaged_quantity or 0) > 0 or (batch.missing_quantity or 0) > 0 %}laundry-row-alert{% endif %}">
+
+                        <td data-label="Batch">
+
+                            <a href="/hotel-operations/laundry/{{ batch.id }}"
+                               class="laundry-batch-link">
+
+                                <span class="laundry-batch-icon">
+                                    <i class="fas fa-receipt"></i>
+                                </span>
+
+                                <span>
+
+                                    <strong>
+                                        {{ batch.batch_no }}
+                                    </strong>
+
+                                    <small>
+                                        {{ batch.created_by or "ADS ERP User" }}
+                                    </small>
+
+                                </span>
+
+                            </a>
+
+                        </td>
+
+
+                        <td data-label="Date">
+
+                            <strong>
+                                {{ batch.batch_date.strftime("%d %b %Y") }}
+                            </strong>
+
+                            <small class="laundry-table-subtext">
+                                {{ batch.batch_date.strftime("%I:%M %p") }}
+                            </small>
+
+                        </td>
+
+
+                        <td data-label="Source">
+
+                            <span class="laundry-source-badge">
+
+                                {% if batch.source_type == "ROOM" %}
+
+                                    <i class="fas fa-door-open"></i>
+
+                                    Room
+                                    {% if batch.room %}
+                                        {{ batch.room.room_number }}
+                                    {% endif %}
+
+                                {% elif batch.source_type == "BOOKING" %}
+
+                                    <i class="fas fa-calendar-check"></i>
+
+                                    Booking
+                                    {% if batch.booking %}
+                                        {{ batch.booking.booking_no }}
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <i class="fas fa-warehouse"></i>
+
+                                    {{ batch.source_type|replace("_", " ")|title }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </td>
+
+
+                        <td data-label="Vendor">
+
+                            {% if batch.vendor_name %}
+
+                                <strong>
+                                    {{ batch.vendor_name }}
+                                </strong>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Internal Laundry
+                                </span>
+
+                            {% endif %}
+
+                            {% if batch.expected_return_at %}
+
+                                <small class="laundry-table-subtext">
+
+                                    Due:
+                                    {{ batch.expected_return_at.strftime("%d %b %Y") }}
+
+                                </small>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td data-label="Issued"
+                            class="text-right">
+
+                            <strong class="quantity-value issued-value">
+                                {{ "%.2f"|format(batch.total_quantity or 0) }}
+                            </strong>
+
+                        </td>
+
+
+                        <td data-label="Returned"
+                            class="text-right">
+
+                            <strong class="quantity-value clean-value">
+                                {{ "%.2f"|format(returned_total) }}
+                            </strong>
+
+                        </td>
+
+
+                        <td data-label="Damaged"
+                            class="text-right">
+
+                            {% if (batch.damaged_quantity or 0) > 0 %}
+
+                                <span class="quantity-alert damaged-alert">
+
+                                    <i class="fas fa-exclamation-circle"></i>
+
+                                    {{ "%.2f"|format(batch.damaged_quantity or 0) }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="quantity-zero">
+                                    0.00
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td data-label="Missing"
+                            class="text-right">
+
+                            {% if (batch.missing_quantity or 0) > 0 %}
+
+                                <span class="quantity-alert missing-alert">
+
+                                    <i class="fas fa-search-minus"></i>
+
+                                    {{ "%.2f"|format(batch.missing_quantity or 0) }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="quantity-zero">
+                                    0.00
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td data-label="Status">
+
+                            {% if batch.status == "COLLECTED" %}
+
+                                <span class="laundry-status-badge badge-collected">
+                                    <i class="fas fa-box"></i>
+                                    Collected
+                                </span>
+
+                            {% elif batch.status == "SENT_TO_LAUNDRY" %}
+
+                                <span class="laundry-status-badge badge-sent">
+                                    <i class="fas fa-truck"></i>
+                                    Sent
+                                </span>
+
+                            {% elif batch.status == "IN_PROCESS" %}
+
+                                <span class="laundry-status-badge badge-processing">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Processing
+                                </span>
+
+                            {% elif batch.status == "PARTIALLY_RETURNED" %}
+
+                                <span class="laundry-status-badge badge-partial">
+                                    <i class="fas fa-adjust"></i>
+                                    Partial
+                                </span>
+
+                            {% elif batch.status == "COMPLETED" %}
+
+                                <span class="laundry-status-badge badge-completed">
+                                    <i class="fas fa-check-circle"></i>
+                                    Completed
+                                </span>
+
+                            {% elif batch.status == "CANCELLED" %}
+
+                                <span class="laundry-status-badge badge-cancelled">
+                                    <i class="fas fa-ban"></i>
+                                    Cancelled
+                                </span>
+
+                            {% else %}
+
+                                <span class="laundry-status-badge">
+                                    {{ batch.status|replace("_", " ")|title }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td data-label="Action">
+
+                            <a href="/hotel-operations/laundry/{{ batch.id }}"
+                               class="btn laundry-view-button">
+
+                                <i class="fas fa-eye"></i>
+                                View
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="10"
+                            class="laundry-empty-state">
+
+                            <div class="laundry-empty-icon">
+
+                                <i class="fas fa-tshirt"></i>
+
+                            </div>
+
+                            <h3>No laundry batches yet</h3>
+
+                            <p>
+                                Create the first laundry batch to start tracking
+                                linen collection and vendor returns.
+                            </p>
+
+                            <a href="/hotel-operations/laundry/create"
+                               class="btn btn-primary">
+
+                                <i class="fas fa-plus-circle mr-1"></i>
+                                Create First Batch
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}
