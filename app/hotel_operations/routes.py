@@ -365,8 +365,9 @@ async def hotel_operations_dashboard(
     db.commit()
 
     return templates.TemplateResponse(
-        "hotel_operations/dashboard.html",
-        {
+        request=request,
+        name="hotel_operations/dashboard.html",
+        context={
             "request": request,
             "total_rooms": len(rooms),
             "ready_rooms": ready_rooms,
@@ -411,8 +412,9 @@ async def hotel_operations_room_board(
     db.commit()
 
     return templates.TemplateResponse(
-        "hotel_operations/room_statuses.html",
-        {
+        request=request,
+        name="hotel_operations/room_statuses.html",
+        context={
             "request": request,
             "room_items": room_items,
             "room_statuses": ROOM_STATUSES,
@@ -480,8 +482,9 @@ async def hotel_operations_housekeeping_page(
     )
 
     return templates.TemplateResponse(
-        "hotel_operations/housekeeping.html",
-        {
+        request=request,
+        name="hotel_operations/housekeeping.html",
+        context={
             "request": request,
             "tasks": tasks,
             "rooms": rooms,
@@ -512,8 +515,9 @@ async def hotel_operations_staff_page(
     )
 
     return templates.TemplateResponse(
-        "hotel_operations/staff.html",
-        {
+        request=request,
+        name="hotel_operations/staff.html",
+        context={
             "request": request,
             "staff_members": staff_members,
             "staff_departments": STAFF_DEPARTMENTS,
@@ -1165,8 +1169,9 @@ async def hotel_inventory_dashboard(
     )
 
     return templates.TemplateResponse(
-        "hotel_inventory/dashboard.html",
-        {
+        request=request,
+        name="hotel_inventory/dashboard.html",
+        context={
             "request": request,
             "items": items,
             "total_items": total_items,
@@ -1182,8 +1187,9 @@ async def hotel_inventory_item_create_page(
     request: Request,
 ):
     return templates.TemplateResponse(
-        "hotel_inventory/create_item.html",
-        {
+        request=request,
+        name="hotel_inventory/create_item.html",
+        context={
             "request": request,
         },
     )
@@ -1310,8 +1316,9 @@ async def hotel_inventory_ledger(
     )
 
     return templates.TemplateResponse(
-        "hotel_inventory/ledger.html",
-        {
+        request=request,
+        name="hotel_inventory/ledger.html",
+        context={
             "request": request,
             "item": item,
             "transactions": transactions,
@@ -1498,8 +1505,9 @@ async def hotel_laundry_dashboard(
     recent_batches = batches[:50]
 
     return templates.TemplateResponse(
-        "hotel_laundry/dashboard.html",
-        {
+        request=request,
+        name="hotel_laundry/dashboard.html",
+        context={
             "request": request,
             "batches": recent_batches,
             "total_batches": len(batches),
@@ -1565,8 +1573,9 @@ async def hotel_laundry_create_page(
     )
 
     return templates.TemplateResponse(
-        "hotel_laundry/create.html",
-        {
+        request=request,
+        name="hotel_laundry/create.html",
+        context={
             "request": request,
             "rooms": rooms,
             "bookings": bookings,
@@ -1906,8 +1915,9 @@ async def hotel_laundry_view(
         )
 
     return templates.TemplateResponse(
-        "hotel_laundry/view.html",
-        {
+        request=request,
+        name="hotel_laundry/view.html",
+        context={
             "request": request,
             "batch": batch,
             "statuses": LAUNDRY_BATCH_STATUSES,
