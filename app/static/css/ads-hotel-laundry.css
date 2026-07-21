@@ -908,3 +908,1357 @@
     }
 
 }
+
+
+/*
+========================================================
+ CREATE LAUNDRY BATCH
+ PATCH-HOTEL-OPS-006 PART-4B.1
+========================================================
+*/
+
+
+/* -----------------------------------------------------
+   PAGE
+----------------------------------------------------- */
+
+.laundry-create-page {
+    padding: 4px 0 38px;
+    color: #172033;
+}
+
+.laundry-create-page .form-control {
+    min-height: 44px;
+    border-radius: 11px;
+    border: 1px solid #dce3ec;
+    background: #ffffff;
+    color: #172033;
+    box-shadow: none;
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background-color .18s ease;
+}
+
+.laundry-create-page .form-control:focus {
+    border-color: #60a5fa;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .10);
+}
+
+.laundry-create-page textarea.form-control {
+    min-height: 82px;
+    resize: vertical;
+}
+
+.laundry-create-page .form-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #46546a;
+    font-size: .77rem;
+    font-weight: 850;
+    letter-spacing: .025em;
+}
+
+.laundry-create-page select.form-control {
+    cursor: pointer;
+}
+
+
+/* -----------------------------------------------------
+   HEADER
+----------------------------------------------------- */
+
+.laundry-header {
+    margin-bottom: 22px;
+    padding: 26px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 22px;
+    color: #ffffff;
+    background:
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(255, 255, 255, .24),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #0f766e 0%,
+            #0891b2 44%,
+            #2563eb 100%
+        );
+    box-shadow:
+        0 20px 45px rgba(37, 99, 235, .17),
+        0 8px 18px rgba(15, 118, 110, .10);
+}
+
+.laundry-header::before {
+    content: "";
+    position: absolute;
+    width: 145px;
+    height: 145px;
+    right: 22%;
+    bottom: -100px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .15);
+    background: rgba(255, 255, 255, .06);
+}
+
+.laundry-header > * {
+    position: relative;
+    z-index: 2;
+}
+
+.laundry-header .page-title {
+    margin: 0 0 7px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #ffffff;
+    font-size: clamp(1.55rem, 2.4vw, 2.2rem);
+    font-weight: 850;
+    letter-spacing: -.025em;
+}
+
+.laundry-header .page-title i {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .17);
+    border: 1px solid rgba(255, 255, 255, .22);
+    font-size: 1.08rem;
+}
+
+.laundry-header .page-subtitle {
+    max-width: 720px;
+    color: rgba(255, 255, 255, .83);
+    font-size: .94rem;
+    line-height: 1.55;
+}
+
+.laundry-header .btn {
+    min-height: 44px;
+    padding: 10px 17px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    color: #174174;
+    background: #ffffff;
+    border-color: #ffffff !important;
+    font-weight: 800;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .15);
+}
+
+.laundry-header .btn:hover {
+    color: #0f766e;
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
+
+
+/* -----------------------------------------------------
+   CARDS
+----------------------------------------------------- */
+
+.laundry-create-page .ads-card {
+    overflow: hidden;
+    border: 1px solid #e8edf4;
+    border-radius: 21px;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, .065);
+}
+
+.laundry-create-page .ads-card > .card-header {
+    min-height: 70px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    border-bottom: 1px solid #edf1f5;
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #fbfcfe 100%
+        );
+}
+
+.laundry-create-page .ads-card > .card-header h5 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #172033;
+    font-size: 1.03rem;
+    font-weight: 850;
+}
+
+.laundry-create-page .ads-card > .card-header h5 i {
+    width: 35px;
+    height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #2563eb;
+    background: #eaf1ff;
+    font-size: .88rem;
+}
+
+.laundry-create-page .ads-card > .card-body {
+    padding: 23px;
+}
+
+
+/* -----------------------------------------------------
+   ITEMS CARD HEADER
+----------------------------------------------------- */
+
+.laundry-items-card-header > div:first-child {
+    min-width: 0;
+}
+
+.laundry-items-card-header p {
+    margin: 5px 0 0;
+    color: #7e8a9c;
+    font-size: .83rem;
+    line-height: 1.45;
+}
+
+.laundry-items-card-header .btn {
+    min-height: 42px;
+    padding: 9px 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+
+/* -----------------------------------------------------
+   ITEMS TABLE
+----------------------------------------------------- */
+
+.laundry-items-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e8edf4;
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+.laundry-items-table {
+    min-width: 1040px;
+    margin: 0;
+    color: #2b3648;
+}
+
+.laundry-items-table thead th {
+    padding: 13px 12px;
+    border-top: 0;
+    border-bottom: 1px solid #e7edf4;
+    color: #6f7c91;
+    background: #f8fafc;
+    font-size: .68rem;
+    font-weight: 850;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.laundry-items-table tbody td {
+    padding: 13px 12px;
+    border-top: 1px solid #edf1f5;
+    vertical-align: top;
+    background: #ffffff;
+}
+
+.laundry-items-table tbody tr:first-child td {
+    border-top: 0;
+}
+
+.laundry-items-table tbody tr {
+    transition: background-color .16s ease;
+}
+
+.laundry-items-table tbody tr:hover td {
+    background: #fbfdff;
+}
+
+.laundry-column-number {
+    width: 48px;
+    text-align: center;
+}
+
+.laundry-column-stock {
+    width: 150px;
+}
+
+.laundry-column-quantity {
+    width: 190px;
+}
+
+.laundry-column-action {
+    width: 76px;
+    text-align: center;
+}
+
+.laundry-row-number {
+    color: #64748b;
+    font-weight: 850;
+    text-align: center;
+}
+
+
+/* -----------------------------------------------------
+   ITEM SELECT & META
+----------------------------------------------------- */
+
+.laundry-item-select {
+    min-width: 285px;
+}
+
+.laundry-item-meta {
+    min-height: 20px;
+    margin-top: 7px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 13px;
+}
+
+.laundry-item-meta span {
+    color: #8490a3;
+    font-size: .7rem;
+    font-weight: 700;
+}
+
+.laundry-item-meta strong {
+    color: #536176;
+    font-weight: 850;
+}
+
+
+/* -----------------------------------------------------
+   STOCK
+----------------------------------------------------- */
+
+.laundry-stock-cell {
+    text-align: center;
+}
+
+.laundry-stock-badge {
+    min-height: 42px;
+    padding: 8px 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 11px;
+    color: #047857;
+    background: #e8faf3;
+    border: 1px solid #d5f2e4;
+    font-size: .78rem;
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.laundry-stock-value {
+    font-size: .9rem;
+}
+
+.laundry-stock-unit {
+    color: #3b8d72;
+    font-size: .69rem;
+    text-transform: lowercase;
+}
+
+
+/* -----------------------------------------------------
+   QUANTITY CONTROL
+----------------------------------------------------- */
+
+.laundry-quantity-control {
+    min-width: 170px;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid #dce3ec;
+    border-radius: 11px;
+    background: #ffffff;
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease;
+}
+
+.laundry-quantity-control:focus-within {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .09);
+}
+
+.laundry-quantity-button {
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    border: 0;
+    color: #526176;
+    background: #f6f8fb;
+    cursor: pointer;
+    transition:
+        color .16s ease,
+        background-color .16s ease;
+}
+
+.laundry-quantity-button:hover {
+    color: #2563eb;
+    background: #eaf1ff;
+}
+
+.laundry-quantity-button:focus {
+    outline: 0;
+}
+
+.laundry-quantity-input {
+    min-width: 74px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 7px 6px !important;
+    border: 0 !important;
+    border-left: 1px solid #e4e9f0 !important;
+    border-right: 1px solid #e4e9f0 !important;
+    border-radius: 0 !important;
+    text-align: center;
+    font-weight: 850;
+    box-shadow: none !important;
+    appearance: textfield;
+}
+
+.laundry-quantity-input::-webkit-inner-spin-button,
+.laundry-quantity-input::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+}
+
+.laundry-quantity-input.is-invalid {
+    color: #b91c1c;
+    background: #fff7f7;
+}
+
+.laundry-quantity-error {
+    margin-top: 6px;
+    color: #dc2626;
+    font-size: .68rem;
+    font-weight: 750;
+    line-height: 1.35;
+}
+
+
+/* -----------------------------------------------------
+   ACTION BUTTON
+----------------------------------------------------- */
+
+.laundry-action-cell {
+    text-align: center;
+}
+
+.laundry-remove-button {
+    width: 39px;
+    height: 39px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.laundry-remove-button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+
+/* -----------------------------------------------------
+   MOBILE ADD BUTTON
+----------------------------------------------------- */
+
+.laundry-mobile-add-wrapper {
+    display: none;
+    margin-top: 14px;
+}
+
+.laundry-mobile-add-wrapper .btn {
+    min-height: 44px;
+    border-radius: 11px;
+    font-weight: 800;
+}
+
+
+/* -----------------------------------------------------
+   SUMMARY
+----------------------------------------------------- */
+
+.laundry-create-summary {
+    margin-bottom: 20px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    border-radius: 18px;
+    color: #ffffff;
+    background:
+        radial-gradient(
+            circle at 87% 20%,
+            rgba(255, 255, 255, .20),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #1d4ed8 0%,
+            #2563eb 42%,
+            #0891b2 100%
+        );
+    box-shadow: 0 14px 30px rgba(37, 99, 235, .17);
+}
+
+.laundry-summary-information {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.laundry-summary-icon {
+    width: 49px;
+    height: 49px;
+    flex: 0 0 49px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .16);
+    border: 1px solid rgba(255, 255, 255, .20);
+    font-size: 1.05rem;
+}
+
+.laundry-summary-label {
+    display: block;
+    margin-bottom: 2px;
+    color: rgba(255, 255, 255, .75);
+    font-size: .69rem;
+    font-weight: 850;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.laundry-summary-title {
+    display: block;
+    color: #ffffff;
+    font-size: .94rem;
+    font-weight: 850;
+}
+
+.laundry-summary-metrics {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.laundry-summary-metric {
+    min-width: 105px;
+    text-align: center;
+}
+
+.laundry-summary-metric span {
+    display: block;
+    margin-bottom: 3px;
+    color: rgba(255, 255, 255, .72);
+    font-size: .68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.laundry-summary-metric strong {
+    display: block;
+    color: #ffffff;
+    font-size: 1.45rem;
+    line-height: 1.1;
+    font-weight: 900;
+}
+
+.laundry-summary-divider {
+    width: 1px;
+    height: 43px;
+    background: rgba(255, 255, 255, .24);
+}
+
+
+/* -----------------------------------------------------
+   VALIDATION
+----------------------------------------------------- */
+
+.laundry-validation-alert {
+    margin-bottom: 18px;
+    padding: 13px 16px;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    color: #b91c1c;
+    background: #fff1f2;
+    font-size: .82rem;
+    font-weight: 750;
+}
+
+.laundry-validation-alert:not([hidden]) {
+    display: flex;
+}
+
+.laundry-validation-alert i {
+    font-size: 1rem;
+}
+
+
+/* -----------------------------------------------------
+   FORM ACTIONS
+----------------------------------------------------- */
+
+.laundry-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 11px;
+    padding-top: 2px;
+}
+
+.laundry-form-actions .btn {
+    min-height: 46px;
+    min-width: 130px;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    font-weight: 850;
+}
+
+.laundry-create-submit {
+    min-width: 205px !important;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, .17);
+}
+
+.laundry-create-submit:disabled {
+    cursor: wait;
+    opacity: .75;
+}
+
+.laundry-submit-default,
+.laundry-submit-loading {
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.laundry-submit-default:not([hidden]),
+.laundry-submit-loading:not([hidden]) {
+    display: inline-flex;
+}
+
+
+/* -----------------------------------------------------
+   EMPTY INVENTORY
+----------------------------------------------------- */
+
+.laundry-empty-inventory {
+    padding: 50px 22px;
+    text-align: center;
+    border: 1px dashed #dce4ee;
+    border-radius: 17px;
+    background: #fbfcfe;
+}
+
+.laundry-empty-inventory .laundry-empty-icon {
+    margin-bottom: 15px;
+}
+
+.laundry-empty-inventory h4 {
+    margin: 0 0 7px;
+    color: #172033;
+    font-size: 1.1rem;
+    font-weight: 850;
+}
+
+.laundry-empty-inventory p {
+    max-width: 520px;
+    margin: 0 auto 18px;
+    color: #7f8b9d;
+    line-height: 1.55;
+}
+
+.laundry-empty-inventory .btn {
+    min-height: 43px;
+    padding: 9px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 11px;
+    font-weight: 800;
+}
+
+
+
+/*
+========================================================
+ CREATE LAUNDRY BATCH RESPONSIVE
+ PATCH-HOTEL-OPS-006 PART-4B.2
+========================================================
+*/
+
+
+/* -----------------------------------------------------
+   GENERAL REFINEMENTS
+----------------------------------------------------- */
+
+.laundry-create-page [hidden] {
+    display: none !important;
+}
+
+.laundry-create-page button,
+.laundry-create-page .btn,
+.laundry-create-page .form-control {
+    transition:
+        color .18s ease,
+        background-color .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease,
+        transform .18s ease,
+        opacity .18s ease;
+}
+
+.laundry-create-page .btn:active {
+    transform: translateY(1px);
+}
+
+.laundry-create-page .form-control::placeholder {
+    color: #a0aabd;
+    opacity: 1;
+}
+
+.laundry-create-page .form-control:disabled,
+.laundry-create-page .form-control[readonly] {
+    color: #68758a;
+    background: #f5f7fa;
+    cursor: not-allowed;
+}
+
+.laundry-create-page .form-control.is-invalid {
+    border-color: #ef4444;
+    background-color: #fffafa;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, .08);
+}
+
+.laundry-create-page .text-danger {
+    color: #dc2626 !important;
+}
+
+
+/* -----------------------------------------------------
+   TABLE SCROLLBAR
+----------------------------------------------------- */
+
+.laundry-items-table-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.laundry-items-table-wrapper::-webkit-scrollbar {
+    height: 9px;
+}
+
+.laundry-items-table-wrapper::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: #f8fafc;
+}
+
+.laundry-items-table-wrapper::-webkit-scrollbar-thumb {
+    border: 2px solid #f8fafc;
+    border-radius: 999px;
+    background: #cbd5e1;
+}
+
+.laundry-items-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* -----------------------------------------------------
+   ITEM ROW STATES
+----------------------------------------------------- */
+
+.laundry-item-row {
+    position: relative;
+}
+
+.laundry-item-row:focus-within td {
+    background: #fbfdff;
+}
+
+.laundry-item-row .is-invalid {
+    border-color: #ef4444 !important;
+}
+
+.laundry-item-row .laundry-item-select:invalid:focus {
+    border-color: #ef4444;
+}
+
+.laundry-stock-badge {
+    max-width: 140px;
+}
+
+.laundry-stock-badge.stock-warning,
+.laundry-stock-badge.is-low-stock {
+    color: #b45309;
+    background: #fff7df;
+    border-color: #fde7ad;
+}
+
+.laundry-stock-badge.stock-empty,
+.laundry-stock-badge.is-out-of-stock {
+    color: #b91c1c;
+    background: #fff0f0;
+    border-color: #fecaca;
+}
+
+
+/* -----------------------------------------------------
+   QUANTITY CONTROL REFINEMENTS
+----------------------------------------------------- */
+
+.laundry-quantity-button:disabled {
+    color: #a8b1c0;
+    background: #f8fafc;
+    cursor: not-allowed;
+}
+
+.laundry-quantity-input:focus {
+    background: #ffffff;
+}
+
+.laundry-quantity-control.has-error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, .08);
+}
+
+.laundry-quantity-control.has-error
+.laundry-quantity-input {
+    color: #b91c1c;
+    background: #fffafa;
+}
+
+
+/* -----------------------------------------------------
+   LOADING STATE
+----------------------------------------------------- */
+
+.laundry-submit-loading i,
+.laundry-create-submit .fa-spinner,
+.laundry-create-submit .spinner-border {
+    animation: laundry-spin .8s linear infinite;
+}
+
+@keyframes laundry-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+.laundry-create-submit:disabled {
+    pointer-events: none;
+}
+
+.laundry-create-submit:disabled
+.laundry-submit-loading {
+    opacity: 1;
+}
+
+
+/* -----------------------------------------------------
+   VALIDATION ANIMATION
+----------------------------------------------------- */
+
+.laundry-validation-alert:not([hidden]) {
+    animation: laundry-alert-enter .22s ease-out;
+}
+
+@keyframes laundry-alert-enter {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* -----------------------------------------------------
+   LARGE TABLET
+----------------------------------------------------- */
+
+@media (max-width: 1199px) {
+
+    .laundry-header {
+        padding: 24px;
+    }
+
+    .laundry-items-table {
+        min-width: 980px;
+    }
+
+    .laundry-create-summary {
+        align-items: flex-start;
+    }
+
+}
+
+
+/* -----------------------------------------------------
+   TABLET
+----------------------------------------------------- */
+
+@media (max-width: 991px) {
+
+    .laundry-create-page {
+        padding-bottom: 30px;
+    }
+
+    .laundry-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .laundry-header > div:first-child {
+        width: 100%;
+    }
+
+    .laundry-header .btn {
+        width: 100%;
+    }
+
+    .laundry-create-page .ads-card > .card-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .laundry-items-card-header .btn {
+        width: 100%;
+    }
+
+    .laundry-create-summary {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .laundry-summary-metrics {
+        width: 100%;
+        justify-content: space-around;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, .20);
+    }
+
+    .laundry-summary-metric {
+        flex: 1 1 0;
+    }
+
+}
+
+
+/* -----------------------------------------------------
+   MOBILE ITEM CARD LAYOUT
+----------------------------------------------------- */
+
+@media (max-width: 767px) {
+
+    .laundry-create-page {
+        padding-top: 0;
+    }
+
+    .laundry-header {
+        margin-bottom: 16px;
+        padding: 21px 18px;
+        border-radius: 18px;
+    }
+
+    .laundry-header .page-title {
+        align-items: flex-start;
+        font-size: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .laundry-header .page-title i {
+        width: 41px;
+        height: 41px;
+        flex: 0 0 41px;
+        border-radius: 12px;
+    }
+
+    .laundry-header .page-subtitle {
+        font-size: .86rem;
+    }
+
+    .laundry-create-page .ads-card {
+        border-radius: 17px;
+    }
+
+    .laundry-create-page .ads-card > .card-header {
+        min-height: auto;
+        padding: 17px;
+    }
+
+    .laundry-create-page .ads-card > .card-body {
+        padding: 17px;
+    }
+
+    .laundry-items-card-header > .btn,
+    .laundry-items-card-header
+    #addLaundryItemButton {
+        display: none;
+    }
+
+    .laundry-mobile-add-wrapper {
+        display: block;
+    }
+
+    .laundry-mobile-add-wrapper .btn {
+        width: 100%;
+    }
+
+    .laundry-items-table-wrapper {
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .laundry-items-table {
+        display: block;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .laundry-items-table thead {
+        display: none;
+    }
+
+    .laundry-items-table tbody {
+        display: grid;
+        gap: 14px;
+        width: 100%;
+    }
+
+    .laundry-items-table tbody,
+    .laundry-items-table tr,
+    .laundry-items-table td {
+        width: 100%;
+    }
+
+    .laundry-items-table tr {
+        display: grid;
+        grid-template-columns: 1fr;
+        overflow: hidden;
+        border: 1px solid #e5ebf2;
+        border-radius: 15px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, .055);
+    }
+
+    .laundry-items-table tbody td,
+    .laundry-items-table tbody tr:first-child td {
+        display: block;
+        min-height: 0;
+        padding: 13px 14px;
+        border-top: 1px solid #edf1f5;
+        background: #ffffff;
+        text-align: left;
+    }
+
+    .laundry-items-table tbody td:first-child {
+        padding: 10px 14px;
+        border-top: 0;
+        color: #2563eb;
+        background: #f5f9ff;
+    }
+
+    .laundry-items-table tbody td:not(:first-child)::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 7px;
+        color: #748196;
+        font-size: .66rem;
+        font-weight: 850;
+        letter-spacing: .055em;
+        text-transform: uppercase;
+    }
+
+    .laundry-row-number {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        text-align: left;
+    }
+
+    .laundry-row-number::before {
+        content: "ITEM";
+        color: #718096;
+        font-size: .64rem;
+        letter-spacing: .08em;
+    }
+
+    .laundry-item-select {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .laundry-item-meta {
+        gap: 6px 10px;
+    }
+
+    .laundry-stock-cell,
+    .laundry-action-cell {
+        text-align: left;
+    }
+
+    .laundry-stock-badge {
+        width: 100%;
+        max-width: none;
+        justify-content: flex-start;
+    }
+
+    .laundry-quantity-control {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .laundry-quantity-button {
+        width: 46px;
+        min-width: 46px;
+        min-height: 44px;
+    }
+
+    .laundry-quantity-input {
+        flex: 1 1 auto;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 44px !important;
+        min-height: 44px !important;
+    }
+
+    .laundry-remove-button {
+        width: 100%;
+        height: 42px;
+        gap: 7px;
+    }
+
+    .laundry-remove-button::after {
+        content: "Remove item";
+        font-size: .75rem;
+        font-weight: 800;
+    }
+
+    .laundry-create-summary {
+        margin-bottom: 16px;
+        padding: 17px;
+        border-radius: 16px;
+    }
+
+    .laundry-summary-information {
+        align-items: flex-start;
+    }
+
+    .laundry-summary-icon {
+        width: 43px;
+        height: 43px;
+        flex-basis: 43px;
+    }
+
+    .laundry-summary-metrics {
+        gap: 8px;
+    }
+
+    .laundry-summary-metric {
+        min-width: 0;
+    }
+
+    .laundry-summary-divider {
+        height: 38px;
+    }
+
+    .laundry-summary-metric strong {
+        font-size: 1.25rem;
+    }
+
+    .laundry-validation-alert {
+        align-items: flex-start;
+    }
+
+    .laundry-form-actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .laundry-form-actions .btn,
+    .laundry-create-submit {
+        width: 100%;
+        min-width: 0 !important;
+    }
+
+}
+
+
+/* -----------------------------------------------------
+   SMALL MOBILE
+----------------------------------------------------- */
+
+@media (max-width: 575px) {
+
+    .laundry-header {
+        padding: 19px 16px;
+    }
+
+    .laundry-header .page-title {
+        font-size: 1.35rem;
+    }
+
+    .laundry-create-page .ads-card > .card-header,
+    .laundry-create-page .ads-card > .card-body {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .laundry-create-page .form-control {
+        min-height: 46px;
+        font-size: 16px;
+    }
+
+    .laundry-create-page textarea.form-control {
+        min-height: 92px;
+    }
+
+    .laundry-items-table tbody td,
+    .laundry-items-table tbody tr:first-child td {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .laundry-create-summary {
+        padding: 15px;
+    }
+
+    .laundry-summary-information {
+        gap: 10px;
+    }
+
+    .laundry-summary-title {
+        font-size: .86rem;
+    }
+
+    .laundry-summary-metrics {
+        justify-content: space-between;
+    }
+
+    .laundry-summary-metric span {
+        font-size: .61rem;
+    }
+
+    .laundry-summary-metric strong {
+        font-size: 1.12rem;
+    }
+
+    .laundry-summary-divider {
+        height: 34px;
+    }
+
+    .laundry-empty-inventory {
+        padding: 38px 16px;
+    }
+
+}
+
+
+/* -----------------------------------------------------
+   EXTRA SMALL MOBILE
+----------------------------------------------------- */
+
+@media (max-width: 380px) {
+
+    .laundry-header .page-title {
+        font-size: 1.2rem;
+    }
+
+    .laundry-header .page-title i {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .laundry-summary-metrics {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 11px;
+    }
+
+    .laundry-summary-divider {
+        width: 100%;
+        height: 1px;
+    }
+
+    .laundry-summary-metric {
+        text-align: left;
+    }
+
+}
+
+
+/* -----------------------------------------------------
+   ACCESSIBILITY
+----------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .laundry-create-page *,
+    .laundry-create-page *::before,
+    .laundry-create-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+
+}
+

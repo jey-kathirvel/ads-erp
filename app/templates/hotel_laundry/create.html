@@ -1,0 +1,2052 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+Create Laundry Batch
+{% endblock %}
+
+{% block head %}
+
+<link
+    rel="stylesheet"
+    href="/static/css/ads-hotel-laundry.css">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid laundry-create-page">
+
+    <!-- ===================================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ===================================================== -->
+
+    <div class="laundry-header">
+
+        <div>
+
+            <h1 class="page-title">
+
+                <i class="fas fa-soap"></i>
+
+                Create Laundry Batch
+
+            </h1>
+
+            <div class="page-subtitle">
+
+                Collect linen from rooms, guests and
+                housekeeping inventory for laundry processing.
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <a
+                href="/hotel-operations/laundry"
+                class="btn btn-light border">
+
+                <i class="fas fa-arrow-left"></i>
+
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- FORM -->
+    <!-- ===================================================== -->
+
+    <form
+
+        method="post"
+
+        action="/hotel-operations/laundry/create"
+
+        id="laundryForm"
+
+    >
+
+        <!-- ========================================= -->
+        <!-- INFORMATION CARD -->
+        <!-- ========================================= -->
+
+        <div class="card ads-card mb-4">
+
+            <div class="card-header">
+
+                <h5>
+
+                    <i class="fas fa-info-circle"></i>
+
+                    Laundry Information
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <!-- Source -->
+
+                    <div class="col-lg-3 mb-3">
+
+                        <label class="form-label">
+
+                            Source Type
+
+                        </label>
+
+                        <select
+
+                            name="source_type"
+
+                            id="sourceType"
+
+                            class="form-control"
+
+                        >
+
+                            {% for source in source_types %}
+
+                            <option value="{{ source }}">
+
+                                {{ source.replace("_"," ") }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- Room -->
+
+                    <div
+                        class="col-lg-3 mb-3"
+                        id="roomContainer">
+
+                        <label class="form-label">
+
+                            Room
+
+                        </label>
+
+                        <select
+
+                            name="room_id"
+
+                            class="form-control"
+
+                        >
+
+                            <option value="">
+
+                                Select Room
+
+                            </option>
+
+                            {% for room in rooms %}
+
+                            <option
+                                value="{{ room.id }}">
+
+                                {{ room.room_number }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- Booking -->
+
+                    <div
+                        class="col-lg-3 mb-3"
+                        id="bookingContainer">
+
+                        <label class="form-label">
+
+                            Booking
+
+                        </label>
+
+                        <select
+
+                            name="booking_id"
+
+                            class="form-control"
+
+                        >
+
+                            <option value="">
+
+                                Select Booking
+
+                            </option>
+
+                            {% for booking in bookings %}
+
+                            <option
+                                value="{{ booking.id }}">
+
+                                {{ booking.booking_no }}
+                                -
+                                {{ booking.guest_name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- Vendor -->
+
+                    <div class="col-lg-3 mb-3">
+
+                        <label class="form-label">
+
+                            Laundry Vendor
+
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            class="form-control"
+
+                            name="vendor_name"
+
+                            placeholder="Vendor Name"
+
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-4 mb-3">
+
+                        <label class="form-label">
+
+                            Expected Return
+
+                        </label>
+
+                        <input
+
+                            type="datetime-local"
+
+                            class="form-control"
+
+                            name="expected_return_at"
+
+                        >
+
+                    </div>
+
+                    <div class="col-lg-8 mb-3">
+
+                        <label class="form-label">
+
+                            Remarks
+
+                        </label>
+
+                        <textarea
+
+                            rows="2"
+
+                            class="form-control"
+
+                            name="remarks"
+
+                            placeholder="Optional Remarks"
+
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+                <!-- ========================================= -->
+        <!-- LAUNDRY ITEMS CARD -->
+        <!-- ========================================= -->
+
+        <div class="card ads-card mb-4">
+
+            <div class="card-header laundry-items-card-header">
+
+                <div>
+
+                    <h5>
+
+                        <i class="fas fa-layer-group"></i>
+
+                        Laundry Items
+
+                    </h5>
+
+                    <p>
+
+                        Select inventory items and enter the
+                        quantity being sent for laundry.
+
+                    </p>
+
+                </div>
+
+                <button
+
+                    type="button"
+
+                    class="btn btn-primary"
+
+                    id="addLaundryItemButton"
+
+                >
+
+                    <i class="fas fa-plus"></i>
+
+                    Add Item
+
+                </button>
+
+            </div>
+
+            <div class="card-body">
+
+                <!-- ============================== -->
+                <!-- EMPTY INVENTORY MESSAGE -->
+                <!-- ============================== -->
+
+                {% if not linen_items %}
+
+                <div class="laundry-empty-inventory">
+
+                    <div class="laundry-empty-icon">
+
+                        <i class="fas fa-box-open"></i>
+
+                    </div>
+
+                    <h4>
+
+                        No Laundry Inventory Items Found
+
+                    </h4>
+
+                    <p>
+
+                        Create active inventory items under
+                        LINEN, BATHROOM or HOUSEKEEPING
+                        category before creating a laundry
+                        batch.
+
+                    </p>
+
+                    <a
+
+                        href="/hotel-operations/inventory/create"
+
+                        class="btn btn-primary"
+
+                    >
+
+                        <i class="fas fa-plus"></i>
+
+                        Create Inventory Item
+
+                    </a>
+
+                </div>
+
+                {% else %}
+
+                <!-- ============================== -->
+                <!-- DESKTOP TABLE -->
+                <!-- ============================== -->
+
+                <div class="laundry-items-table-wrapper">
+
+                    <table class="table laundry-items-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="laundry-column-number">
+
+                                    #
+
+                                </th>
+
+                                <th>
+
+                                    Inventory Item
+
+                                </th>
+
+                                <th class="laundry-column-stock">
+
+                                    Available Stock
+
+                                </th>
+
+                                <th class="laundry-column-quantity">
+
+                                    Quantity
+
+                                </th>
+
+                                <th>
+
+                                    Item Remarks
+
+                                </th>
+
+                                <th class="laundry-column-action">
+
+                                    Action
+
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="laundryItemsBody">
+
+                            <tr
+                                class="laundry-item-row"
+                                data-row-index="0">
+
+                                <td
+                                    class="laundry-row-number"
+                                    data-label="#">
+
+                                    1
+
+                                </td>
+
+                                <td data-label="Inventory Item">
+
+                                    <select
+
+                                        name="inventory_item_id"
+
+                                        class="form-control laundry-item-select"
+
+                                        required
+
+                                    >
+
+                                        <option value="">
+
+                                            Select Item
+
+                                        </option>
+
+                                        {% for item in linen_items %}
+
+                                        <option
+
+                                            value="{{ item.id }}"
+
+                                            data-stock="{{ item.current_stock or 0 }}"
+
+                                            data-unit="{{ item.unit or '' }}"
+
+                                            data-category="{{ item.category or '' }}"
+
+                                        >
+
+                                            {{ item.item_name }}
+
+                                            {% if item.item_code %}
+
+                                            ({{ item.item_code }})
+
+                                            {% endif %}
+
+                                            -
+                                            {{ item.category }}
+
+                                        </option>
+
+                                        {% endfor %}
+
+                                    </select>
+
+                                    <div class="laundry-item-meta">
+
+                                        <span
+                                            class="laundry-item-category"
+                                            hidden>
+
+                                            Category:
+                                            <strong></strong>
+
+                                        </span>
+
+                                        <span
+                                            class="laundry-item-unit"
+                                            hidden>
+
+                                            Unit:
+                                            <strong></strong>
+
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+                                <td
+                                    class="laundry-stock-cell"
+                                    data-label="Available Stock">
+
+                                    <div class="laundry-stock-badge">
+
+                                        <span
+                                            class="laundry-stock-value">
+
+                                            0
+
+                                        </span>
+
+                                        <span
+                                            class="laundry-stock-unit">
+
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+                                <td data-label="Quantity">
+
+                                    <div class="laundry-quantity-control">
+
+                                        <button
+
+                                            type="button"
+
+                                            class="laundry-quantity-button laundry-decrease-button"
+
+                                            aria-label="Decrease quantity"
+
+                                        >
+
+                                            <i class="fas fa-minus"></i>
+
+                                        </button>
+
+                                        <input
+
+                                            type="number"
+
+                                            name="issued_quantity"
+
+                                            class="form-control laundry-quantity-input"
+
+                                            min="0.01"
+
+                                            step="0.01"
+
+                                            value="1"
+
+                                            required
+
+                                        >
+
+                                        <button
+
+                                            type="button"
+
+                                            class="laundry-quantity-button laundry-increase-button"
+
+                                            aria-label="Increase quantity"
+
+                                        >
+
+                                            <i class="fas fa-plus"></i>
+
+                                        </button>
+
+                                    </div>
+
+                                    <div
+                                        class="laundry-quantity-error"
+                                        hidden>
+
+                                    </div>
+
+                                </td>
+
+                                <td data-label="Item Remarks">
+
+                                    <input
+
+                                        type="text"
+
+                                        name="item_remarks"
+
+                                        class="form-control"
+
+                                        placeholder="Optional item remarks"
+
+                                    >
+
+                                </td>
+
+                                <td
+                                    class="laundry-action-cell"
+                                    data-label="Action">
+
+                                    <button
+
+                                        type="button"
+
+                                        class="btn btn-sm btn-outline-danger laundry-remove-button"
+
+                                        title="Remove item"
+
+                                    >
+
+                                        <i class="fas fa-trash-alt"></i>
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- ============================== -->
+                <!-- ADDITIONAL ITEM BUTTON -->
+                <!-- ============================== -->
+
+                <div class="laundry-mobile-add-wrapper">
+
+                    <button
+
+                        type="button"
+
+                        class="btn btn-outline-primary btn-block"
+
+                        id="mobileAddLaundryItemButton"
+
+                    >
+
+                        <i class="fas fa-plus"></i>
+
+                        Add Another Item
+
+                    </button>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- SUMMARY CARD -->
+        <!-- ========================================= -->
+
+        {% if linen_items %}
+
+        <div class="laundry-create-summary">
+
+            <div class="laundry-summary-information">
+
+                <div class="laundry-summary-icon">
+
+                    <i class="fas fa-clipboard-check"></i>
+
+                </div>
+
+                <div>
+
+                    <span class="laundry-summary-label">
+
+                        Batch Summary
+
+                    </span>
+
+                    <strong class="laundry-summary-title">
+
+                        Review before creating the batch
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <div class="laundry-summary-metrics">
+
+                <div class="laundry-summary-metric">
+
+                    <span>
+
+                        Selected Items
+
+                    </span>
+
+                    <strong id="selectedItemCount">
+
+                        0
+
+                    </strong>
+
+                </div>
+
+                <div class="laundry-summary-divider"></div>
+
+                <div class="laundry-summary-metric">
+
+                    <span>
+
+                        Total Quantity
+
+                    </span>
+
+                    <strong id="totalIssuedQuantity">
+
+                        0.00
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- VALIDATION MESSAGE -->
+        <!-- ========================================= -->
+
+        <div
+            id="laundryValidationAlert"
+            class="alert alert-danger laundry-validation-alert"
+            role="alert"
+            hidden>
+
+            <i class="fas fa-exclamation-circle"></i>
+
+            <span id="laundryValidationMessage"></span>
+
+        </div>
+
+
+        <!-- ========================================= -->
+        <!-- FORM ACTIONS -->
+        <!-- ========================================= -->
+
+        <div class="laundry-form-actions">
+
+            <a
+
+                href="/hotel-operations/laundry"
+
+                class="btn btn-light border"
+
+            >
+
+                <i class="fas fa-times"></i>
+
+                Cancel
+
+            </a>
+
+            <button
+
+                type="submit"
+
+                class="btn btn-primary laundry-create-submit"
+
+                id="createLaundryBatchButton"
+
+            >
+
+                <span class="laundry-submit-default">
+
+                    <i class="fas fa-check"></i>
+
+                    Create Laundry Batch
+
+                </span>
+
+                <span
+                    class="laundry-submit-loading"
+                    hidden>
+
+                    <i class="fas fa-spinner fa-spin"></i>
+
+                    Creating Batch...
+
+                </span>
+
+            </button>
+
+        </div>
+
+        {% endif %}
+
+    </form>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- ITEM ROW TEMPLATE -->
+<!-- ===================================================== -->
+
+{% if linen_items %}
+
+<template id="laundryItemRowTemplate">
+
+    <tr
+        class="laundry-item-row"
+        data-row-index="__INDEX__">
+
+        <td
+            class="laundry-row-number"
+            data-label="#">
+
+            __NUMBER__
+
+        </td>
+
+        <td data-label="Inventory Item">
+
+            <select
+
+                name="inventory_item_id"
+
+                class="form-control laundry-item-select"
+
+                required
+
+            >
+
+                <option value="">
+
+                    Select Item
+
+                </option>
+
+                {% for item in linen_items %}
+
+                <option
+
+                    value="{{ item.id }}"
+
+                    data-stock="{{ item.current_stock or 0 }}"
+
+                    data-unit="{{ item.unit or '' }}"
+
+                    data-category="{{ item.category or '' }}"
+
+                >
+
+                    {{ item.item_name }}
+
+                    {% if item.item_code %}
+
+                    ({{ item.item_code }})
+
+                    {% endif %}
+
+                    -
+                    {{ item.category }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <div class="laundry-item-meta">
+
+                <span
+                    class="laundry-item-category"
+                    hidden>
+
+                    Category:
+                    <strong></strong>
+
+                </span>
+
+                <span
+                    class="laundry-item-unit"
+                    hidden>
+
+                    Unit:
+                    <strong></strong>
+
+                </span>
+
+            </div>
+
+        </td>
+
+        <td
+            class="laundry-stock-cell"
+            data-label="Available Stock">
+
+            <div class="laundry-stock-badge">
+
+                <span class="laundry-stock-value">
+
+                    0
+
+                </span>
+
+                <span class="laundry-stock-unit"></span>
+
+            </div>
+
+        </td>
+
+        <td data-label="Quantity">
+
+            <div class="laundry-quantity-control">
+
+                <button
+
+                    type="button"
+
+                    class="laundry-quantity-button laundry-decrease-button"
+
+                    aria-label="Decrease quantity"
+
+                >
+
+                    <i class="fas fa-minus"></i>
+
+                </button>
+
+                <input
+
+                    type="number"
+
+                    name="issued_quantity"
+
+                    class="form-control laundry-quantity-input"
+
+                    min="0.01"
+
+                    step="0.01"
+
+                    value="1"
+
+                    required
+
+                >
+
+                <button
+
+                    type="button"
+
+                    class="laundry-quantity-button laundry-increase-button"
+
+                    aria-label="Increase quantity"
+
+                >
+
+                    <i class="fas fa-plus"></i>
+
+                </button>
+
+            </div>
+
+            <div
+                class="laundry-quantity-error"
+                hidden>
+
+            </div>
+
+        </td>
+
+        <td data-label="Item Remarks">
+
+            <input
+
+                type="text"
+
+                name="item_remarks"
+
+                class="form-control"
+
+                placeholder="Optional item remarks"
+
+            >
+
+        </td>
+
+        <td
+            class="laundry-action-cell"
+            data-label="Action">
+
+            <button
+
+                type="button"
+
+                class="btn btn-sm btn-outline-danger laundry-remove-button"
+
+                title="Remove item"
+
+            >
+
+                <i class="fas fa-trash-alt"></i>
+
+            </button>
+
+        </td>
+
+    </tr>
+
+</template>
+
+{% endif %}
+<!-- ===================================================== -->
+<!-- CREATE LAUNDRY BATCH JAVASCRIPT -->
+<!-- ===================================================== -->
+
+{% if linen_items %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    "use strict";
+
+    const laundryForm = document.getElementById(
+        "laundryForm"
+    );
+
+    const sourceType = document.getElementById(
+        "sourceType"
+    );
+
+    const roomContainer = document.getElementById(
+        "roomContainer"
+    );
+
+    const bookingContainer = document.getElementById(
+        "bookingContainer"
+    );
+
+    const roomSelect = roomContainer
+        ? roomContainer.querySelector(
+            'select[name="room_id"]'
+        )
+        : null;
+
+    const bookingSelect = bookingContainer
+        ? bookingContainer.querySelector(
+            'select[name="booking_id"]'
+        )
+        : null;
+
+    const laundryItemsBody = document.getElementById(
+        "laundryItemsBody"
+    );
+
+    const rowTemplate = document.getElementById(
+        "laundryItemRowTemplate"
+    );
+
+    const addLaundryItemButton = document.getElementById(
+        "addLaundryItemButton"
+    );
+
+    const mobileAddLaundryItemButton =
+        document.getElementById(
+            "mobileAddLaundryItemButton"
+        );
+
+    const selectedItemCount = document.getElementById(
+        "selectedItemCount"
+    );
+
+    const totalIssuedQuantity =
+        document.getElementById(
+            "totalIssuedQuantity"
+        );
+
+    const validationAlert = document.getElementById(
+        "laundryValidationAlert"
+    );
+
+    const validationMessage = document.getElementById(
+        "laundryValidationMessage"
+    );
+
+    const submitButton = document.getElementById(
+        "createLaundryBatchButton"
+    );
+
+    let rowSequence = 1;
+
+
+    /* ================================================== */
+    /* NUMBER HELPERS */
+    /* ================================================== */
+
+    function parseNumber(value) {
+
+        const parsedValue = Number.parseFloat(
+            String(value || "").trim()
+        );
+
+        if (!Number.isFinite(parsedValue)) {
+            return 0;
+        }
+
+        return parsedValue;
+    }
+
+
+    function formatQuantity(value) {
+
+        return parseNumber(value).toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
+    }
+
+
+    /* ================================================== */
+    /* SOURCE TYPE VISIBILITY */
+    /* ================================================== */
+
+    function normalizeSourceType(value) {
+
+        return String(value || "")
+            .trim()
+            .toUpperCase();
+    }
+
+
+    function sourceUsesRoom(value) {
+
+        const normalized = normalizeSourceType(value);
+
+        return (
+            normalized === "ROOM" ||
+            normalized === "GUEST_ROOM" ||
+            normalized === "ROOM_LINEN"
+        );
+    }
+
+
+    function sourceUsesBooking(value) {
+
+        const normalized = normalizeSourceType(value);
+
+        return (
+            normalized === "BOOKING" ||
+            normalized === "GUEST" ||
+            normalized === "GUEST_LAUNDRY"
+        );
+    }
+
+
+    function updateSourceFields() {
+
+        const selectedSource = sourceType
+            ? sourceType.value
+            : "";
+
+        const showRoom = sourceUsesRoom(
+            selectedSource
+        );
+
+        const showBooking = sourceUsesBooking(
+            selectedSource
+        );
+
+        if (roomContainer) {
+
+            roomContainer.hidden = !showRoom;
+
+            if (!showRoom && roomSelect) {
+                roomSelect.value = "";
+            }
+        }
+
+        if (bookingContainer) {
+
+            bookingContainer.hidden = !showBooking;
+
+            if (!showBooking && bookingSelect) {
+                bookingSelect.value = "";
+            }
+        }
+    }
+
+
+    /* ================================================== */
+    /* VALIDATION ALERT */
+    /* ================================================== */
+
+    function showValidationMessage(message) {
+
+        if (!validationAlert || !validationMessage) {
+            return;
+        }
+
+        validationMessage.textContent = message;
+        validationAlert.hidden = false;
+
+        validationAlert.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+
+    function hideValidationMessage() {
+
+        if (!validationAlert || !validationMessage) {
+            return;
+        }
+
+        validationMessage.textContent = "";
+        validationAlert.hidden = true;
+    }
+
+
+    /* ================================================== */
+    /* ROW HELPERS */
+    /* ================================================== */
+
+    function getRows() {
+
+        if (!laundryItemsBody) {
+            return [];
+        }
+
+        return Array.from(
+            laundryItemsBody.querySelectorAll(
+                ".laundry-item-row"
+            )
+        );
+    }
+
+
+    function getSelectedOption(row) {
+
+        const itemSelect = row.querySelector(
+            ".laundry-item-select"
+        );
+
+        if (
+            !itemSelect ||
+            itemSelect.selectedIndex < 0
+        ) {
+            return null;
+        }
+
+        return itemSelect.options[
+            itemSelect.selectedIndex
+        ];
+    }
+
+
+    function getAvailableStock(row) {
+
+        const selectedOption = getSelectedOption(
+            row
+        );
+
+        if (
+            !selectedOption ||
+            !selectedOption.value
+        ) {
+            return 0;
+        }
+
+        return parseNumber(
+            selectedOption.dataset.stock
+        );
+    }
+
+
+    function clearQuantityError(row) {
+
+        const errorElement = row.querySelector(
+            ".laundry-quantity-error"
+        );
+
+        const quantityInput = row.querySelector(
+            ".laundry-quantity-input"
+        );
+
+        if (errorElement) {
+            errorElement.textContent = "";
+            errorElement.hidden = true;
+        }
+
+        if (quantityInput) {
+            quantityInput.classList.remove(
+                "is-invalid"
+            );
+        }
+    }
+
+
+    function showQuantityError(row, message) {
+
+        const errorElement = row.querySelector(
+            ".laundry-quantity-error"
+        );
+
+        const quantityInput = row.querySelector(
+            ".laundry-quantity-input"
+        );
+
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.hidden = false;
+        }
+
+        if (quantityInput) {
+            quantityInput.classList.add(
+                "is-invalid"
+            );
+        }
+    }
+
+
+    function updateRowNumbers() {
+
+        getRows().forEach(function (row, index) {
+
+            const rowNumber = row.querySelector(
+                ".laundry-row-number"
+            );
+
+            if (rowNumber) {
+                rowNumber.textContent = String(
+                    index + 1
+                );
+            }
+
+            row.dataset.rowIndex = String(index);
+        });
+    }
+
+
+    function updateRemoveButtons() {
+
+        const rows = getRows();
+        const disableRemove = rows.length <= 1;
+
+        rows.forEach(function (row) {
+
+            const removeButton = row.querySelector(
+                ".laundry-remove-button"
+            );
+
+            if (!removeButton) {
+                return;
+            }
+
+            removeButton.disabled = disableRemove;
+            removeButton.setAttribute(
+                "aria-disabled",
+                disableRemove
+                    ? "true"
+                    : "false"
+            );
+        });
+    }
+
+
+    /* ================================================== */
+    /* ITEM INFORMATION */
+    /* ================================================== */
+
+    function updateItemInformation(row) {
+
+        const selectedOption = getSelectedOption(
+            row
+        );
+
+        const stockValue = row.querySelector(
+            ".laundry-stock-value"
+        );
+
+        const stockUnit = row.querySelector(
+            ".laundry-stock-unit"
+        );
+
+        const categoryWrapper = row.querySelector(
+            ".laundry-item-category"
+        );
+
+        const categoryValue = categoryWrapper
+            ? categoryWrapper.querySelector("strong")
+            : null;
+
+        const unitWrapper = row.querySelector(
+            ".laundry-item-unit"
+        );
+
+        const unitValue = unitWrapper
+            ? unitWrapper.querySelector("strong")
+            : null;
+
+        if (
+            !selectedOption ||
+            !selectedOption.value
+        ) {
+
+            if (stockValue) {
+                stockValue.textContent = "0.00";
+            }
+
+            if (stockUnit) {
+                stockUnit.textContent = "";
+            }
+
+            if (categoryWrapper) {
+                categoryWrapper.hidden = true;
+            }
+
+            if (unitWrapper) {
+                unitWrapper.hidden = true;
+            }
+
+            clearQuantityError(row);
+            updateSummary();
+
+            return;
+        }
+
+        const stock = parseNumber(
+            selectedOption.dataset.stock
+        );
+
+        const unit = String(
+            selectedOption.dataset.unit || ""
+        ).trim();
+
+        const category = String(
+            selectedOption.dataset.category || ""
+        ).trim();
+
+        if (stockValue) {
+            stockValue.textContent = formatQuantity(
+                stock
+            );
+        }
+
+        if (stockUnit) {
+            stockUnit.textContent = unit;
+        }
+
+        if (categoryWrapper && categoryValue) {
+
+            categoryValue.textContent = category;
+            categoryWrapper.hidden = !category;
+        }
+
+        if (unitWrapper && unitValue) {
+
+            unitValue.textContent = unit;
+            unitWrapper.hidden = !unit;
+        }
+
+        validateRowQuantity(row);
+        updateSummary();
+    }
+
+
+    /* ================================================== */
+    /* QUANTITY VALIDATION */
+    /* ================================================== */
+
+    function validateRowQuantity(row) {
+
+        clearQuantityError(row);
+
+        const itemSelect = row.querySelector(
+            ".laundry-item-select"
+        );
+
+        const quantityInput = row.querySelector(
+            ".laundry-quantity-input"
+        );
+
+        if (!itemSelect || !quantityInput) {
+            return false;
+        }
+
+        if (!itemSelect.value) {
+            return false;
+        }
+
+        const quantity = parseNumber(
+            quantityInput.value
+        );
+
+        const availableStock = getAvailableStock(
+            row
+        );
+
+        if (quantity <= 0) {
+
+            showQuantityError(
+                row,
+                "Quantity must be greater than zero."
+            );
+
+            return false;
+        }
+
+        if (quantity > availableStock) {
+
+            showQuantityError(
+                row,
+                "Quantity cannot exceed available stock of "
+                + formatQuantity(availableStock)
+                + "."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    function validateAllRows() {
+
+        const rows = getRows();
+        const selectedIds = new Set();
+
+        let hasValidItem = false;
+
+        for (const row of rows) {
+
+            const itemSelect = row.querySelector(
+                ".laundry-item-select"
+            );
+
+            if (!itemSelect || !itemSelect.value) {
+
+                showValidationMessage(
+                    "Select an inventory item for every row."
+                );
+
+                if (itemSelect) {
+                    itemSelect.focus();
+                }
+
+                return false;
+            }
+
+            if (selectedIds.has(itemSelect.value)) {
+
+                showValidationMessage(
+                    "The same inventory item cannot be entered twice."
+                );
+
+                itemSelect.focus();
+
+                return false;
+            }
+
+            selectedIds.add(itemSelect.value);
+            hasValidItem = true;
+
+            if (!validateRowQuantity(row)) {
+
+                showValidationMessage(
+                    "Correct the invalid laundry item quantity."
+                );
+
+                const quantityInput = row.querySelector(
+                    ".laundry-quantity-input"
+                );
+
+                if (quantityInput) {
+                    quantityInput.focus();
+                }
+
+                return false;
+            }
+        }
+
+        if (!hasValidItem) {
+
+            showValidationMessage(
+                "Add at least one laundry item."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /* ================================================== */
+    /* SUMMARY */
+    /* ================================================== */
+
+    function updateSummary() {
+
+        let itemCount = 0;
+        let totalQuantity = 0;
+
+        getRows().forEach(function (row) {
+
+            const itemSelect = row.querySelector(
+                ".laundry-item-select"
+            );
+
+            const quantityInput = row.querySelector(
+                ".laundry-quantity-input"
+            );
+
+            if (
+                itemSelect &&
+                itemSelect.value
+            ) {
+
+                itemCount += 1;
+
+                if (quantityInput) {
+
+                    const quantity = parseNumber(
+                        quantityInput.value
+                    );
+
+                    if (quantity > 0) {
+                        totalQuantity += quantity;
+                    }
+                }
+            }
+        });
+
+        if (selectedItemCount) {
+            selectedItemCount.textContent = String(
+                itemCount
+            );
+        }
+
+        if (totalIssuedQuantity) {
+            totalIssuedQuantity.textContent =
+                formatQuantity(totalQuantity);
+        }
+    }
+
+
+    /* ================================================== */
+    /* ADD ROW */
+    /* ================================================== */
+
+    function addLaundryItemRow() {
+
+        hideValidationMessage();
+
+        if (!laundryItemsBody || !rowTemplate) {
+            return;
+        }
+
+        const templateHtml = rowTemplate.innerHTML
+            .replaceAll(
+                "__INDEX__",
+                String(rowSequence)
+            )
+            .replaceAll(
+                "__NUMBER__",
+                String(getRows().length + 1)
+            );
+
+        const temporaryBody = document.createElement(
+            "tbody"
+        );
+
+        temporaryBody.innerHTML = templateHtml.trim();
+
+        const newRow = temporaryBody.firstElementChild;
+
+        if (!newRow) {
+            return;
+        }
+
+        laundryItemsBody.appendChild(newRow);
+
+        rowSequence += 1;
+
+        updateRowNumbers();
+        updateRemoveButtons();
+        updateSummary();
+
+        const newSelect = newRow.querySelector(
+            ".laundry-item-select"
+        );
+
+        if (newSelect) {
+            newSelect.focus();
+        }
+    }
+
+
+    /* ================================================== */
+    /* REMOVE ROW */
+    /* ================================================== */
+
+    function removeLaundryItemRow(row) {
+
+        hideValidationMessage();
+
+        const rows = getRows();
+
+        if (rows.length <= 1) {
+            return;
+        }
+
+        row.remove();
+
+        updateRowNumbers();
+        updateRemoveButtons();
+        updateSummary();
+    }
+
+
+    /* ================================================== */
+    /* QUANTITY BUTTONS */
+    /* ================================================== */
+
+    function changeQuantity(row, adjustment) {
+
+        const quantityInput = row.querySelector(
+            ".laundry-quantity-input"
+        );
+
+        if (!quantityInput) {
+            return;
+        }
+
+        const currentValue = parseNumber(
+            quantityInput.value
+        );
+
+        const step = parseNumber(
+            quantityInput.step
+        ) || 1;
+
+        const nextValue = Math.max(
+            step,
+            currentValue + (
+                adjustment * step
+            )
+        );
+
+        quantityInput.value = String(
+            Number(nextValue.toFixed(2))
+        );
+
+        validateRowQuantity(row);
+        updateSummary();
+    }
+
+
+    /* ================================================== */
+    /* DELEGATED ROW EVENTS */
+    /* ================================================== */
+
+    if (laundryItemsBody) {
+
+        laundryItemsBody.addEventListener(
+            "change",
+            function (event) {
+
+                const target = event.target;
+                const row = target.closest(
+                    ".laundry-item-row"
+                );
+
+                if (!row) {
+                    return;
+                }
+
+                hideValidationMessage();
+
+                if (
+                    target.classList.contains(
+                        "laundry-item-select"
+                    )
+                ) {
+                    updateItemInformation(row);
+                }
+
+                if (
+                    target.classList.contains(
+                        "laundry-quantity-input"
+                    )
+                ) {
+                    validateRowQuantity(row);
+                    updateSummary();
+                }
+            }
+        );
+
+
+        laundryItemsBody.addEventListener(
+            "input",
+            function (event) {
+
+                const target = event.target;
+                const row = target.closest(
+                    ".laundry-item-row"
+                );
+
+                if (!row) {
+                    return;
+                }
+
+                if (
+                    target.classList.contains(
+                        "laundry-quantity-input"
+                    )
+                ) {
+                    hideValidationMessage();
+                    validateRowQuantity(row);
+                    updateSummary();
+                }
+            }
+        );
+
+
+        laundryItemsBody.addEventListener(
+            "click",
+            function (event) {
+
+                const removeButton = event.target.closest(
+                    ".laundry-remove-button"
+                );
+
+                const decreaseButton = event.target.closest(
+                    ".laundry-decrease-button"
+                );
+
+                const increaseButton = event.target.closest(
+                    ".laundry-increase-button"
+                );
+
+                const clickedButton = (
+                    removeButton ||
+                    decreaseButton ||
+                    increaseButton
+                );
+
+                if (!clickedButton) {
+                    return;
+                }
+
+                const row = clickedButton.closest(
+                    ".laundry-item-row"
+                );
+
+                if (!row) {
+                    return;
+                }
+
+                if (removeButton) {
+                    removeLaundryItemRow(row);
+                    return;
+                }
+
+                if (decreaseButton) {
+                    changeQuantity(row, -1);
+                    return;
+                }
+
+                if (increaseButton) {
+                    changeQuantity(row, 1);
+                }
+            }
+        );
+    }
+
+
+    /* ================================================== */
+    /* ADD BUTTON EVENTS */
+    /* ================================================== */
+
+    if (addLaundryItemButton) {
+
+        addLaundryItemButton.addEventListener(
+            "click",
+            addLaundryItemRow
+        );
+    }
+
+
+    if (mobileAddLaundryItemButton) {
+
+        mobileAddLaundryItemButton.addEventListener(
+            "click",
+            addLaundryItemRow
+        );
+    }
+
+
+    /* ================================================== */
+    /* SOURCE EVENT */
+    /* ================================================== */
+
+    if (sourceType) {
+
+        sourceType.addEventListener(
+            "change",
+            function () {
+
+                hideValidationMessage();
+                updateSourceFields();
+            }
+        );
+    }
+
+
+    /* ================================================== */
+    /* FORM VALIDATION */
+    /* ================================================== */
+
+    if (laundryForm) {
+
+        laundryForm.addEventListener(
+            "submit",
+            function (event) {
+
+                hideValidationMessage();
+
+                const selectedSource = sourceType
+                    ? sourceType.value
+                    : "";
+
+                if (
+                    sourceUsesRoom(selectedSource) &&
+                    roomSelect &&
+                    !roomSelect.value
+                ) {
+
+                    event.preventDefault();
+
+                    showValidationMessage(
+                        "Select the room for this laundry batch."
+                    );
+
+                    roomSelect.focus();
+                    return;
+                }
+
+                if (
+                    sourceUsesBooking(selectedSource) &&
+                    bookingSelect &&
+                    !bookingSelect.value
+                ) {
+
+                    event.preventDefault();
+
+                    showValidationMessage(
+                        "Select the booking for this laundry batch."
+                    );
+
+                    bookingSelect.focus();
+                    return;
+                }
+
+                if (!validateAllRows()) {
+
+                    event.preventDefault();
+                    return;
+                }
+
+                if (submitButton) {
+
+                    submitButton.disabled = true;
+
+                    const defaultContent =
+                        submitButton.querySelector(
+                            ".laundry-submit-default"
+                        );
+
+                    const loadingContent =
+                        submitButton.querySelector(
+                            ".laundry-submit-loading"
+                        );
+
+                    if (defaultContent) {
+                        defaultContent.hidden = true;
+                    }
+
+                    if (loadingContent) {
+                        loadingContent.hidden = false;
+                    }
+                }
+            }
+        );
+    }
+
+
+    /* ================================================== */
+    /* INITIALIZATION */
+    /* ================================================== */
+
+    updateSourceFields();
+
+    getRows().forEach(function (row) {
+        updateItemInformation(row);
+    });
+
+    updateRowNumbers();
+    updateRemoveButtons();
+    updateSummary();
+});
+</script>
+
+{% endif %}
+
+{% endblock %}
