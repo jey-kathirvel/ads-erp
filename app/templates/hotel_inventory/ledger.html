@@ -1,0 +1,244 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<link rel="stylesheet"
+      href="/static/css/ads-hotel-inventory.css?v=2">
+
+<div class="inventory-page">
+
+<div class="card inventory-hero mb-4">
+<div class="card-body">
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+<div class="small text-uppercase mb-1">
+{{ item.item_code }} · {{ item.category }}
+</div>
+
+<h2 class="mb-2">
+{{ item.item_name }}
+</h2>
+
+<p class="mb-0">
+Current stock:
+<strong>{{ item.current_stock }} {{ item.unit }}</strong>
+</p>
+</div>
+
+<a href="/hotel-operations/inventory"
+   class="btn btn-light">
+<i class="fas fa-arrow-left mr-1"></i>
+Inventory
+</a>
+
+</div>
+
+</div>
+</div>
+
+<div class="row">
+
+<div class="col-lg-4">
+
+<div class="card inventory-card">
+
+<div class="card-header">
+<h3 class="card-title">
+Stock Transaction
+</h3>
+</div>
+
+<form method="post"
+      action="/hotel-operations/inventory/{{ item.id }}/transaction">
+
+<div class="card-body">
+
+<div class="form-group">
+<label>Transaction Type</label>
+
+<select name="transaction_type"
+        class="form-control"
+        required>
+
+<option value="STOCK_IN">
+Stock In
+</option>
+
+<option value="STOCK_OUT">
+Stock Out
+</option>
+
+<option value="LINEN_ISSUE">
+Linen Issue
+</option>
+
+<option value="LINEN_RETURN">
+Linen Return
+</option>
+
+<option value="ADJUSTMENT_IN">
+Positive Adjustment
+</option>
+
+<option value="ADJUSTMENT_OUT">
+Negative Adjustment
+</option>
+
+</select>
+</div>
+
+<div class="form-group">
+<label>Quantity</label>
+
+<input type="number"
+       name="quantity"
+       class="form-control"
+       min="0.01"
+       step="0.01"
+       required>
+</div>
+
+<div class="form-group">
+<label>Reference Number</label>
+
+<input type="text"
+       name="reference_no"
+       class="form-control"
+       maxlength="60"
+       placeholder="Room / Laundry / Purchase reference">
+</div>
+
+<div class="form-group">
+<label>Remarks</label>
+
+<textarea name="remarks"
+          class="form-control"
+          rows="3"
+          placeholder="Transaction notes"></textarea>
+</div>
+
+</div>
+
+<div class="card-footer">
+
+<button type="submit"
+        class="btn btn-primary btn-block">
+<i class="fas fa-exchange-alt mr-1"></i>
+Save Transaction
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<div class="col-lg-8">
+
+<div class="card inventory-card">
+
+<div class="card-header">
+<h3 class="card-title">
+Inventory Ledger
+</h3>
+</div>
+
+<div class="card-body p-0">
+
+<div class="table-responsive">
+
+<table class="table table-hover inventory-table mb-0">
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Type</th>
+<th>Quantity</th>
+<th>Balance</th>
+<th>Reference</th>
+<th>Remarks</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for transaction in transactions %}
+
+<tr>
+
+<td>
+{{ transaction.created_at.strftime("%d-%m-%Y %I:%M %p") }}
+</td>
+
+<td>
+
+{% if transaction.transaction_type in [
+    "STOCK_IN",
+    "LINEN_RETURN",
+    "ADJUSTMENT_IN"
+] %}
+
+<span class="badge badge-success">
+{{ transaction.transaction_type.replace("_", " ") }}
+</span>
+
+{% else %}
+
+<span class="badge badge-warning">
+{{ transaction.transaction_type.replace("_", " ") }}
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+{{ transaction.quantity }} {{ item.unit }}
+</td>
+
+<td>
+<strong>
+{{ transaction.balance_after }} {{ item.unit }}
+</strong>
+</td>
+
+<td>
+{{ transaction.reference_no or "-" }}
+</td>
+
+<td>
+{{ transaction.remarks or "-" }}
+</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+<td colspan="6"
+    class="text-center text-muted py-5">
+No inventory transactions.
+</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+{% endblock %}

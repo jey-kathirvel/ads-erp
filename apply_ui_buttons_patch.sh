@@ -1,3 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /opt/ads-erp-phase2
+
+test "$(git branch --show-current)" = "ui-buttons" || {
+  echo "ERROR: Switch to ui-buttons branch first."
+  exit 1
+}
+
+cp app/static/css/ads-buttons.css app/static/css/ads-buttons.css.ui-buttons.bak
+cp app/templates/layouts/base.html app/templates/layouts/base.html.ui-buttons.bak
+
+cat > app/static/css/ads-buttons.css <<'CSS'
 /*
 =====================================================
  ADS ERP UI V2
@@ -355,3 +369,35 @@ td.ads-table-actions .btn-sm:has(i:only-child) {
         min-height: 36px !important;
     }
 }
+
+CSS
+
+python3 - <<'PY'
+from pathlib import Path
+
+path = Path("app/templates/layouts/base.html")
+text = path.read_text()
+
+old = '    <link rel="stylesheet" href="/static/css/ads-buttons.css?v=1">\n'
+text = text.replace(old, "")
+
+anchor = '    <link rel="stylesheet" href="/static/css/ads-ui-refactor.css?v=1">\n'
+replacement = anchor + '    <link rel="stylesheet" href="/static/css/ads-buttons.css?v=2">\n'
+
+if anchor not in text:
+    raise SystemExit("ERROR: ads-ui-refactor.css link not found in base.html")
+
+text = text.replace(anchor, replacement, 1)
+path.write_text(text)
+PY
+
+git diff --check
+git diff --stat
+git add app/static/css/ads-buttons.css app/templates/layouts/base.html
+git commit -m "Standardize ERP button styling and action alignment"
+git push origin ui-buttons
+
+echo
+echo "UI BUTTON ALIGNMENT PATCH: PUSHED"
+echo "Restart only if template/static cache requires it:"
+echo "systemctl restart ads-erp"

@@ -1,0 +1,58 @@
+.inventory-page{
+    padding-bottom:30px;
+}
+
+.inventory-hero{
+    border:0;
+    border-radius:22px;
+    background:linear-gradient(135deg,#0ea5e9,#2563eb,#4338ca);
+    color:#fff;
+    overflow:hidden;
+    box-shadow:0 20px 45px rgba(37,99,235,.18);
+}
+
+.inventory-hero .card-body{
+    padding:30px;
+}
+
+.inventory-card{
+    border:0;
+    border-radius:18px;
+    box-shadow:0 10px 28px rgba(15,23,42,.08);
+}
+
+.inventory-stat{
+    font-size:2rem;
+    font-weight:800;
+}
+
+.stock-good{
+    color:#16a34a;
+    font-weight:700;
+}
+
+.stock-low{
+    color:#ea580c;
+    font-weight:700;
+}
+
+.stock-empty{
+    color:#dc2626;
+    font-weight:700;
+}
+
+.inventory-icon{
+    width:54px;
+    height:54px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#dbeafe;
+    color:#2563eb;
+}
+
+.inventory-table thead th{
+    text-transform:uppercase;
+    font-size:.72rem;
+}

@@ -2,6 +2,39 @@
 
 {% block content %}
 
+{% if request.query_params.get("success") %}
+<div class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-check-circle mr-1"></i>
+    {{ request.query_params.get("success") }}
+
+    <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+    >
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% if request.query_params.get("error") %}
+<div class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-exclamation-circle mr-1"></i>
+    {{ request.query_params.get("error") }}
+
+    <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+    >
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+
 <div class="card">
 
 
@@ -145,12 +178,20 @@
 
                         </a>
 
-                        <a href="/suppliers/{{ supplier.id }}/delete" class="btn btn-danger btn-sm" title="Delete"
-                            onclick="return confirm('Delete Supplier?')">
-
-                            <i class="fas fa-trash"></i>
-
-                        </a>
+                        <form
+                            method="post"
+                            action="/suppliers/{{ supplier.id }}/delete"
+                            class="d-inline"
+                            onsubmit="return confirm('Delete Supplier?')"
+                        >
+                            <button
+                                type="submit"
+                                class="btn btn-danger btn-sm"
+                                title="Delete"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
 
                     </td>
 

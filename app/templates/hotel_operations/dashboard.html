@@ -1,0 +1,180 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/ads-hotel-operations.css?v=1">
+
+<div class="hotel-ops-page">
+    <div class="card hotel-ops-hero mb-4">
+        <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div>
+                    <div class="hotel-ops-hero-title">
+                        Hotel Operations Control Center
+                    </div>
+                    <p class="hotel-ops-hero-text">
+                        Monitor room readiness, housekeeping workload and hotel staff from one operational dashboard.
+                    </p>
+                </div>
+
+                <div class="hotel-ops-actions mt-3 mt-md-0">
+                    <a href="/hotel-operations/rooms" class="btn btn-light mr-2">
+                        <i class="fas fa-bed mr-1"></i>
+                        Room Board
+                    </a>
+                    <a href="/hotel-operations/housekeeping" class="btn btn-outline-light">
+                        <i class="fas fa-broom mr-1"></i>
+                        Housekeeping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card hotel-ops-stat">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="hotel-ops-stat-value">{{ total_rooms }}</div>
+                            <div class="hotel-ops-stat-label">Active Rooms</div>
+                        </div>
+                        <div class="hotel-ops-stat-icon ops-bg-blue">
+                            <i class="fas fa-hotel"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card hotel-ops-stat">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="hotel-ops-stat-value">{{ ready_rooms }}</div>
+                            <div class="hotel-ops-stat-label">Ready Rooms</div>
+                        </div>
+                        <div class="hotel-ops-stat-icon ops-bg-green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card hotel-ops-stat">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="hotel-ops-stat-value">{{ active_tasks }}</div>
+                            <div class="hotel-ops-stat-label">Active Tasks</div>
+                        </div>
+                        <div class="hotel-ops-stat-icon ops-bg-orange">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card hotel-ops-stat">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="hotel-ops-stat-value">{{ active_staff }}</div>
+                            <div class="hotel-ops-stat-label">Active Staff</div>
+                        </div>
+                        <div class="hotel-ops-stat-icon ops-bg-purple">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-7">
+            <div class="card hotel-ops-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-door-open mr-2 text-primary"></i>
+                        Room Status Summary
+                    </h3>
+                    <a href="/hotel-operations/rooms" class="btn btn-sm btn-outline-primary float-right">
+                        View Room Board
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        {% for status, count in room_status_counts.items() %}
+                        <div class="col-sm-6 col-lg-4 mb-3">
+                            <div class="border rounded-lg p-3 h-100">
+                                <div class="text-muted small text-uppercase font-weight-bold">
+                                    {{ status|replace('_', ' ')|title }}
+                                </div>
+                                <div class="h3 font-weight-bold mb-0 mt-2">
+                                    {{ count }}
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12 text-center text-muted py-4">
+                            No room status records available.
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5">
+            <div class="card hotel-ops-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-tasks mr-2 text-primary"></i>
+                        Recent Housekeeping
+                    </h3>
+                    <a href="/hotel-operations/housekeeping" class="btn btn-sm btn-outline-primary float-right">
+                        Manage
+                    </a>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <tbody>
+                                {% for task in recent_tasks %}
+                                <tr>
+                                    <td>
+                                        <strong>Room {{ task.room.room_number if task.room else '-' }}</strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            {{ task.task_type|replace('_', ' ')|title }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <span class="task-status-pill task-status-{{ task.status }}">
+                                            {{ task.status|replace('_', ' ')|title }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-center text-muted py-4">
+                                        No housekeeping tasks found.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

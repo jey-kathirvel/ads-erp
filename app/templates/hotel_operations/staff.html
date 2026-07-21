@@ -1,0 +1,249 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/css/ads-hotel-operations.css?v=1">
+
+<div class="hotel-ops-page">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 hotel-ops-heading mb-1">Hotel Staff</h1>
+            <p class="hotel-ops-subtitle mb-0">
+                Manage operations and housekeeping staff.
+            </p>
+        </div>
+
+        <button class="btn btn-primary" data-toggle="modal" data-target="#staffModal">
+            <i class="fas fa-user-plus mr-1"></i>
+            Add Staff
+        </button>
+    </div>
+
+    <div class="card hotel-ops-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-users mr-2 text-primary"></i>
+                Staff Directory
+            </h3>
+            <span class="badge badge-primary float-right">
+                {{ staff_members|length }} staff
+            </span>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Staff</th>
+                            <th>Mobile</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for staff in staff_members %}
+                        <tr>
+                            <td>
+                                <span class="staff-avatar">
+                                    {{ staff.staff_name[:1]|upper }}
+                                </span>
+                                <strong>{{ staff.staff_name }}</strong>
+                                <br>
+                                <small class="text-muted ml-5">
+                                    {{ staff.staff_code }}
+                                </small>
+                            </td>
+                            <td>{{ staff.mobile or '-' }}</td>
+                            <td>{{ staff.department|replace('_', ' ')|title }}</td>
+                            <td>{{ staff.designation or '-' }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if staff.is_active else 'secondary' }}">
+                                    {{ 'Active' if staff.is_active else 'Inactive' }}
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-sm btn-outline-primary"
+                                    data-toggle="modal"
+                                    data-target="#editStaffModal"
+                                    data-id="{{ staff.id }}"
+                                    data-name="{{ staff.staff_name }}"
+                                    data-mobile="{{ staff.mobile or '' }}"
+                                    data-department="{{ staff.department }}"
+                                    data-designation="{{ staff.designation or '' }}"
+                                    data-active="{{ 'true' if staff.is_active else 'false' }}"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                No hotel staff found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade ops-modal" id="staffModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="/hotel-operations/staff">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Hotel Staff</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Staff Code</label>
+                        <input class="form-control" name="staff_code" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Staff Name</label>
+                        <input class="form-control" name="staff_name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input class="form-control" name="mobile">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select class="form-control" name="department">
+                            {% for value in staff_departments %}
+                            <option value="{{ value }}">
+                                {{ value|replace('_', ' ')|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label>Designation</label>
+                        <input class="form-control" name="designation">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save mr-1"></i>
+                        Save Staff
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade ops-modal" id="editStaffModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" id="editStaffForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Hotel Staff</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Staff Name</label>
+                        <input class="form-control" name="staff_name" id="editStaffName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input class="form-control" name="mobile" id="editStaffMobile">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select class="form-control" name="department" id="editStaffDepartment">
+                            {% for value in staff_departments %}
+                            <option value="{{ value }}">
+                                {{ value|replace('_', ' ')|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input
+                            class="form-control"
+                            name="designation"
+                            id="editStaffDesignation"
+                        >
+                    </div>
+
+                    <div class="custom-control custom-switch">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="editStaffActive"
+                            name="is_active"
+                            value="true"
+                        >
+                        <label class="custom-control-label" for="editStaffActive">
+                            Active staff
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save mr-1"></i>
+                        Update Staff
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    $("#editStaffModal").on("show.bs.modal", function (event) {
+        const button = $(event.relatedTarget);
+
+        document.getElementById("editStaffForm").action =
+            "/hotel-operations/staff/" + button.data("id");
+
+        document.getElementById("editStaffName").value =
+            button.data("name") || "";
+
+        document.getElementById("editStaffMobile").value =
+            button.data("mobile") || "";
+
+        document.getElementById("editStaffDepartment").value =
+            button.data("department") || "HOUSEKEEPING";
+
+        document.getElementById("editStaffDesignation").value =
+            button.data("designation") || "";
+
+        document.getElementById("editStaffActive").checked =
+            String(button.data("active")) === "true";
+    });
+});
+</script>
+{% endblock %}

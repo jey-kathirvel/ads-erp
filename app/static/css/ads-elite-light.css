@@ -459,3 +459,38 @@ html body.ads-elite-light .content-wrapper .alert {
     color: #26344a !important;
     opacity: 1 !important;
 }
+
+/* =========================================================
+   PATCH-GST-BILLING-PRODUCT-TEXT-001
+   Select2 selected value visibility in Elite Light theme
+========================================================= */
+
+.ads-elite-light
+.select2-container--default
+.select2-selection--single
+.select2-selection__rendered {
+    color: var(--ads-text, #172033) !important;
+    background: transparent !important;
+}
+
+.ads-elite-light
+.select2-container--default
+.select2-selection--single
+.select2-selection__placeholder {
+    color: #7b8ba3 !important;
+}
+
+.ads-elite-light
+.select2-container--default
+.select2-selection--single
+.select2-selection__arrow b {
+    border-color: #526780 transparent transparent transparent !important;
+}
+
+.ads-elite-light
+.select2-container--default
+.select2-container--open
+.select2-selection--single
+.select2-selection__arrow b {
+    border-color: transparent transparent #526780 transparent !important;
+}
