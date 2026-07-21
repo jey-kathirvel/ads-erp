@@ -22,6 +22,7 @@ from app.hrm.routes import router as hrm_router
 from app.custom_gst.routes import router as custom_gst_router
 from app.incidents.routes import router as incidents_router
 from app.finance_tools.routes import router as finance_tools_router
+from app.hotel_operations.routes import router as hotel_operations_router
 
 api_router = APIRouter()
 
@@ -76,6 +77,12 @@ api_router.include_router(permission_router, tags=["Permissions"])
 
 # Booking
 api_router.include_router(booking_router, tags=["Booking"])
+
+# Hotel Operations
+api_router.include_router(
+    hotel_operations_router,
+    tags=["Hotel Operations"],
+)
 
 # Human Resources
 api_router.include_router(hrm_router, tags=["HRM"])

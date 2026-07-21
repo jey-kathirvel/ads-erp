@@ -1,0 +1,151 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<link rel="stylesheet"
+      href="/static/css/ads-hotel-inventory.css?v=2">
+
+<div class="inventory-page">
+
+<div class="card inventory-hero mb-4">
+<div class="card-body">
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+<h2 class="mb-2">Add Hotel Inventory Item</h2>
+<p class="mb-0">
+Create linen, amenities, housekeeping or maintenance stock.
+</p>
+</div>
+
+<a href="/hotel-operations/inventory"
+   class="btn btn-light">
+<i class="fas fa-arrow-left mr-1"></i>
+Back
+</a>
+
+</div>
+
+</div>
+</div>
+
+<div class="card inventory-card">
+
+<form method="post"
+      action="/hotel-operations/inventory/items/create">
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="form-group">
+<label>Item Code</label>
+<input type="text"
+       name="item_code"
+       class="form-control"
+       maxlength="30"
+       placeholder="LINEN-BEDSHEET"
+       required>
+</div>
+</div>
+
+<div class="col-md-8">
+<div class="form-group">
+<label>Item Name</label>
+<input type="text"
+       name="item_name"
+       class="form-control"
+       maxlength="120"
+       placeholder="Double Bed Bedsheet"
+       required>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="form-group">
+<label>Category</label>
+<select name="category"
+        class="form-control"
+        required>
+<option value="">Select category</option>
+<option value="LINEN">Linen</option>
+<option value="BATHROOM">Bathroom</option>
+<option value="HOUSEKEEPING">Housekeeping</option>
+<option value="AMENITIES">Guest Amenities</option>
+<option value="MAINTENANCE">Maintenance</option>
+<option value="ELECTRICAL">Electrical</option>
+<option value="PANTRY">Pantry</option>
+<option value="OTHER">Other</option>
+</select>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="form-group">
+<label>Unit</label>
+<select name="unit"
+        class="form-control">
+<option value="Nos">Nos</option>
+<option value="Pairs">Pairs</option>
+<option value="Sets">Sets</option>
+<option value="Litres">Litres</option>
+<option value="Kilograms">Kilograms</option>
+<option value="Packets">Packets</option>
+<option value="Bottles">Bottles</option>
+<option value="Boxes">Boxes</option>
+</select>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="form-group">
+<label>Minimum Stock</label>
+<input type="number"
+       name="minimum_stock"
+       class="form-control"
+       min="0"
+       step="0.01"
+       value="0"
+       required>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="form-group">
+<label>Opening Stock</label>
+<input type="number"
+       name="opening_stock"
+       class="form-control"
+       min="0"
+       step="0.01"
+       value="0"
+       required>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="card-footer text-right">
+
+<a href="/hotel-operations/inventory"
+   class="btn btn-outline-secondary mr-2">
+Cancel
+</a>
+
+<button type="submit"
+        class="btn btn-primary">
+<i class="fas fa-save mr-1"></i>
+Save Inventory Item
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+{% endblock %}

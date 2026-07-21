@@ -1,0 +1,46 @@
+ROOM_STATUSES = {
+    "VACANT_CLEAN",
+    "VACANT_DIRTY",
+    "OCCUPIED",
+    "OCCUPIED_DIRTY",
+    "READY_FOR_CHECKIN",
+    "LAUNDRY",
+    "MAINTENANCE",
+    "OUT_OF_ORDER",
+    "INSPECTION",
+}
+
+TASK_TYPES = {
+    "CLEANING",
+    "LAUNDRY",
+    "MAINTENANCE",
+    "INSPECTION",
+}
+
+TASK_PRIORITIES = {
+    "LOW",
+    "NORMAL",
+    "HIGH",
+    "URGENT",
+}
+
+TASK_STATUSES = {
+    "PENDING",
+    "ASSIGNED",
+    "IN_PROGRESS",
+    "COMPLETED",
+    "CANCELLED",
+}
+
+STAFF_DEPARTMENTS = {
+    "HOUSEKEEPING",
+    "LAUNDRY",
+    "MAINTENANCE",
+    "SUPERVISION",
+}
+
+ACTIVE_TASK_STATUSES = {
+    "PENDING",
+    "ASSIGNED",
+    "IN_PROGRESS",
+}

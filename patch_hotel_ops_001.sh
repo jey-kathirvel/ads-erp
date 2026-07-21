@@ -1,3 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /opt/ads-erp-phase2 || exit 1
+
+CURRENT_BRANCH="$(git branch --show-current)"
+if [ "$CURRENT_BRANCH" != "ui-buttons" ]; then
+    echo "ERROR: Current branch is '$CURRENT_BRANCH'. Switch to ui-buttons first."
+    exit 1
+fi
+
+echo "===== PATCH-HOTEL-OPS-001 START ====="
+
+mkdir -p app/hotel_operations
+cp -a main.py "main.py.patch-hotel-ops-001.bak"
+
+cat > app/hotel_operations/__init__.py <<'PY'
+# Hotel operations package.
+PY
+
+cat > app/hotel_operations/models.py <<'PY'
 from datetime import datetime
 
 from sqlalchemy import (
@@ -13,7 +34,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
-from app.booking.models import Booking, Room
 
 
 class HotelStaff(Base):
@@ -85,7 +105,7 @@ class HotelRoomStatus(Base):
         onupdate=datetime.utcnow,
     )
 
-    room = relationship(Room)
+    room = relationship("Room")
 
 
 class HousekeepingTask(Base):
@@ -137,7 +157,7 @@ class HousekeepingTask(Base):
         onupdate=datetime.utcnow,
     )
 
-    room = relationship(Room)
+    room = relationship("Room")
     staff: Mapped["HotelStaff | None"] = relationship(
         back_populates="housekeeping_tasks",
     )
@@ -213,237 +233,88 @@ class HotelInventoryTransaction(Base):
     inventory_item: Mapped["HotelInventoryItem"] = relationship(
         back_populates="transactions",
     )
+PY
 
+python3 - <<'PY'
+from pathlib import Path
 
-class HotelLaundryBatch(Base):
-    __tablename__ = "hotel_laundry_batches"
-    __table_args__ = (
-        UniqueConstraint(
-            "batch_no",
-            name="uq_hotel_laundry_batches_batch_no",
-        ),
-    )
+path = Path("main.py")
+text = path.read_text()
 
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        index=True,
-    )
+import_line = (
+    "from app.hotel_operations.models import (\n"
+    "    HotelInventoryItem,\n"
+    "    HotelInventoryTransaction,\n"
+    "    HotelRoomStatus,\n"
+    "    HotelStaff,\n"
+    "    HousekeepingTask,\n"
+    ")\n"
+)
 
-    batch_no: Mapped[str] = mapped_column(
-        String(40),
-        nullable=False,
-        unique=True,
-        index=True,
-    )
+if "from app.hotel_operations.models import (" not in text:
+    anchor = "from app.booking.models import BookingPayment\n"
+    if anchor not in text:
+        raise SystemExit("ERROR: BookingPayment import anchor not found")
+    text = text.replace(anchor, anchor + import_line, 1)
 
-    batch_date: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        index=True,
-    )
+startup_block = (
+    "\n\n@app.on_event(\"startup\")\n"
+    "def ensure_hotel_operations_tables():\n"
+    "    # Create only hotel operations tables.\n"
+    "    HotelStaff.metadata.create_all(\n"
+    "        bind=engine,\n"
+    "        tables=[\n"
+    "            HotelStaff.__table__,\n"
+    "            HotelRoomStatus.__table__,\n"
+    "            HousekeepingTask.__table__,\n"
+    "            HotelInventoryItem.__table__,\n"
+    "            HotelInventoryTransaction.__table__,\n"
+    "        ],\n"
+    "        checkfirst=True,\n"
+    "    )\n"
+)
 
-    source_type: Mapped[str] = mapped_column(
-        String(30),
-        nullable=False,
-        default="ROOM",
-        index=True,
-    )
+if "def ensure_hotel_operations_tables" not in text:
+    anchor = "# ----------------------------------------------------\n# Home\n# ----------------------------------------------------"
+    if anchor not in text:
+        raise SystemExit("ERROR: Home section anchor not found")
+    text = text.replace(anchor, startup_block + "\n" + anchor, 1)
 
-    room_id: Mapped[int | None] = mapped_column(
-        ForeignKey(
-            "rooms.id",
-            ondelete="SET NULL",
-        ),
-        nullable=True,
-        index=True,
-    )
+path.write_text(text)
+PY
 
-    booking_id: Mapped[int | None] = mapped_column(
-        ForeignKey(
-            "bookings.id",
-            ondelete="SET NULL",
-        ),
-        nullable=True,
-        index=True,
-    )
+echo "===== COMPILE VERIFY ====="
+./venv/bin/python -m compileall app main.py
 
-    status: Mapped[str] = mapped_column(
-        String(30),
-        nullable=False,
-        default="COLLECTED",
-        index=True,
-    )
+echo "===== MODEL IMPORT VERIFY ====="
+./venv/bin/python - <<'PY'
+from app.hotel_operations.models import (
+    HotelInventoryItem,
+    HotelInventoryTransaction,
+    HotelRoomStatus,
+    HotelStaff,
+    HousekeepingTask,
+)
 
-    vendor_name: Mapped[str | None] = mapped_column(
-        String(120),
-        nullable=True,
-        index=True,
-    )
+assert HotelStaff.__tablename__ == "hotel_staff"
+assert HotelRoomStatus.__tablename__ == "hotel_room_status"
+assert HousekeepingTask.__tablename__ == "housekeeping_tasks"
+assert HotelInventoryItem.__tablename__ == "hotel_inventory_items"
+assert HotelInventoryTransaction.__tablename__ == "hotel_inventory_transactions"
 
-    sent_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
-        nullable=True,
-        index=True,
-    )
+print("MODEL IMPORTS: PASSED")
+PY
 
-    expected_return_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
-        nullable=True,
-        index=True,
-    )
+echo "===== GIT VERIFY ====="
+git diff --check
+git diff --stat
 
-    returned_at: Mapped[datetime | None] = mapped_column(
-        DateTime,
-        nullable=True,
-        index=True,
-    )
-
-    total_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    clean_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    damaged_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    missing_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    remarks: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True,
-    )
-
-    created_by: Mapped[str | None] = mapped_column(
-        String(120),
-        nullable=True,
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        index=True,
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-    )
-
-    room = relationship(Room)
-
-    booking = relationship(Booking)
-
-    items: Mapped[list["HotelLaundryBatchItem"]] = relationship(
-        back_populates="batch",
-        cascade="all, delete-orphan",
-        passive_deletes=True,
-    )
-
-
-class HotelLaundryBatchItem(Base):
-    __tablename__ = "hotel_laundry_batch_items"
-    __table_args__ = (
-        UniqueConstraint(
-            "laundry_batch_id",
-            "inventory_item_id",
-            name="uq_hotel_laundry_batch_item",
-        ),
-    )
-
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        index=True,
-    )
-
-    laundry_batch_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            "hotel_laundry_batches.id",
-            ondelete="CASCADE",
-        ),
-        nullable=False,
-        index=True,
-    )
-
-    inventory_item_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            "hotel_inventory_items.id",
-            ondelete="RESTRICT",
-        ),
-        nullable=False,
-        index=True,
-    )
-
-    issued_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    returned_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    clean_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    damaged_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    missing_quantity: Mapped[float] = mapped_column(
-        Numeric(12, 2),
-        nullable=False,
-        default=0,
-    )
-
-    remarks: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True,
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-    )
-
-    batch: Mapped["HotelLaundryBatch"] = relationship(
-        back_populates="items",
-    )
-
-    inventory_item: Mapped["HotelInventoryItem"] = relationship()
-
+echo
+echo "PATCH-HOTEL-OPS-001 CODE INSTALLED"
+echo
+echo "NEXT COMMANDS:"
+echo "git add app/hotel_operations main.py"
+echo 'git commit -m "Add hotel operations database foundation"'
+echo "git push origin ui-buttons"
+echo "systemctl restart ads-erp"
+echo "systemctl status ads-erp --no-pager"
